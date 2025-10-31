@@ -6,9 +6,13 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.util.Date;
 
 import com.toedter.calendar.JDateChooser;
-//import controller.NhanVienController;
+import controllers.NhanVienController;
 
 public class NhanVienPanel extends JPanel{
     public JButton btn_VoHieuHoaTaiKhoan;
@@ -19,7 +23,7 @@ public class NhanVienPanel extends JPanel{
     public JComboBox cbb_LocChucVu;
     public JRadioButton rdbtn_Nam;
     public JRadioButton rdbtn_Nu;
-//    private NhanVienController nhanVienController;
+    private NhanVienController nhanVienController;
     public JButton btn_Tim;
     public JButton btn_CapTaiKhoan;
     public JButton btn_ThemNhanVien;
@@ -117,6 +121,27 @@ public class NhanVienPanel extends JPanel{
         ngaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngaySinh.setBounds(156, 94, 210, 30);
         pnlThongTinNhanVien.add(ngaySinh);
+
+        // Tính ngày hợp lệ (ít nhất 18 tuổi)
+        LocalDate today = LocalDate.now();
+        LocalDate maxDate = today.minusYears(18);
+        LocalDate minDate = today.minusYears(100); // Giới hạn tối đa 100 tuổi nếu cần
+
+        // Thiết lập khoảng hợp lệ
+        ngaySinh.setMaxSelectableDate(java.sql.Date.valueOf(maxDate));
+        ngaySinh.setMinSelectableDate(java.sql.Date.valueOf(minDate));
+
+        // Set ngày mặc định (ví dụ: đủ 18 tuổi tính đến hôm nay)
+        ngaySinh.setDate(java.sql.Date.valueOf(maxDate));
+
+        // Khi click hoặc focus thì tự động mở popup
+        Component editor = ngaySinh.getDateEditor().getUiComponent();
+        editor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                ngaySinh.getCalendarButton().doClick();
+            }
+        });
 
         JLabel lbl_Email = new JLabel("Email:");
         lbl_Email.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -230,8 +255,8 @@ public class NhanVienPanel extends JPanel{
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
         table.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         pnlDanhSachNhanVien.add(scrollPane);
-        
-//        nhanVienController = new NhanVienController(this);
-//        nhanVienController.getTatCaNhanVien();
+
+        nhanVienController = new NhanVienController(this);
+        nhanVienController.getTatCaNhanVien();
     }
 }
