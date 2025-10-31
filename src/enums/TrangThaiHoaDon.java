@@ -1,8 +1,8 @@
 package enums;
 
 public enum TrangThaiHoaDon {
-	HoaDonDatPhong  ,
-    HoaDonThuePhong ,
+	PhieuDatPhong  ,
+    PhieuThuePhong ,
     HoaDonHoanThanh ,
     HoaDonTam,
     TatCa;

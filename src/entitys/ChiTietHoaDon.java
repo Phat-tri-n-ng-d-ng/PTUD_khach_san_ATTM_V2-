@@ -1,4 +1,4 @@
-package entity;
+package entitys;
 
 public class ChiTietHoaDon {
 	private double thanhTien;
@@ -62,13 +62,13 @@ public class ChiTietHoaDon {
         this.soNgayO = soNgayO;
         this.thanhTien = tinhThanhTien();
     }
-    public ChiTietHoaDon(Phong phong, entity.HoaDon hoaDon) {
+    public ChiTietHoaDon(Phong phong, entitys.HoaDon hoaDon) {
             super();
             this.phong = phong;
             HoaDon = hoaDon;
         }
 
-	public ChiTietHoaDon(double thanhTien, Phong phong, entity.HoaDon hoaDon, int soNgayO) {
+	public ChiTietHoaDon(double thanhTien, Phong phong, entitys.HoaDon hoaDon, int soNgayO) {
             super();
             this.thanhTien = thanhTien;
             this.phong = phong;

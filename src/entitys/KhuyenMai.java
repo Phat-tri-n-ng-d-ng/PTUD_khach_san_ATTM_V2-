@@ -1,4 +1,4 @@
-package entity;
+package entitys;
 
 import enums.TrangThaiKhuyenMai;
 import java.time.LocalDateTime;
