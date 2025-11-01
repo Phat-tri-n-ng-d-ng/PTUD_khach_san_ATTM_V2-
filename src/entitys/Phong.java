@@ -8,31 +8,41 @@ import java.util.Objects;
 public class Phong {
 	private String maPhong;
     private LoaiPhong loaiPhong;
+    private int tang;
+    private int soPhong;
     private int soLuongToiDa;
 	private double giaPhong;
     private double tienCoc;
     private TrangThaiPhong trangThai;
 
-    public Phong(String maPhong, TrangThaiPhong trangThai, LoaiPhong loaiPhong, int soLuongToiDa) {
+    public Phong(String maPhong, LoaiPhong loaiPhong, int tang, int soPhong, int soLuongToiDa,TrangThaiPhong trangThai) {
         this.maPhong = maPhong;
         this.trangThai = trangThai;
-
+        this.tang = tang;
+		this.soPhong = soPhong;
         this.loaiPhong = loaiPhong;
         this.soLuongToiDa = soLuongToiDa;
         setGiaPhong();
         setTienCoc();
     }
 
-    public Phong(String maPhong, TrangThaiPhong trangThai, double giaPhong, double tienCoc, LoaiPhong loaiPhong, int soLuongToiDa) {
-        this.maPhong = maPhong;
-        this.trangThai = trangThai;
-        this.giaPhong = giaPhong;
-        this.tienCoc = tienCoc;
-        this.loaiPhong = loaiPhong;
-        this.soLuongToiDa = soLuongToiDa;
-    }
+    
 
-    public Phong() {
+    public Phong(String maPhong, LoaiPhong loaiPhong, int tang, int soPhong, int soLuongToiDa, double giaPhong,
+			double tienCoc, TrangThaiPhong trangThai) {
+		this.maPhong = maPhong;
+		this.loaiPhong = loaiPhong;
+		this.tang = tang;
+		this.soPhong = soPhong;
+		this.soLuongToiDa = soLuongToiDa;
+		this.giaPhong = giaPhong;
+		this.tienCoc = tienCoc;
+		this.trangThai = trangThai;
+	}
+
+
+
+	public Phong() {
 
     }
 
@@ -60,6 +70,32 @@ public class Phong {
 	public void setSoLuongToiDa(int soLuongToiDa) {
 		this.soLuongToiDa = soLuongToiDa;
 	}
+	
+	
+	public int getTang() {
+		return tang;
+	}
+
+
+
+	public void setTang(int tang) {
+		this.tang = tang;
+	}
+
+
+
+	public int getSoPhong() {
+		return soPhong;
+	}
+
+
+
+	public void setSoPhong(int soPhong) {
+		this.soPhong = soPhong;
+	}
+
+
+
 	// Dẫn xuất
 	public double getGiaPhong() {
 		return giaPhong;

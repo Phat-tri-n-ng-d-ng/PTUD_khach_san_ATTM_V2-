@@ -63,7 +63,13 @@ public class LoaiPhong {
     public LoaiPhong() {
     }
 
-    @Override
+    public LoaiPhong(String tenlp) {
+		this.tenLoaiPhong=tenlp;
+	}
+
+
+
+	@Override
 	public int hashCode() {
 		return Objects.hash(maLoaiPhong);
 	}
