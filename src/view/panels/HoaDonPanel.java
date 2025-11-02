@@ -41,6 +41,7 @@ import java.awt.SystemColor;
 
 public class HoaDonPanel extends JPanel {
     public static final long serialVersionUID = 1L;
+    public JButton btn_TimHoaDon;
     public JTextField txt_MaHoaDon;
     public JTextField txt_SoDienThoaiKhachHang;
     public JTable table_DanhSachHoaDon;
@@ -68,7 +69,6 @@ public class HoaDonPanel extends JPanel {
 
 
     public HoaDonPanel() {
-        setBounds(100, 100, 1336, 768);
         setBackground(new Color(236, 247, 255));
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(null);
@@ -76,48 +76,44 @@ public class HoaDonPanel extends JPanel {
         JLabel lbl_TieuDe = new JLabel("Hóa Đơn");
         lbl_TieuDe.setForeground(new Color(10, 100, 189));
         lbl_TieuDe.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        lbl_TieuDe.setBounds(725, 10, 114, 24);
+        lbl_TieuDe.setBounds(620, 10, 92, 24);
         add(lbl_TieuDe);
 
         pnlBoLocHoaDon = new JPanel();
         pnlBoLocHoaDon.setBackground(new Color(255, 255, 255));
         pnlBoLocHoaDon.setBorder(new LineBorder(new Color(0, 0, 0)));
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(screenSize.width, screenSize.height);
-        int doDaiThongTinNhanVien = screenSize.width - 40;
-        pnlBoLocHoaDon.setBounds(714, 379,576 , 402);
+        pnlBoLocHoaDon.setBounds(20, 70,1292 , 139);
         add(pnlBoLocHoaDon);
         pnlBoLocHoaDon.setLayout(null);
 
         txt_MaHoaDon = new JTextField();
         txt_MaHoaDon.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        txt_MaHoaDon.setBounds(61, 128, 390, 30);
+        txt_MaHoaDon.setBounds(651, 37, 631, 30);
         pnlBoLocHoaDon.add(txt_MaHoaDon);
         txt_MaHoaDon.setColumns(10);
 
         txt_SoDienThoaiKhachHang = new JTextField();
         txt_SoDienThoaiKhachHang.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         txt_SoDienThoaiKhachHang.setColumns(10);
-        txt_SoDienThoaiKhachHang.setBounds(59, 53, 392, 30);
+        txt_SoDienThoaiKhachHang.setBounds(10, 37, 631, 30);
         pnlBoLocHoaDon.add(txt_SoDienThoaiKhachHang);
 
         cbb_TrangThaiHoaDon = new JComboBox();
         cbb_TrangThaiHoaDon.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         cbb_TrangThaiHoaDon.setModel(new DefaultComboBoxModel(new String[] {"Hóa đơn đặt phòng", "Hóa đơn thuê phòng", "Hóa đơn hoàn thành", "Hóa đơn tạm", "Tất cả"}));
-        cbb_TrangThaiHoaDon.setBounds(151, 178, 300, 30);
+        cbb_TrangThaiHoaDon.setBounds(10, 101, 270, 30);
         pnlBoLocHoaDon.add(cbb_TrangThaiHoaDon);
 
         rdbtn_TimMaHoaDon = new JRadioButton("  Tìm mã hóa đơn:");
         rdbtn_TimMaHoaDon.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_TimMaHoaDon.setBackground(Color.WHITE);
-        rdbtn_TimMaHoaDon.setBounds(34, 102, 150, 21);
+        rdbtn_TimMaHoaDon.setBounds(651, 10, 150, 21);
         pnlBoLocHoaDon.add(rdbtn_TimMaHoaDon);
 
         rdbtn_SoDTKH = new JRadioButton("  Tìm số điện thoại khách hàng:");
-        rdbtn_SoDTKH.setHorizontalAlignment(SwingConstants.CENTER);
         rdbtn_SoDTKH.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_SoDTKH.setBackground(Color.WHITE);
-        rdbtn_SoDTKH.setBounds(33, 27, 221, 21);
+        rdbtn_SoDTKH.setBounds(10, 10, 221, 21);
         pnlBoLocHoaDon.add(rdbtn_SoDTKH);
 
         btn_TimHoaDon_1 = new JButton("Tìm");
@@ -127,11 +123,11 @@ public class HoaDonPanel extends JPanel {
         ChonNgay = new JDateChooser();
         ChonNgay.setDateFormatString("dd/MM/yyyy");
         ChonNgay.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        ChonNgay.setBounds(152, 233, 299, 30);
+        ChonNgay.setBounds(290, 101, 351, 30);
         pnlBoLocHoaDon.add(ChonNgay);
 
         rdbtn_ChonNgay = new JRadioButton("  Chọn ngày: ");
-        rdbtn_ChonNgay.setBounds(34, 237, 112, 21);
+        rdbtn_ChonNgay.setBounds(290, 73, 112, 21);
         pnlBoLocHoaDon.add(rdbtn_ChonNgay);
         rdbtn_ChonNgay.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_ChonNgay.setBackground(Color.WHITE);
@@ -139,27 +135,27 @@ public class HoaDonPanel extends JPanel {
         rdbtn_ChonKhoangTG = new JRadioButton("  Hóa đơn trong khoảng: ");
         rdbtn_ChonKhoangTG.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_ChonKhoangTG.setBackground(Color.WHITE);
-        rdbtn_ChonKhoangTG.setBounds(34, 293, 181, 21);
+        rdbtn_ChonKhoangTG.setBounds(651, 74, 181, 21);
         pnlBoLocHoaDon.add(rdbtn_ChonKhoangTG);
 
         NgayBD = new JDateChooser();
         NgayBD.setDateFormatString("dd/MM/yyyy");
         NgayBD.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        NgayBD.setBounds(221, 289, 102, 30);
+        NgayBD.setBounds(651, 101, 230, 30);
         pnlBoLocHoaDon.add(NgayBD);
 
         ngayKT = new JDateChooser();
         ngayKT.setDateFormatString("dd/MM/yyyy");
         ngayKT.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        ngayKT.setBounds(349, 289, 102, 30);
-        
+        ngayKT.setBounds(891, 101, 230, 30);
+
         pnlBoLocHoaDon.add(ngayKT);
 
         rdbtn_TrangThai = new JRadioButton(" Trạng thái:");
         rdbtn_TrangThai.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_TrangThai.setBackground(Color.WHITE);
-        rdbtn_TrangThai.setBounds(33, 183, 99, 21);
-      
+        rdbtn_TrangThai.setBounds(10, 74, 99, 21);
+
         pnlBoLocHoaDon.add(rdbtn_TrangThai);
         ButtonGroup group = new ButtonGroup();
         group.add(rdbtn_TimMaHoaDon);
@@ -167,39 +163,32 @@ public class HoaDonPanel extends JPanel {
         group.add(rdbtn_SoDTKH);
         group.add(rdbtn_ChonKhoangTG);
         group.add(rdbtn_TrangThai);
-        
-        JButton btn_TimHoaDon = new JButton("Tìm");
-        btn_TimHoaDon.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
-        btn_TimHoaDon.setBounds(434, 340, 131, 39);
+
+        btn_TimHoaDon = new JButton("Tìm");
+        btn_TimHoaDon.setBounds(1131, 102, 151, 30);
         pnlBoLocHoaDon.add(btn_TimHoaDon);
-      
-
-
 
         JLabel lbl_Boloc = new JLabel("Bộ lọc");
         lbl_Boloc.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        lbl_Boloc.setBounds(714, 349, 62, 20);
+        lbl_Boloc.setBounds(20, 49, 62, 20);
         add(lbl_Boloc);
 
         JLabel lbl_DanhSachHoaDon = new JLabel("Danh Sách Hóa Đơn");
         lbl_DanhSachHoaDon.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        lbl_DanhSachHoaDon.setBounds(20, 199, 180, 20);
+        lbl_DanhSachHoaDon.setBounds(20, 219, 180, 20);
         add(lbl_DanhSachHoaDon);
 
         JPanel pnlDanhSachHoaDon = new JPanel();
         pnlDanhSachHoaDon.setBackground(new Color(255, 255, 255));
         pnlDanhSachHoaDon.setBorder(new LineBorder(new Color(0, 0, 0)));
-        pnlDanhSachHoaDon.setBounds(20, 229, 668, 552);
+        pnlDanhSachHoaDon.setBounds(20, 249, 1292, 543);
         add(pnlDanhSachHoaDon);
 
         model_DSHD = new DefaultTableModel(new String[] {"Mã hóa đơn","Ngày lập","Tên khách hàng","Số điện thoại KH", "Tổng tiền","Trạng thái hóa đơn"}, 0);
         pnlDanhSachHoaDon.setLayout(null);
         table_DanhSachHoaDon = new JTable(model_DSHD);
         JScrollPane scrollPane = new JScrollPane(table_DanhSachHoaDon);
-        scrollPane.setBounds(10, 10, 648, 526);
+        scrollPane.setBounds(10, 10, 1272, 523);
         JTableHeader header = table_DanhSachHoaDon.getTableHeader();
         header.setFont(new Font("Times New Roman", Font.BOLD, 18));
         header.setBackground(new Color(10, 100, 189));
@@ -219,7 +208,7 @@ public class HoaDonPanel extends JPanel {
         header.setBackground(new Color(10, 100, 189));
         header.setForeground(Color.WHITE);
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
-//        hoaDonController = new HoaDonController(this);
+    //        hoaDonController = new HoaDonController(this);
         
         panel_1 = new JPanel();
         panel_1.setBounds(1326, 10, 210, 844);

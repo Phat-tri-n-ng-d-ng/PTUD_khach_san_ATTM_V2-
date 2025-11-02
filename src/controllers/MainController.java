@@ -50,10 +50,10 @@ public class MainController {
         nhanVienPanel = new NhanVienPanel();
         doi_Panel(nhanVienPanel);
     }
-//    public void showHoa_Don_Panel() {
-//        hoaDonPanel = new HoaDonPanel();
-//        doi_Panel(hoaDonPanel);
-//    }
+    public void showHoa_Don_Panel() {
+        hoaDonPanel = new HoaDonPanel();
+        doi_Panel(hoaDonPanel);
+    }
     public void showLoai_Phong_Panel() {
         loaiPhongPanel = new LoaiPhongPanel();
         doi_Panel(loaiPhongPanel);
