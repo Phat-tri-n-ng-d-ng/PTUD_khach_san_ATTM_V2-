@@ -102,10 +102,10 @@ public class NhanVienController implements MouseListener {
             String email = nhanVienPanel.table.getValueAt(row,5).toString();
             ChucVuNhanVien chucVuNhanVien = getChucVu(nhanVienPanel.table.getValueAt(row,6).toString());
 
-            NhanVien nv = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVuNhanVien);
+            NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVuNhanVien);
             NhanVienDialog dialog = new NhanVienDialog(
                     (JFrame) SwingUtilities.getWindowAncestor(nhanVienPanel),
-                    nv
+                    nhanVien
             );
             dialog.setVisible(true);
         }

@@ -115,13 +115,13 @@ public class NhanVienDialog extends JDialog {
 
         JLabel lbl_NgaySinh = new JLabel("Ngày sinh:");
         lbl_NgaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lbl_NgaySinh.setBounds(201, 199, 84, 16);
+        lbl_NgaySinh.setBounds(238, 204, 84, 16);
         pnl_ThongTinNhanVien.add(lbl_NgaySinh);
 
-        ngaySinh = new JDateChooser();
+        JDateChooser ngaySinh = new JDateChooser();
         ngaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngaySinh.setDateFormatString("dd/MM/yyyy");
-        ngaySinh.setBounds(201, 225, 255, 30);
+        ngaySinh.setBounds(238, 225, 218, 30);
         pnl_ThongTinNhanVien.add(ngaySinh);
 
         // Tính ngày hợp lệ (ít nhất 18 tuổi)

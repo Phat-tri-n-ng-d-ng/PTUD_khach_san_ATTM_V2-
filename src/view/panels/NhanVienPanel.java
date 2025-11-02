@@ -15,7 +15,6 @@ import com.toedter.calendar.JDateChooser;
 import controllers.NhanVienController;
 
 public class NhanVienPanel extends JPanel{
-    public JButton btn_VoHieuHoaTaiKhoan;
     public JButton btn_LamMoi;
     public JRadioButton rdbtn_TimMaNhanVien;
     public JRadioButton rdbtn_TimSoDienThoai;
@@ -38,7 +37,6 @@ public class NhanVienPanel extends JPanel{
     public DefaultTableModel model;
 
     public NhanVienPanel() {
-        setBounds(100, 100, 1336, 768);
         setBackground(new Color(236, 247, 255));
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(null);
@@ -46,24 +44,20 @@ public class NhanVienPanel extends JPanel{
         JLabel lbl_TieuDe = new JLabel("Nhân Viên");
         lbl_TieuDe.setForeground(new Color(10, 100, 189));
         lbl_TieuDe.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        lbl_TieuDe.setBounds(725, 10, 114, 24);
+        lbl_TieuDe.setBounds(609, 10, 114, 24);
         add(lbl_TieuDe);
 
 
         //thông tin nhân viên
         JLabel lbl_ThongTinNhanVien = new JLabel("Thông Tin Nhân Viên");
         lbl_ThongTinNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        lbl_ThongTinNhanVien.setBounds(230, 44, 180, 20);
+        lbl_ThongTinNhanVien.setBounds(20, 44, 180, 20);
         add(lbl_ThongTinNhanVien);
 
         JPanel pnlThongTinNhanVien = new JPanel();
         pnlThongTinNhanVien.setBackground(new Color(255, 255, 255));
         pnlThongTinNhanVien.setBorder(new LineBorder(new Color(0, 0, 0)));
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // lấy kích thước màng hình hiện tại
-        setSize(screenSize.width, screenSize.height);
-        int doDaiThongTinNhanVien = screenSize.width - 40;
-        int viChiDauThongTinNhanVien = (screenSize.width - doDaiThongTinNhanVien) / 2;
-        pnlThongTinNhanVien.setBounds(230, 74,1292 , 175);
+        pnlThongTinNhanVien.setBounds(20, 74,1292 , 175);
         add(pnlThongTinNhanVien);
         pnlThongTinNhanVien.setLayout(null);
 
@@ -74,7 +68,6 @@ public class NhanVienPanel extends JPanel{
 
         txt_TenNhanVien = new JTextField();
         txt_TenNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        int doDaiTxt = doDaiThongTinNhanVien/2 - 20;
         txt_TenNhanVien.setBounds(10, 33, 626, 30);
         pnlThongTinNhanVien.add(txt_TenNhanVien);
 
@@ -178,34 +171,34 @@ public class NhanVienPanel extends JPanel{
         JPanel pnlBoLoc = new JPanel();
         pnlBoLoc.setBorder(new LineBorder(new Color(0, 0, 0)));
         pnlBoLoc.setBackground(new Color(255, 255, 255));
-        pnlBoLoc.setBounds(230, 289, 1292, 104);
+        pnlBoLoc.setBounds(20, 289, 1292, 77);
         add(pnlBoLoc);
         pnlBoLoc.setLayout(null);
 
         txt_TimMaNhanVien = new JTextField();
         txt_TimMaNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        txt_TimMaNhanVien.setBounds(10, 33, 626, 30);
+        txt_TimMaNhanVien.setBounds(10, 33, 500, 30);
         pnlBoLoc.add(txt_TimMaNhanVien);
 
         txt_TimSoDienThoai = new JTextField();
         txt_TimSoDienThoai.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        txt_TimSoDienThoai.setBounds(652, 33, 626, 30);
+        txt_TimSoDienThoai.setBounds(520, 34, 500, 30);
         txt_TimSoDienThoai.setEditable(false);
         pnlBoLoc.add(txt_TimSoDienThoai);
 
         btn_Tim = new JButton("Tìm");
-        btn_Tim.setBounds(1166, 71, 112, 30);
+        btn_Tim.setBounds(1030, 34, 112, 30);
         pnlBoLoc.add(btn_Tim);
 
         JLabel lbl_ChucVu_1 = new JLabel("Chức vụ:");
         lbl_ChucVu_1.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lbl_ChucVu_1.setBounds(1382, 10, 104, 20);
+        lbl_ChucVu_1.setBounds(1152, 11, 104, 20);
         pnlBoLoc.add(lbl_ChucVu_1);
 
         cbb_LocChucVu = new JComboBox();
         cbb_LocChucVu.setModel(new DefaultComboBoxModel(new String[] {"Tất cả", "Quản lý", "Lễ tân", "Kế toán", "Kỹ thuật", "Buồng phòng", "Bếp", "Bảo vệ"}));
         cbb_LocChucVu.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        cbb_LocChucVu.setBounds(1382, 33, 104, 30);
+        cbb_LocChucVu.setBounds(1152, 33, 130, 30);
         pnlBoLoc.add(cbb_LocChucVu);
 
         rdbtn_TimMaNhanVien = new JRadioButton("Tìm mã nhân viên");
@@ -218,7 +211,7 @@ public class NhanVienPanel extends JPanel{
         rdbtn_TimSoDienThoai = new JRadioButton("Tìm số điện thoại");
         rdbtn_TimSoDienThoai.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_TimSoDienThoai.setBackground(Color.WHITE);
-        rdbtn_TimSoDienThoai.setBounds(652, 10, 137, 21);
+        rdbtn_TimSoDienThoai.setBounds(520, 11, 137, 21);
         pnlBoLoc.add(rdbtn_TimSoDienThoai);
 
         ButtonGroup groupTimKiem = new ButtonGroup();
@@ -227,27 +220,27 @@ public class NhanVienPanel extends JPanel{
 
         JLabel lbl_BoLoc = new JLabel("Bộ Lọc");
         lbl_BoLoc.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        lbl_BoLoc.setBounds(230, 259, 70, 20);
+        lbl_BoLoc.setBounds(20, 259, 70, 20);
         add(lbl_BoLoc);
 
 
         //Danh sách nhân viên
         JLabel lbl_DanhSachNhanVien = new JLabel("Danh Sách Nhân Viên");
         lbl_DanhSachNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        lbl_DanhSachNhanVien.setBounds(230, 403, 180, 20);
+        lbl_DanhSachNhanVien.setBounds(20, 376, 180, 20);
         add(lbl_DanhSachNhanVien);
 
         JPanel pnlDanhSachNhanVien = new JPanel();
         pnlDanhSachNhanVien.setBackground(new Color(255, 255, 255));
         pnlDanhSachNhanVien.setBorder(new LineBorder(new Color(0, 0, 0)));
-        pnlDanhSachNhanVien.setBounds(230, 433, 1292, 358);
+        pnlDanhSachNhanVien.setBounds(20, 406, 1292, 385);
         add(pnlDanhSachNhanVien);
 
         model = new DefaultTableModel(new String[] {"Mã nhân viên","Tên nhân viên","Giới tính","Ngày sinh","Số điện thoại","Email","Chức vụ","Tài khoản"}, 0);
         pnlDanhSachNhanVien.setLayout(null);
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 1272, 338);
+        scrollPane.setBounds(10, 10, 1272, 365);
         JTableHeader header = table.getTableHeader(); // chỉnh sửa header
         header.setFont(new Font("Times New Roman", Font.BOLD, 18));
         header.setBackground(new Color(10, 100, 189));
