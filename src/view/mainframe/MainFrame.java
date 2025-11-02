@@ -19,12 +19,12 @@ public class MainFrame extends JFrame {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        setVisible(true); // ⚠️ bắt buộc để hiển thị frame
+        setVisible(true); // bắt buộc để hiển thị frame
     }
 
     public void addPanel(JPanel panel, String name) {
         mainPanel.add(panel, name);
-        mainPanel.revalidate(); // ⚠️ cập nhật layout
+        mainPanel.revalidate(); // cập nhật layout
         mainPanel.repaint();
     }
 
