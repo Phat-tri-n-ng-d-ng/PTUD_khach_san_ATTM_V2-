@@ -23,9 +23,7 @@ public class NhanVienPanel extends JPanel{
     public JRadioButton rdbtn_Nu;
     private NhanVienController nhanVienController;
     public JButton btn_Tim;
-    public JButton btn_CapTaiKhoan;
     public JButton btn_ThemNhanVien;
-    public JButton btn_CapNhat;
     public JTextField txt_TenNhanVien;
     public JTextField txt_SoDienThoai;
     public JTextField txt_Email;
@@ -34,9 +32,7 @@ public class NhanVienPanel extends JPanel{
     public JTable table;
     public JComboBox cbb_ChucVu;
     public DefaultTableModel model;
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    int screenWidth = (int) screenSize.getWidth();
-    int screenHeight = (int) screenSize.getHeight();
+    public LocalDate maxDate;
 
     public NhanVienPanel() {
         setBounds(100, 100, 1336, 768);
@@ -122,6 +118,27 @@ public class NhanVienPanel extends JPanel{
         ngaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngaySinh.setBounds(156, 94, 210, 30);
         pnlThongTinNhanVien.add(ngaySinh);
+
+        // Tính ngày hợp lệ (ít nhất 18 tuổi)
+        LocalDate today = LocalDate.now();
+        maxDate = today.minusYears(18);
+        LocalDate minDate = today.minusYears(100); // Giới hạn tối đa 100 tuổi nếu cần
+
+        // Thiết lập khoảng hợp lệ
+        ngaySinh.setMaxSelectableDate(java.sql.Date.valueOf(maxDate));
+        ngaySinh.setMinSelectableDate(java.sql.Date.valueOf(minDate));
+
+        // Set ngày mặc định (ví dụ: đủ 18 tuổi tính đến hôm nay)
+        ngaySinh.setDate(java.sql.Date.valueOf(maxDate));
+
+        // Khi click hoặc focus thì tự động mở popup
+        Component editor = ngaySinh.getDateEditor().getUiComponent();
+        editor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                ngaySinh.getCalendarButton().doClick();
+            }
+        });
 
         JLabel lbl_Email = new JLabel("Email:");
         lbl_Email.setFont(new Font("Times New Roman", Font.PLAIN, 16));

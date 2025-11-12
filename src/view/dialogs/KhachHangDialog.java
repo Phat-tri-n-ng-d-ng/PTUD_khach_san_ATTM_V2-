@@ -25,6 +25,8 @@ public class KhachHangDialog extends JDialog{
     public JRadioButton rdbtn_Nam;
     public JRadioButton rdbtn_Nu;
     private KhachHangDialogController khachHangDialogController;
+    public JButton btn_Dong;
+    public JButton btn_CapNhat;
 
     public KhachHangDialog(JFrame mainframe, KhachHang khachHang) {
         super(mainframe, "Thông tin nhân viên", true);
@@ -117,9 +119,6 @@ public class KhachHangDialog extends JDialog{
         ngaySinh.setMaxSelectableDate(java.sql.Date.valueOf(maxDate));
         ngaySinh.setMinSelectableDate(java.sql.Date.valueOf(minDate));
 
-        // Set ngày mặc định (ví dụ: đủ 18 tuổi tính đến hôm nay)
-        ngaySinh.setDate(java.sql.Date.valueOf(maxDate));
-
         // Khi click hoặc focus thì tự động mở popup
         Component editor = ngaySinh.getDateEditor().getUiComponent();
         editor.addMouseListener(new MouseAdapter() {
@@ -169,12 +168,12 @@ public class KhachHangDialog extends JDialog{
         txt_DiemTichLuy.setBounds(10, 350, 218, 30);
         pnl_ThongTinNhanVien.add(txt_DiemTichLuy);
 
-        JButton btn_Dong = new JButton("Đóng");
+        btn_Dong = new JButton("Đóng");
         btn_Dong.setActionCommand("Cancel");
         btn_Dong.setBounds(356, 463, 120, 30);
         getContentPane().add(btn_Dong);
 
-        JButton btn_CapNhat = new JButton("Cập nhật");
+        btn_CapNhat = new JButton("Cập nhật");
         btn_CapNhat.setActionCommand("OK");
         btn_CapNhat.setBounds(226, 463, 120, 30);
         getContentPane().add(btn_CapNhat);

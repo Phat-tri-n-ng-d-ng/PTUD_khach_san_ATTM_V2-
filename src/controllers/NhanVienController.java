@@ -1,7 +1,10 @@
 package controllers;
 
 import entitys.NhanVien;
+import entitys.TaiKhoan;
 import enums.ChucVuNhanVien;
+import enums.TrangThaiTaiKhoan;
+import services.NhanVienService;
 import view.dialogs.NhanVienDialog;
 import view.panels.NhanVienPanel;
 
@@ -17,13 +20,17 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 public class NhanVienController implements MouseListener {
+    private NhanVienService nhanVienService;
     private NhanVienPanel nhanVienPanel;
 
     public NhanVienController(NhanVienPanel nhanVienPanel){
+        nhanVienService = new NhanVienService();
         this.nhanVienPanel = nhanVienPanel;
 
         nhanVienPanel.btn_ThemNhanVien.addActionListener(e -> ThemNhanVien());
         nhanVienPanel.btn_LamMoi.addActionListener(e -> LamMoi());
+        nhanVienPanel.btn_Tim.addActionListener(e -> TimNhanVien());
+        nhanVienPanel.cbb_LocChucVu.addActionListener(e -> LocNhanVienTheoChucVu());
 
         nhanVienPanel.table.addMouseListener(this);
 
@@ -31,34 +38,34 @@ public class NhanVienController implements MouseListener {
     }
 
     public void getTatCaNhanVien(){
-        ArrayList<NhanVien> dsNhanVien = new ArrayList<>();
-        NhanVien nv1 = new NhanVien("NV001","NV1",LocalDate.now(),"0123456789",false,"123@gmail.com",ChucVuNhanVien.QuanLy);
-        NhanVien nv2 = new NhanVien("NV002","NV2",LocalDate.now(),"0123456789",false,"123@gmail.com",ChucVuNhanVien.LeTan);
-        NhanVien nv3 = new NhanVien("NV001","NV3",LocalDate.now(),"0123456789",false,"123@gmail.com",ChucVuNhanVien.BaoVe);
-        dsNhanVien.add(nv1);
-        dsNhanVien.add(nv2);
-        dsNhanVien.add(nv3);
-
-        DefaultTableModel model = nhanVienPanel.model;
-        model.setRowCount(0); // Xóa dữ liệu cũ trong bảng trước khi load mới
-        for (NhanVien nv : dsNhanVien) {
-            String gioiTinh = nv.isGioiTinh() ? "Nam" : "Nữ"; // Nếu có kiểu boolean
-            model.addRow(new Object[]{
-                    nv.getMaNV(),
-                    nv.getTenNV(),
-                    gioiTinh,
-                    nv.getNgaySinh(),
-                    nv.getSdt(),
-                    nv.getEmail(),
-                    getChucVuHienThi(nv.getChucVu()),
-            });
+        try {
+            ArrayList<NhanVien> dsNhanVien = nhanVienService.getTatCaNhanVien();
+            DefaultTableModel model = nhanVienPanel.model;
+            model.setRowCount(0); // Xóa dữ liệu cũ trong bảng trước khi load mới
+            for (NhanVien nv : dsNhanVien) {
+                String gioiTinh = nv.isGioiTinh() ? "Nam" : "Nữ"; // Nếu có kiểu boolean
+                model.addRow(new Object[]{
+                        nv.getMaNV(),
+                        nv.getTenNV(),
+                        gioiTinh,
+                        nv.getNgaySinh(),
+                        nv.getSdt(),
+                        nv.getEmail(),
+                        getChucVuHienThi(nv.getChucVu()),
+                        (nv.getTaiKhoan() != null)
+                                ? getTrangThaiTaiKhoanHienThi(nv.getTaiKhoan().getTrangThai())
+                                : ""
+                });
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void ThemNhanVien(){
         if(kiemTraDuLieu()){
             int namHienTai = LocalDate.now().getYear();
-            String maNV = "NV" + (namHienTai % 100) + String.format("%03d", nhanVienPanel.table.getRowCount() + 1);
+            String maNV = "NV" + (namHienTai % 100) +  String.format("%03d", nhanVienService.getSoLuongNhanVien() + 1);
             String tenNV = nhanVienPanel.txt_TenNhanVien.getText().strip();
             String sdt = nhanVienPanel.txt_SoDienThoai.getText().strip();
             boolean gioiTinh = nhanVienPanel.rdbtn_Nam.isSelected() ? true : false;
@@ -74,18 +81,76 @@ public class NhanVienController implements MouseListener {
             String email = nhanVienPanel.txt_Email.getText().strip();
 
             NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu);
-            JOptionPane.showMessageDialog(nhanVienPanel, "Thêm thành công");
-            String gt = nhanVien.isGioiTinh() ? "Nam" : "Nữ";
-            nhanVienPanel.model.addRow(new Object[]{
-                    nhanVien.getMaNV(),
-                    nhanVien.getTenNV(),
-                    gt,
-                    nhanVien.getNgaySinh(),
-                    nhanVien.getSdt(),
-                    nhanVien.getEmail(),
-                    getChucVuHienThi(nhanVien.getChucVu())
+            if(nhanVienService.themNhanVien(nhanVien)){
+                JOptionPane.showMessageDialog(nhanVienPanel, "Thêm thành công");
+                LamMoi();
+                getTatCaNhanVien();
+            }else{
+                JOptionPane.showMessageDialog(nhanVienPanel, "Nhân viên đã tồn tại");
+            }
+        }
+    }
+
+    private void TimNhanVien() {
+        try {
+            NhanVien nv;
+            if (nhanVienPanel.rdbtn_TimMaNhanVien.isSelected()) {
+                String maNV = nhanVienPanel.txt_TimMaNhanVien.getText().strip();
+                nv = nhanVienService.TimNhanVien(maNV, "MA");
+            } else {
+                String soDT = nhanVienPanel.txt_TimSoDienThoai.getText().strip();
+                nv = nhanVienService.TimNhanVien(soDT, "SDT");
+            }
+
+            if (nv != null) {
+                DefaultTableModel model = nhanVienPanel.model;
+                model.setRowCount(0);
+                String gioiTinh = nv.isGioiTinh() ? "Nam" : "Nữ";
+                model.addRow(new Object[]{
+                        nv.getMaNV(),
+                        nv.getTenNV(),
+                        gioiTinh,
+                        nv.getNgaySinh(),
+                        nv.getSdt(),
+                        nv.getEmail(),
+                        getChucVuHienThi(nv.getChucVu()),
+                        (nv.getTaiKhoan() != null)
+                                ? getTrangThaiTaiKhoanHienThi(nv.getTaiKhoan().getTrangThai())
+                                : ""
+                });
+            } else {
+                JOptionPane.showMessageDialog(nhanVienPanel, "Không tìm thấy nhân viên");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void LocNhanVienTheoChucVu() {
+        String chucVuChon = nhanVienPanel.cbb_LocChucVu.getSelectedItem().toString();
+        ArrayList<NhanVien> dsNhanVien;
+        if (chucVuChon.equals("Tất cả")) {
+            dsNhanVien = nhanVienService.getTatCaNhanVien(); // gọi lấy toàn bộ
+        } else {
+            ChucVuNhanVien chucVu = getChucVu(chucVuChon);
+            dsNhanVien = nhanVienService.getNhanVienTheoChucVu(chucVu.toString());
+        }
+        DefaultTableModel model = nhanVienPanel.model;
+        model.setRowCount(0);
+        for (NhanVien nv : dsNhanVien) {
+            String gioiTinh = nv.isGioiTinh() ? "Nam" : "Nữ";
+            model.addRow(new Object[]{
+                    nv.getMaNV(),
+                    nv.getTenNV(),
+                    gioiTinh,
+                    nv.getNgaySinh(),
+                    nv.getSdt(),
+                    nv.getEmail(),
+                    getChucVuHienThi(nv.getChucVu()),
+                    (nv.getTaiKhoan() != null)
+                            ? getTrangThaiTaiKhoanHienThi(nv.getTaiKhoan().getTrangThai())
+                            : ""
             });
-            LamMoi();
         }
     }
 
@@ -101,13 +166,18 @@ public class NhanVienController implements MouseListener {
             String sdt = nhanVienPanel.table.getValueAt(row,4).toString();
             String email = nhanVienPanel.table.getValueAt(row,5).toString();
             ChucVuNhanVien chucVuNhanVien = getChucVu(nhanVienPanel.table.getValueAt(row,6).toString());
-
-            NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVuNhanVien);
+            TrangThaiTaiKhoan trangThaiTaiKhoan = getTrangThaiTaiKhoan(nhanVienPanel.table.getValueAt(row,7).toString());
+            TaiKhoan tk = null;
+            if (trangThaiTaiKhoan != null && !trangThaiTaiKhoan.toString().trim().isEmpty()) {
+                tk = new TaiKhoan(sdt,trangThaiTaiKhoan);
+            }
+            NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVuNhanVien,tk);
             NhanVienDialog dialog = new NhanVienDialog(
                     (JFrame) SwingUtilities.getWindowAncestor(nhanVienPanel),
                     nhanVien
             );
             dialog.setVisible(true);
+            LamMoi();
         }
     }
 
@@ -222,6 +292,16 @@ public class NhanVienController implements MouseListener {
         nhanVienPanel.cbb_ChucVu.addActionListener(e->{
             nhanVienPanel.txt_Email.requestFocus();
         });
+        nhanVienPanel.rdbtn_TimMaNhanVien.addActionListener(e ->{
+            nhanVienPanel.txt_TimMaNhanVien.setEditable(true);
+            nhanVienPanel.txt_TimMaNhanVien.requestFocus();
+            nhanVienPanel.txt_TimSoDienThoai.setEditable(false);
+        });
+        nhanVienPanel.rdbtn_TimSoDienThoai.addActionListener(e -> {
+            nhanVienPanel.txt_TimMaNhanVien.setEditable(false);
+            nhanVienPanel.txt_TimSoDienThoai.requestFocus();
+            nhanVienPanel.txt_TimSoDienThoai.setEditable(true);
+        });
     }
 
     private  void LamMoi(){
@@ -232,10 +312,11 @@ public class NhanVienController implements MouseListener {
         nhanVienPanel.txt_Email.setText("");
         nhanVienPanel.txt_TimMaNhanVien.setText("");
         nhanVienPanel.txt_TimSoDienThoai.setText("");
-        nhanVienPanel.ngaySinh.setDate(null);
+        nhanVienPanel.ngaySinh.setDate(java.sql.Date.valueOf(nhanVienPanel.maxDate));
         nhanVienPanel.cbb_ChucVu.setSelectedIndex(0);
         nhanVienPanel.cbb_LocChucVu.setSelectedIndex(0);
         nhanVienPanel.txt_TenNhanVien.requestFocus();
+        getTatCaNhanVien();
     }
 
     private ChucVuNhanVien getChucVu(String tenChucVu) {
@@ -261,6 +342,21 @@ public class NhanVienController implements MouseListener {
             case Bep -> { return "Bếp"; }
             case BaoVe -> { return "Bảo vệ"; }
             default -> { return ""; }
+        }
+    }
+    private String getTrangThaiTaiKhoanHienThi(TrangThaiTaiKhoan trangThaiTaiKhoan) {
+        switch (trangThaiTaiKhoan) {
+            case DangHoatDong -> { return "Đang hoạt động"; }
+            case VoHieuHoa -> { return "Vô hiệu hóa"; }
+            default -> { return ""; }
+        }
+    }
+
+    private TrangThaiTaiKhoan getTrangThaiTaiKhoan(String trangThai) {
+        switch (trangThai) {
+            case "Đang hoạt động" -> { return TrangThaiTaiKhoan.DangHoatDong; }
+            case "Vô hiệu hóa" -> { return TrangThaiTaiKhoan.VoHieuHoa; }
+            default -> { return null; }
         }
     }
 }

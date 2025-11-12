@@ -7,5 +7,5 @@ public enum ChucVuNhanVien {
     BuongPhong,
     Bep,
     BaoVe,
-    QuanLy
+    QuanLy;
 }

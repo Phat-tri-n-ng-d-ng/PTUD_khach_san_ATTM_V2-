@@ -33,11 +33,11 @@ public class NhanVienDialog extends JDialog {
     public JRadioButton rdbtn_Nu;
     public JComboBox cbb_ChucVu;
     public JComboBox cbb_TrangThaiTaiKhoan;
+    public JLabel lpl_TrangThaiTaiKhoan;
 
     public NhanVienDialog(JFrame mainframe, NhanVien nv) {
         super(mainframe, "Thông tin nhân viên", true);
         this.nhanVien = nv;
-
         giaoDienDialog();
         setLocationRelativeTo(mainframe);
     }
@@ -69,12 +69,14 @@ public class NhanVienDialog extends JDialog {
         txt_MaNhanVien = new JTextField();
         txt_MaNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         txt_MaNhanVien.setBounds(10, 33, 446, 30);
+        txt_MaNhanVien.setEnabled(false);
+        txt_MaNhanVien.setEditable(false);
         pnl_ThongTinNhanVien.add(txt_MaNhanVien);
 
-        JLabel lpl_TenNhanVien_1 = new JLabel("Tên nhân viên:");
-        lpl_TenNhanVien_1.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lpl_TenNhanVien_1.setBounds(10, 73, 546, 16);
-        pnl_ThongTinNhanVien.add(lpl_TenNhanVien_1);
+        JLabel lpl_TenNhanVien = new JLabel("Tên nhân viên:");
+        lpl_TenNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        lpl_TenNhanVien.setBounds(10, 73, 546, 16);
+        pnl_ThongTinNhanVien.add(lpl_TenNhanVien);
 
         txt_TenNhanVien = new JTextField();
         txt_TenNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -118,7 +120,7 @@ public class NhanVienDialog extends JDialog {
         lbl_NgaySinh.setBounds(238, 204, 84, 16);
         pnl_ThongTinNhanVien.add(lbl_NgaySinh);
 
-        JDateChooser ngaySinh = new JDateChooser();
+        ngaySinh = new JDateChooser();
         ngaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngaySinh.setDateFormatString("dd/MM/yyyy");
         ngaySinh.setBounds(238, 225, 218, 30);
@@ -132,9 +134,6 @@ public class NhanVienDialog extends JDialog {
         // Thiết lập khoảng hợp lệ
         ngaySinh.setMaxSelectableDate(java.sql.Date.valueOf(maxDate));
         ngaySinh.setMinSelectableDate(java.sql.Date.valueOf(minDate));
-
-        // Set ngày mặc định (ví dụ: đủ 18 tuổi tính đến hôm nay)
-        ngaySinh.setDate(java.sql.Date.valueOf(maxDate));
 
         // Khi click hoặc focus thì tự động mở popup
         Component editor = ngaySinh.getDateEditor().getUiComponent();
@@ -166,9 +165,9 @@ public class NhanVienDialog extends JDialog {
         lpl_Email.setBounds(10, 261, 92, 16);
         pnl_ThongTinNhanVien.add(lpl_Email);
 
-        JLabel lpl_TrangThaiTaiKhoan = new JLabel("Chức vụ:");
+        lpl_TrangThaiTaiKhoan = new JLabel("Trạng thái tài khoản:");
         lpl_TrangThaiTaiKhoan.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lpl_TrangThaiTaiKhoan.setBounds(239, 324, 77, 16);
+        lpl_TrangThaiTaiKhoan.setBounds(239, 324, 130, 16);
         pnl_ThongTinNhanVien.add(lpl_TrangThaiTaiKhoan);
 
         cbb_TrangThaiTaiKhoan = new JComboBox();

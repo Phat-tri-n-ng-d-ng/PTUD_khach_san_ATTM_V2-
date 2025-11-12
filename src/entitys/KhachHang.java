@@ -1,7 +1,7 @@
 package entitys;
 
 
-import enums.HangKhachHang;
+import entitys.HangKhachHang;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -15,7 +15,7 @@ public class KhachHang {
     private String sdt;
     private String soCCCD;
     private HangKhachHang hangKH;
-    private int diemTichLuy;
+    private double diemTichLuy;
     public String getMaKH() {
         return maKH;
     }
@@ -59,20 +59,14 @@ public class KhachHang {
     public HangKhachHang getHangKH() {
         return hangKH;
     }
-    public void setHangKH() {
-        this.hangKH = HangKhachHang.Dong;
+    public void setHangKH(HangKhachHang hangKhachHang) {
+        this.hangKH = hangKhachHang;
     }
-    public void setHangKH(int diemTichLuy) {
-        if(diemTichLuy>=0 && diemTichLuy<=10) this.hangKH = HangKhachHang.Dong;
-        else if(diemTichLuy>10 && diemTichLuy<=20) this.hangKH = HangKhachHang.Bac;
-        else if(diemTichLuy>20 && diemTichLuy<=40) this.hangKH = HangKhachHang.Vang;
-        else this.hangKH = HangKhachHang.KimCuong;
-    }
-    public int getDiemTichLuy() {
+    public double getDiemTichLuy() {
         return diemTichLuy;
     }
-    public void setDiemTichLuy() {
-        this.diemTichLuy = 0;
+    public void setDiemTichLuy(double diemTichLuy) {
+        this.diemTichLuy = diemTichLuy;
     }
     public KhachHang(String maKH, String tenKH, boolean gioiTinh, LocalDate ngaySinh, String email, String sdt,
                      String soCCCD) {
@@ -84,12 +78,10 @@ public class KhachHang {
         this.email = email;
         this.sdt = sdt;
         this.soCCCD = soCCCD;
-        setHangKH();
-        setDiemTichLuy();
     }
 
     public KhachHang(String maKH, String tenKH, boolean gioiTinh, LocalDate ngaySinh, String email, String sdt,
-                     String soCCCD, int diemTichLuy) {
+                     String soCCCD, double diemTichLuy, HangKhachHang hangKhachHang) {
         super();
         this.maKH = maKH;
         this.tenKH = tenKH;
@@ -98,7 +90,7 @@ public class KhachHang {
         this.email = email;
         this.sdt = sdt;
         this.soCCCD = soCCCD;
-        setHangKH(diemTichLuy);
+        this.hangKH = hangKhachHang;
         this.diemTichLuy = diemTichLuy;
     }
 
