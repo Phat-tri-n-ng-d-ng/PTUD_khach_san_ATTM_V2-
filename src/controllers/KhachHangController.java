@@ -1,9 +1,10 @@
 package controllers;
 
+import entitys.HangKhachHang;
 import entitys.KhachHang;
 import entitys.NhanVien;
 import enums.ChucVuNhanVien;
-import enums.HangKhachHang;
+import services.KhachHangService;
 import view.dialogs.KhachHangDialog;
 import view.dialogs.NhanVienDialog;
 import view.panels.KhachHangPanel;
@@ -13,17 +14,23 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class KhachHangController implements MouseListener {
+    private KhachHangService khachHangService;
     private KhachHangPanel khachHangPanel;
 
+
     public KhachHangController(KhachHangPanel khachHangPanel){
+        khachHangService = new KhachHangService();
         this.khachHangPanel = khachHangPanel;
 
         khachHangPanel.btn_ThemKhachHang.addActionListener(e -> ThemKhachHang());
         khachHangPanel.btn_LamMoi.addActionListener(e -> LamMoi());
+        khachHangPanel.cbb_LocHangKhachHang.addActionListener(e -> getKhachHangTheoHang());
+        khachHangPanel.btn_Tim.addActionListener(e -> TimKhachHang());
 
         khachHangPanel.table.addMouseListener(this);
 
@@ -31,15 +38,69 @@ public class KhachHangController implements MouseListener {
     }
 
     public void getTatCaKhachHang(){
-        ArrayList<KhachHang> dsKhachHang = new ArrayList<>();
-        KhachHang kh1 = new KhachHang("KH001","KH1",false,LocalDate.parse("2005-01-01"),"123@gmail.com","0123456789", "123456789012",0 );
-        KhachHang kh2 = new KhachHang("KH002","KH2",false,LocalDate.parse("2005-01-01"),"123@gmail.com","0123456789", "123456789012",0 );
-        KhachHang kh3 = new KhachHang("KH003","KH3",false,LocalDate.parse("2005-01-01"),"123@gmail.com","0123456789", "123456789012",0 );
-        dsKhachHang.add(kh1);
-        dsKhachHang.add(kh2);
-        dsKhachHang.add(kh3);
+        try {
+            ArrayList<KhachHang> dsKhachHang = khachHangService.getTatCaKhachHang();
+            DefaultTableModel model = khachHangPanel.model;
+            model.setRowCount(0); // Xóa dữ liệu cũ trong bảng trước khi load mới
+            for (KhachHang kh : dsKhachHang) {
+                String gioiTinh = kh.isGioiTinh() ? "Nam" : "Nữ"; // Nếu có kiểu boolean
+                model.addRow(new Object[]{
+                        kh.getMaKH(),
+                        kh.getTenKH(),
+                        gioiTinh,
+                        kh.getNgaySinh(),
+                        kh.getSdt(),
+                        kh.getEmail(),
+                        kh.getSoCCCD(),
+                        kh.getHangKH().getTenHang(),
+                        kh.getDiemTichLuy()
+                });
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ThemKhachHang() {
+        int row = khachHangPanel.table.getSelectedRow();
+        if(row == -1){
+            int namHienTai = LocalDate.now().getYear();
+            String maKH = "KH" + (namHienTai % 100) + String.format("%03d", khachHangService.getSoLuongKhachHang() + 1);
+            String tenKH = khachHangPanel.txt_TenKhachHang.getText().strip();
+            String sdt = khachHangPanel.txt_SoDienThoai.getText().strip();
+            boolean gioiTinh = khachHangPanel.rdbtn_Nam.isSelected() ? true : false;
+            Date date = khachHangPanel.ngaySinh.getDate();
+            LocalDate ngaySinh = null;
+            if (date != null) {
+                ngaySinh = date.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+            }
+            String soCCCD = khachHangPanel.txt_soCCCD.getText().strip();
+            String email = khachHangPanel.txt_Email.getText().strip();
+
+            KhachHang khachHang = new KhachHang(maKH, tenKH, gioiTinh, ngaySinh, email, sdt,
+                    soCCCD);
+            if(khachHangService.themKhachHang(khachHang)){
+                JOptionPane.showMessageDialog(khachHangPanel, "Thêm thành công");
+                LamMoi();
+                getTatCaKhachHang();
+            }else{
+                JOptionPane.showMessageDialog(khachHangPanel, "Thêm thất bại");
+            }
+        }else JOptionPane.showMessageDialog(khachHangPanel, "Nhân viên đã tồn tại");
+    }
+
+    private void getKhachHangTheoHang() {
+        String hangKhachHangChon = khachHangPanel.cbb_LocHangKhachHang.getSelectedItem().toString();
+        ArrayList<KhachHang> dsKhachHang;
+        if (hangKhachHangChon.equals("Tất cả")) {
+            dsKhachHang = khachHangService.getTatCaKhachHang(); // gọi lấy toàn bộ
+        } else {
+            dsKhachHang = khachHangService.getKhachHangTheoHang(hangKhachHangChon);
+        }
         DefaultTableModel model = khachHangPanel.model;
-        model.setRowCount(0); // Xóa dữ liệu cũ trong bảng trước khi load mới
+        model.setRowCount(0);
         for (KhachHang kh : dsKhachHang) {
             String gioiTinh = kh.isGioiTinh() ? "Nam" : "Nữ"; // Nếu có kiểu boolean
             model.addRow(new Object[]{
@@ -50,13 +111,42 @@ public class KhachHangController implements MouseListener {
                     kh.getSdt(),
                     kh.getEmail(),
                     kh.getSoCCCD(),
-                    getHangKhachHienThi(kh.getHangKH()),
+                    kh.getHangKH().getTenHang(),
                     kh.getDiemTichLuy()
             });
         }
     }
 
-    private void ThemKhachHang() {
+    private void TimKhachHang() {
+        try {
+            KhachHang kh;
+            if(khachHangPanel.rdbtn_TimSoCanCuocCongDan.isSelected()){
+                String soCCCD = khachHangPanel.txt_TimSoCanCuocCongDan.getText().strip();
+                kh = khachHangService.TimKhachHang(soCCCD,"CCCD");
+            }else{
+                String soDT = khachHangPanel.txt_TimSoDienThoai.getText().strip();
+                kh = khachHangService.TimKhachHang(soDT,"SDT");
+            }
+            if(kh != null){
+                DefaultTableModel model = khachHangPanel.model;
+                model.setRowCount(0);
+                String gioiTinh = kh.isGioiTinh() ? "Nam" : "Nữ"; // Nếu có kiểu boolean
+                model.addRow(new Object[]{
+                        kh.getMaKH(),
+                        kh.getTenKH(),
+                        gioiTinh,
+                        kh.getNgaySinh(),
+                        kh.getSdt(),
+                        kh.getEmail(),
+                        kh.getSoCCCD(),
+                        kh.getHangKH().getTenHang(),
+                        kh.getDiemTichLuy()
+                });
+            }else JOptionPane.showMessageDialog(khachHangPanel,"Không tìm thấy khách hàng");
+        }catch (Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(khachHangPanel, "Lỗi khi tìm khách hàng: " + e.getMessage());
+        }
     }
 
     @Override
@@ -71,11 +161,13 @@ public class KhachHangController implements MouseListener {
             String sdt = khachHangPanel.table.getValueAt(row, 4).toString();
             String email = khachHangPanel.table.getValueAt(row, 5).toString();
             String soCCCD = khachHangPanel.table.getValueAt(row, 6).toString();
-            HangKhachHang hangKhachHang = getHangKhachHang(khachHangPanel.table.getValueAt(row, 5).toString());
-            int diemTichLuy = Integer.parseInt(khachHangPanel.table.getValueAt(row, 8).toString());
+            String tenHang = khachHangPanel.table.getValueAt(row, 7).toString();
+            String maHang = khachHangService.getMaHang(tenHang);
+            double diemTichLuy = Double.parseDouble(khachHangPanel.table.getValueAt(row, 8).toString());
 
+            HangKhachHang hangKhachHang = new entitys.HangKhachHang(maHang,tenHang);
             KhachHang khachHang = new KhachHang(maKH, tenKH, gioiTinh, ngaySinh, email, sdt,
-                    soCCCD,0);
+                    soCCCD,diemTichLuy, hangKhachHang);
             KhachHangDialog dialog = new KhachHangDialog(
                     (JFrame) SwingUtilities.getWindowAncestor(khachHangPanel),
                     khachHang
@@ -115,29 +207,20 @@ public class KhachHangController implements MouseListener {
         khachHangPanel.txt_TimSoDienThoai.setText("");
         khachHangPanel.txt_TimSoCanCuocCongDan.setText("");
         khachHangPanel.cbb_LocHangKhachHang.setSelectedIndex(0);
-        khachHangPanel.ngaySinh.setDate(null);
+        khachHangPanel.ngaySinh.setDate(java.sql.Date.valueOf(khachHangPanel.maxDate));
+        getTatCaKhachHang();
     }
 
     private void suKienTextField() {
-    }
-
-    private HangKhachHang getHangKhachHang(String tenHangKhachHang) {
-        switch (tenHangKhachHang) {
-            case "Đồng" -> { return HangKhachHang.Dong ; }
-            case "Bạc" -> { return HangKhachHang.Bac; }
-            case "Vàng" -> { return HangKhachHang.Vang; }
-            case "Kim cương" -> { return HangKhachHang.KimCuong; }
-            default -> { return HangKhachHang.Dong; }
-        }
-    }
-
-    private String getHangKhachHienThi(HangKhachHang hangKhachHang) {
-        switch (hangKhachHang) {
-            case Dong -> { return "Đồng"; }
-            case Bac -> { return "Bạc"; }
-            case Vang -> { return "Vàng"; }
-            case KimCuong -> { return "Kim cương"; }
-            default -> { return ""; }
-        }
+        khachHangPanel.rdbtn_TimSoCanCuocCongDan.addActionListener(e ->{
+            khachHangPanel.txt_TimSoCanCuocCongDan.setEditable(true);
+            khachHangPanel.rdbtn_TimSoCanCuocCongDan.requestFocus();
+            khachHangPanel.txt_TimSoDienThoai.setEditable(false);
+        });
+        khachHangPanel.rdbtn_TimSoDienThoai.addActionListener(e -> {
+            khachHangPanel.txt_TimSoCanCuocCongDan.setEditable(false);
+            khachHangPanel.txt_TimSoDienThoai.requestFocus();
+            khachHangPanel.txt_TimSoDienThoai.setEditable(true);
+        });
     }
 }

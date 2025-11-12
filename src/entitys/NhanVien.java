@@ -14,6 +14,7 @@ public class NhanVien {
     private String email;
     private ChucVuNhanVien chucVu;
     private TaiKhoan taiKhoan;
+
     public String getMaNV() {
         return maNV;
     }
@@ -81,6 +82,12 @@ public class NhanVien {
         this.chucVu = chucVu;
         this.taiKhoan = taiKhoan;
     }
+
+    public NhanVien(String maNV, TaiKhoan taiKhoan) {
+        this.maNV = maNV;
+        this.taiKhoan = taiKhoan;
+    }
+
     public NhanVien() {
 
     }

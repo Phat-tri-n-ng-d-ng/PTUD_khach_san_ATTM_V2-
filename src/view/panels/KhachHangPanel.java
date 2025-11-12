@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 
 public class KhachHangPanel extends JPanel {
+    public LocalDate maxDate;
     public KhachHangController khachHangController;
     public JDateChooser ngaySinh;
     public JRadioButton rdbtn_Nam;
@@ -107,24 +108,45 @@ public class KhachHangPanel extends JPanel {
         txt_soCCCD.setBounds(10, 94, 631, 30);
         pnlThongTinKhachHang.add(txt_soCCCD);
 
-        JDateChooser ngaySinh = new JDateChooser();
+        ngaySinh = new JDateChooser();
         ngaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngaySinh.setDateFormatString("dd/MM/yyyy");
         ngaySinh.setBounds(169, 160, 210, 30);
         pnlThongTinKhachHang.add(ngaySinh);
+
+        // Tính ngày hợp lệ (ít nhất 18 tuổi)
+        LocalDate today = LocalDate.now();
+        maxDate = today.minusYears(18);
+        LocalDate minDate = today.minusYears(100); // Giới hạn tối đa 100 tuổi nếu cần
+
+        // Thiết lập khoảng hợp lệ
+        ngaySinh.setMaxSelectableDate(java.sql.Date.valueOf(maxDate));
+        ngaySinh.setMinSelectableDate(java.sql.Date.valueOf(minDate));
+
+        // Set ngày mặc định (ví dụ: đủ 18 tuổi tính đến hôm nay)
+        ngaySinh.setDate(java.sql.Date.valueOf(maxDate));
+
+        // Khi click hoặc focus thì tự động mở popup
+        Component editor = ngaySinh.getDateEditor().getUiComponent();
+        editor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                ngaySinh.getCalendarButton().doClick();
+            }
+        });
 
         JLabel lbl_NgaySinh = new JLabel("Ngày sinh:");
         lbl_NgaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         lbl_NgaySinh.setBounds(169, 134, 104, 16);
         pnlThongTinKhachHang.add(lbl_NgaySinh);
 
-        JRadioButton rdbtn_Nu = new JRadioButton("Nữ");
+        rdbtn_Nu = new JRadioButton("Nữ");
         rdbtn_Nu.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_Nu.setBackground(Color.WHITE);
         rdbtn_Nu.setBounds(95, 164, 47, 21);
         pnlThongTinKhachHang.add(rdbtn_Nu);
 
-        JRadioButton rdbtn_Nam = new JRadioButton("Nam");
+        rdbtn_Nam = new JRadioButton("Nam");
         rdbtn_Nam.setSelected(true);
         rdbtn_Nam.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_Nam.setBackground(Color.WHITE);
