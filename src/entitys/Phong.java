@@ -10,7 +10,7 @@ public class Phong {
     private LoaiPhong loaiPhong;
     private int tang;
     private int soPhong;
-    private int soLuongToiDa;
+    private int sucChuaToiDa;
 	private double giaPhong;
     private double tienCoc;
     private TrangThaiPhong trangThai;
@@ -21,8 +21,8 @@ public class Phong {
         this.tang = tang;
 		this.soPhong = soPhong;
         this.loaiPhong = loaiPhong;
-        this.soLuongToiDa = soLuongToiDa;
-        setGiaPhong();
+        this.sucChuaToiDa = soLuongToiDa;
+        setGiaPhong(loaiPhong.getSucChuaToiThieu(),loaiPhong.getGiaNiemYet());
         setTienCoc();
     }
 
@@ -34,7 +34,7 @@ public class Phong {
 		this.loaiPhong = loaiPhong;
 		this.tang = tang;
 		this.soPhong = soPhong;
-		this.soLuongToiDa = soLuongToiDa;
+		this.sucChuaToiDa = soLuongToiDa;
 		this.giaPhong = giaPhong;
 		this.tienCoc = tienCoc;
 		this.trangThai = trangThai;
@@ -64,15 +64,24 @@ public class Phong {
 	public void setLoaiPhong(LoaiPhong loaiPhong) {
 		this.loaiPhong = loaiPhong;
 	}
-	public int getSoLuongToiDa() {
-		return soLuongToiDa;
-	}
-	public void setSoLuongToiDa(int soLuongToiDa) {
-		this.soLuongToiDa = soLuongToiDa;
-	}
-	
-	
-	public int getTang() {
+
+    public int getSucChuaToiDa() {
+        return sucChuaToiDa;
+    }
+
+    public void setSucChuaToiDa(int sucChuaToiDa) {
+        this.sucChuaToiDa = sucChuaToiDa;
+    }
+
+    public void setGiaPhong(double giaPhong) {
+        this.giaPhong = giaPhong;
+    }
+
+    public void setTienCoc(double tienCoc) {
+        this.tienCoc = tienCoc;
+    }
+
+    public int getTang() {
 		return tang;
 	}
 
@@ -100,14 +109,11 @@ public class Phong {
 	public double getGiaPhong() {
 		return giaPhong;
 	}
-	public void setGiaPhong() {
-        int soNguoiMacDinh = loaiPhong.getSoNguoiMacDinh();
-        double giaNiemYet = loaiPhong.getGiaNiemYet();
-
-        if (soLuongToiDa <= soNguoiMacDinh) {
+	public void setGiaPhong(int sucChuaToiThieu,double giaNiemYet) {
+        if (sucChuaToiDa <= sucChuaToiThieu) {
             giaPhong = giaNiemYet;
         } else {
-            int soNguoiChenhlech = soLuongToiDa - soNguoiMacDinh;
+            int soNguoiChenhlech = sucChuaToiDa - sucChuaToiThieu;
             giaPhong = giaNiemYet + (soNguoiChenhlech / 2) * 500000;
         }
 	}
@@ -115,7 +121,7 @@ public class Phong {
 		return tienCoc;
 	}
 	public void setTienCoc() {
-        tienCoc=loaiPhong.getTyLeCoc()*giaPhong/100;
+        tienCoc=loaiPhong.getTyLeCoc()*giaPhong;
 	}
 	public Phong(String maPhong, double giaPhong) {
 		// TODO Auto-generated constructor stub

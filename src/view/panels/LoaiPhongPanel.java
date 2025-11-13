@@ -18,7 +18,7 @@ public class LoaiPhongPanel extends JPanel {
     public JTextField txt_TyLeCoc;
     public JTextField txt_GiaNiemYet;
     public JTextField txt_TenLoaiPhong;
-    public JTextField txt_SoNguoiMacDinh;
+    public JTextField txt_SucChuaToiThieu;
     public JTable table;
     public DefaultTableModel model;
     public JButton btn_Them, btn_LamMoi;
@@ -79,21 +79,17 @@ public class LoaiPhongPanel extends JPanel {
         txt_TyLeCoc.setBounds(10, 94, 631, 30);
         pnlThongTinLoaiPhong.add(txt_TyLeCoc);
 
-        JLabel lbl_SoNguoiMacDinh = new JLabel("Số người mặc định:");
-        lbl_SoNguoiMacDinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lbl_SoNguoiMacDinh.setBounds(651, 73, 150, 20);
-        pnlThongTinLoaiPhong.add(lbl_SoNguoiMacDinh);
+        JLabel lbl_SucChuaToiThieu = new JLabel("Sức chứa tối thiểu:");
+        lbl_SucChuaToiThieu.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        lbl_SucChuaToiThieu.setBounds(651, 73, 150, 20);
+        pnlThongTinLoaiPhong.add(lbl_SucChuaToiThieu);
 
-        txt_SoNguoiMacDinh = new JTextField();
-        txt_SoNguoiMacDinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        txt_SoNguoiMacDinh.setBounds(651, 94, 631, 30);
-        pnlThongTinLoaiPhong.add(txt_SoNguoiMacDinh);
+        txt_SucChuaToiThieu = new JTextField();
+        txt_SucChuaToiThieu.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        txt_SucChuaToiThieu.setBounds(651, 94, 631, 30);
+        pnlThongTinLoaiPhong.add(txt_SucChuaToiThieu);
 
         btn_Them = new JButton("Thêm");
-        btn_Them.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            }
-        });
         btn_Them.setBounds(1028, 134, 120, 30);
         pnlThongTinLoaiPhong.add(btn_Them);
 
@@ -115,16 +111,11 @@ public class LoaiPhongPanel extends JPanel {
         pnlDanhSachLoaiPhong.setLayout(null);
 
         model = new DefaultTableModel(
-                new String[]{"Mã loại phòng", "Tên loại phòng", "Giá niêm yết", "Tỷ lệ cọc", "Số người mặc định"}, 0);
+                new String[]{"Mã loại phòng", "Tên loại phòng", "Giá niêm yết", "Tỷ lệ cọc", "Sức chứa tối thiểu"}, 0);
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(10, 10, 1272, 478);
         pnlDanhSachLoaiPhong.add(scrollPane);
-
-        model.addRow(new Object[]{"LP001", "Standard", 1000000, 30, 1});
-        model.addRow(new Object[]{"LP002", "Duluxe", 1500000, 30, 2});
-        model.addRow(new Object[]{"LP003", "Suite", 2000000, 30, 4});
-
 
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font("Times New Roman", Font.BOLD, 18));
@@ -134,5 +125,6 @@ public class LoaiPhongPanel extends JPanel {
         table.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         
         LoaiPhongController loaiPhongController = new LoaiPhongController(this);
+        loaiPhongController.hienThiDanhSachLoaiPhong();
     }
 }
