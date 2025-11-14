@@ -118,7 +118,7 @@ public class NhanVienDialog extends JDialog {
         lbl_NgaySinh.setBounds(238, 204, 84, 16);
         pnl_ThongTinNhanVien.add(lbl_NgaySinh);
 
-        JDateChooser ngaySinh = new JDateChooser();
+        ngaySinh = new JDateChooser();
         ngaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngaySinh.setDateFormatString("dd/MM/yyyy");
         ngaySinh.setBounds(238, 225, 218, 30);

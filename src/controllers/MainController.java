@@ -23,6 +23,7 @@ public class MainController {
         this.mainFrame = mainFrame;
         khoi_Tao_Cac_Panel();
         //showMangHinhChinh();
+        mainFrame.chonNutMacDinh();
     }
 
     private void khoi_Tao_Cac_Panel() {

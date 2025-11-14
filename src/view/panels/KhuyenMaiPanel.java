@@ -120,12 +120,20 @@ public class KhuyenMaiPanel extends JPanel {
         ngayBD.setDateFormatString("dd/MM/yyyy");
         ngayBD.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayBD.setBounds(10, 99, 130, 30);
+        // Thiết lập cho ngày bắt đầu (không được chọn ngày trong quá khứ)
+        ngayBD.setMinSelectableDate(new java.util.Date());
         pnlThongTinKhuyenMai.add(ngayBD);
 
         ngayKT = new JDateChooser();
         ngayKT.setDateFormatString("dd/MM/yyyy");
         ngayKT.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayKT.setBounds(150, 99, 130, 30);
+        ngayBD.addPropertyChangeListener("date", e-> {
+            if(ngayBD.getDate() != null){
+                // Thiết lập cho ngày kết thúc (không được chọn ngày trước ngày bắt đầu)
+                ngayKT.setMinSelectableDate(ngayBD.getDate());
+            }
+        });
         pnlThongTinKhuyenMai.add(ngayKT);
 
         JLabel lbl_DieuKienApDung = new JLabel("Điều kiện áp dụng:");
@@ -194,13 +202,18 @@ public class KhuyenMaiPanel extends JPanel {
         ngayBD_1.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayBD_1.setDateFormatString("dd/MM/yyyy");
         ngayBD_1.setBounds(880, 35, 190, 30);
-        ngayBD.setMinSelectableDate(new java.util.Date());
         pnlBoLoc.add(ngayBD_1);
 
         ngayKT_1 = new JDateChooser();
         ngayKT_1.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayKT_1.setDateFormatString("dd/MM/yyyy");
         ngayKT_1.setBounds(1096, 35, 180, 30);
+        // Tương tự cho phần bộ lọc
+        ngayBD_1.addPropertyChangeListener("date", evt -> {
+            if (ngayBD_1.getDate() != null) {
+                ngayKT_1.setMinSelectableDate(ngayBD_1.getDate());
+            }
+        });
         pnlBoLoc.add(ngayKT_1);
 
         JLabel lbl_DieuKienApDung_1 = new JLabel("Điều kiện áp dụng:");
