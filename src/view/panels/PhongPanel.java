@@ -15,7 +15,7 @@ public class PhongPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     public JTextField txt_Tang;
-    public JTextField txt_SoLuongToiDa;
+    public JTextField txt_SucChuaToiDa;
     public JTextField txt_SoPhong;
     public JTextField txt_TimMaPhong;
     public JTable table;
@@ -27,8 +27,10 @@ public class PhongPanel extends JPanel {
     public JCheckBox chckbx_Deluxe;
 	public JCheckBox chckbx_Suite;
 	public JCheckBox chckbx_FamilyRoom;
+    PhongController phongController ;
 
     public PhongPanel() {
+
         setBackground(new Color(236, 247, 255));
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(null);
@@ -64,15 +66,15 @@ public class PhongPanel extends JPanel {
         txt_SoPhong.setBounds(10, 33, 631, 30);
         pnlThongTinPhong.add(txt_SoPhong);
 
-        JLabel lbl_SoLuongToiDa = new JLabel("Số lượng tối đa:");
-        lbl_SoLuongToiDa.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lbl_SoLuongToiDa.setBounds(651, 10, 130, 16);
-        pnlThongTinPhong.add(lbl_SoLuongToiDa);
+        JLabel lbl_SucChuaToiDa = new JLabel("Sức chứa tối đa:");
+        lbl_SucChuaToiDa.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        lbl_SucChuaToiDa.setBounds(651, 10, 130, 16);
+        pnlThongTinPhong.add(lbl_SucChuaToiDa);
 
-        txt_SoLuongToiDa = new JTextField();
-        txt_SoLuongToiDa.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        txt_SoLuongToiDa.setBounds(651, 33, 631, 30);
-        pnlThongTinPhong.add(txt_SoLuongToiDa);
+        txt_SucChuaToiDa = new JTextField();
+        txt_SucChuaToiDa.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        txt_SucChuaToiDa.setBounds(651, 33, 631, 30);
+        pnlThongTinPhong.add(txt_SucChuaToiDa);
 
         JLabel lbl_Tang = new JLabel("Tầng:");
         lbl_Tang.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -91,7 +93,7 @@ public class PhongPanel extends JPanel {
 
         cbb_LoaiPhong = new JComboBox();
         cbb_LoaiPhong.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        cbb_LoaiPhong.setModel(new DefaultComboBoxModel<>(new String[]{"Standard", "Superior", "Deluxe", "Suite", "Family Room"}));
+        cbb_LoaiPhong.setModel(new DefaultComboBoxModel<>());
         cbb_LoaiPhong.setBounds(651, 94, 631, 30);
         pnlThongTinPhong.add(cbb_LoaiPhong);
 
@@ -179,7 +181,7 @@ public class PhongPanel extends JPanel {
         pnlDanhSachPhong.setLayout(null);
 
         model = new DefaultTableModel(
-                new String[]{"Mã phòng", "Loại phòng", "Tầng", "Số phòng", "Số lượng tối đa", "Giá phòng", "Tiền cọc", "Trạng thái"}, 0);
+                new String[]{"Mã phòng", "Loại phòng", "Tầng", "Số phòng", "Sức chứa tối đa", "Giá phòng", "Tiền cọc", "Trạng thái"}, 0);
 
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -191,12 +193,11 @@ public class PhongPanel extends JPanel {
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
         table.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         pnlDanhSachPhong.add(scrollPane);
-        model.addRow(new Object[]{"P01001", "Standard", 1, 1, 2, 1000000, 300000, TrangThaiPhong.Trong.getMoTa()});
-        model.addRow(new Object[]{"P02005", "Deluxe", 2, 5, 3, 1500000, 450000, TrangThaiPhong.DaDat.getMoTa()});
-        model.addRow(new Object[]{"P03010", "Suite", 3, 10, 4, 2000000, 600000, TrangThaiPhong.NgungHoatDong.getMoTa()});
 
-        // Controller
-         PhongController phongController = new PhongController(this);
+        phongController= new PhongController(this);
          // hiển thị lên table
+        phongController.hienThiDanhSachPhong();
+        // hiển thị lên combobox loại phòng
+        phongController.hienThiLoaiPhongLenCombobox();
     }
 }

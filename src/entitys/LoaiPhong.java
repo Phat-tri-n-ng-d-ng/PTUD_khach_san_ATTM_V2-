@@ -7,14 +7,7 @@ public class LoaiPhong {
     private String tenLoaiPhong;
     private double giaNiemYet;
     private double tyLeCoc;
-    private int soNguoiMacDinh;
-
-
-
-    public LoaiPhong(String maLoaiPhong, String tenLoaiPhong) {
-        this(maLoaiPhong,tenLoaiPhong,0,30,0);
-    }
-
+    private int sucChuaToiThieu;
 
 
     public String getMaLoaiPhong() {
@@ -40,25 +33,27 @@ public class LoaiPhong {
         this.maLoaiPhong = maLoaiPhong;
     }
 
-    public int getSoNguoiMacDinh() {
-        return soNguoiMacDinh;
-    }
-
-    public void setSoNguoiMacDinh(int soLuongMacDinh) {
-        this.soNguoiMacDinh = soLuongMacDinh;
-    }
-
-    public void setTyLeCoc(double tyLeCoc) {
+    public int getSucChuaToiThieu() {
+		return sucChuaToiThieu;
+	}
+	public void setSucChuaToiThieu(int sucChuaToiThieu) {
+		this.sucChuaToiThieu = sucChuaToiThieu;
+	}
+	public void setTyLeCoc(double tyLeCoc) {
         this.tyLeCoc = tyLeCoc;
-    }
-
-    public LoaiPhong(String maLoaiPhong, String tenLoaiPhong, double giaNiemYet, double tyLeCoc, int soNguoiMacDinh) {
+    }  
+    public LoaiPhong(String maLoaiPhong, String tenLoaiPhong, double giaNiemYet, double tyLeCoc, int sucChuaToiThieu) {
+		this.maLoaiPhong = maLoaiPhong;
+		this.tenLoaiPhong = tenLoaiPhong;
+		this.giaNiemYet = giaNiemYet;
+		this.tyLeCoc = tyLeCoc;
+		this.sucChuaToiThieu = sucChuaToiThieu;
+	}
+    public LoaiPhong(String maLoaiPhong, String tenLoaiPhong) {
         this.maLoaiPhong = maLoaiPhong;
         this.tenLoaiPhong = tenLoaiPhong;
-        this.giaNiemYet = giaNiemYet;
-        this.tyLeCoc = tyLeCoc;
-        this.soNguoiMacDinh = soNguoiMacDinh;
     }
+
 
     public LoaiPhong() {
     }
