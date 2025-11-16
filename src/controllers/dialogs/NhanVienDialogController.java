@@ -76,16 +76,21 @@ public class NhanVienDialogController {
             String chucVuDaChon = nhanVienDialog.cbb_ChucVu.getSelectedItem().toString();
             ChucVuNhanVien chucVu = getChucVu(chucVuDaChon);
             String email = nhanVienDialog.txt_Email.getText().strip();
-            String String_TrangThaiTaiKoan = nhanVienDialog.cbb_TrangThaiTaiKhoan.getSelectedItem().toString();
-            TrangThaiTaiKhoan trangThaiTaiKhoan = getTrangThaiTaiKhoan(String_TrangThaiTaiKoan);
             TaiKhoan tk = null;
-            if (trangThaiTaiKhoan != null && !trangThaiTaiKhoan.toString().trim().isEmpty()) {
-                tk = new TaiKhoan(sdt,trangThaiTaiKhoan);
+            NhanVien nhanVienNew = null;
+            if(nhanVien.getChucVu().equals(ChucVuNhanVien.QuanLy) || nhanVien.getChucVu().equals(ChucVuNhanVien.LeTan)){
+                String String_TrangThaiTaiKoan = nhanVienDialog.cbb_TrangThaiTaiKhoan.getSelectedItem().toString();
+                TrangThaiTaiKhoan trangThaiTaiKhoan = getTrangThaiTaiKhoan(String_TrangThaiTaiKoan);
+                if (trangThaiTaiKhoan != null && !trangThaiTaiKhoan.toString().trim().isEmpty()) {
+                    tk = new TaiKhoan(sdt,trangThaiTaiKhoan);
+                }
+                nhanVienNew = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu,tk);
+            }else{
+                nhanVienNew = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu,tk);
             }
-            NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu,tk);
             int confirm = JOptionPane.showConfirmDialog(nhanVienDialog, "Bạn có chắc chắn muốn cập nhật thông tin nhân viên" + maNV,"Chú ý",JOptionPane.YES_NO_OPTION);
             if(confirm == JOptionPane.YES_OPTION){
-                if(nhanVienService.CapNhatNhanVien(nhanVien)){
+                if(nhanVienService.CapNhatNhanVien(nhanVienNew)){
                     JOptionPane.showMessageDialog(nhanVienDialog, "Cập nhật thành công");
                     Dong();
                 }else{

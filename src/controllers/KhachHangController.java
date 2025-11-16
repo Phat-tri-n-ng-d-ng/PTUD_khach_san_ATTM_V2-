@@ -173,6 +173,7 @@ public class KhachHangController implements MouseListener {
                     khachHang
             );
             dialog.setVisible(true);
+            LamMoi();
         }
     }
 
