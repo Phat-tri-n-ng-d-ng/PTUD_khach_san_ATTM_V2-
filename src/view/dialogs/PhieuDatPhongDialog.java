@@ -4,17 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -25,35 +15,37 @@ import com.toedter.calendar.JDateChooser;
 
 public class PhieuDatPhongDialog extends JDialog {
 	 public JTextField txt_SDT;
-	    public JTextField txt_HoTen;
-	    public JTextField txt_CCCD;
-	    public JTextField txt_NgaySinh;
-	    public JTextField txt_Email;
-	    public JTextField txt_HangKhachHang;
-	    public JTextField txt_DiemTichLuy;
-	    public JTextField txt_TienKhachDua;
-	    public JDateChooser ngayBatDau;
-	    public JDateChooser ngayKetThuc;
-	    public JLabel lbl_PhuongThucThanhToanTrongPnlTongTien;
-	    public JLabel lbl_TongTienTrongPnlTongTien;
-	    public JLabel lbl_TienCocTrongPnlTongTien;
-	    public JLabel lbl_TienNhanTuKhachTrongPnlTongTien;
-	    public JLabel lbl_TienTraLaiKhachTrongPnlTongTien;
-	    public JLabel lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien;
-	    public JLabel lbl_TienCuaTongTienTrongPnlTongTien;
-	    public JLabel lbl_TienCuaTienCocTrongPnlTongTien;
-	    public JLabel lbl_TienCuaTienNhanTuKhachTrongPnlTongTien;
-	    public JLabel lbl_TienCuaTienTraLaiKhachTrongPnlTongTien;
-	    public JButton btn_XacNhan;
-	    public JButton btn_Huy;
-	    public JRadioButton rdbtn_TienMat;
-	    public JRadioButton rdbtn_ChuyenKhoan;
-	    public JTable table;
-	    public DefaultTableModel model;
+     public JTextField txt_HoTen;
+     public JTextField txt_CCCD;
+     public JTextField txt_NgaySinh;
+     public JTextField txt_Email;
+     public JTextField txt_HangKhachHang;
+     public JTextField txt_DiemTichLuy;
+     public JTextField txt_TienKhachDua;
+     public JDateChooser ngayBatDau;
+     public JDateChooser ngayKetThuc;
+     public JLabel lbl_PhuongThucThanhToanTrongPnlTongTien;
+     public JLabel lbl_TongTienTrongPnlTongTien;
+     public JLabel lbl_TienCocTrongPnlTongTien;
+     public JLabel lbl_TienNhanTuKhachTrongPnlTongTien;
+     public JLabel lbl_TienTraLaiKhachTrongPnlTongTien;
+     public JLabel lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien;
+     public JLabel lbl_TienCuaTongTienTrongPnlTongTien;
+     public JLabel lbl_TienCuaTienCocTrongPnlTongTien;
+     public JLabel lbl_TienCuaTienNhanTuKhachTrongPnlTongTien;
+     public JLabel lbl_TienCuaTienTraLaiKhachTrongPnlTongTien;
+     public JButton btn_XacNhan;
+     public JButton btn_Huy;
+     public JRadioButton rdbtn_TienMat;
+     public JRadioButton rdbtn_ChuyenKhoan;
+     public JTable table;
+     public DefaultTableModel model;
+     public JRadioButton rdbtn_NamNguoiO;
+     public JRadioButton rdbtn_NuNguoiO;
 
-	
 
-	public PhieuDatPhongDialog() {
+
+    public PhieuDatPhongDialog() {
 
         getContentPane().setBackground(new Color(236, 247, 255));
         setBounds(100, 100, 1100, 563);
@@ -188,14 +180,14 @@ public class PhieuDatPhongDialog extends JDialog {
         txt_DiemTichLuy.setBounds(393, 269, 112, 25);
         pnl_ThongTinKhachHang.add(txt_DiemTichLuy);
         
-        JRadioButton rdbtn_NamNguoiO = new JRadioButton("Nam");
+        rdbtn_NamNguoiO = new JRadioButton("Nam");
         rdbtn_NamNguoiO.setSelected(true);
         rdbtn_NamNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NamNguoiO.setBackground(Color.WHITE);
         rdbtn_NamNguoiO.setBounds(365, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
         
-        JRadioButton rdbtn_NuNguoiO = new JRadioButton("Nữ");
+        rdbtn_NuNguoiO = new JRadioButton("Nữ");
         rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NuNguoiO.setBackground(Color.WHITE);
         rdbtn_NuNguoiO.setBounds(450, 170, 55, 20);

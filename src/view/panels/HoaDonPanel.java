@@ -33,6 +33,9 @@ import javax.swing.table.TableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import controllers.HoaDonController;
+import entitys.HoaDon;
+
 //import controller.HoaDonController;
 //import controller.NhanVienController;
 
@@ -53,7 +56,7 @@ public class HoaDonPanel extends JPanel {
     public JTable table_1;
     public DefaultTableModel model_DSKH;
     public DefaultTableModel model2;
-//    public HoaDonController hoaDonController;
+    //    public HoaDonController hoaDonController;
     public JButton btn_TimHoaDon_1;
     public JDateChooser ChonNgay;
     public JRadioButton rdbtn_ChonNgay;
@@ -66,6 +69,7 @@ public class HoaDonPanel extends JPanel {
     public JRadioButton rdbtn_TrangThai;
     public JButton btn_LamMoi;
     private JPanel panel_1;
+    public HoaDonController hoaDonController;
 
 
     public HoaDonPanel() {
@@ -100,7 +104,7 @@ public class HoaDonPanel extends JPanel {
 
         cbb_TrangThaiHoaDon = new JComboBox();
         cbb_TrangThaiHoaDon.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        cbb_TrangThaiHoaDon.setModel(new DefaultComboBoxModel(new String[] {"Hóa đơn đặt phòng", "Hóa đơn thuê phòng", "Hóa đơn hoàn thành", "Hóa đơn tạm", "Tất cả"}));
+        cbb_TrangThaiHoaDon.setModel(new DefaultComboBoxModel(new String[] {"Hóa đơn đặt phòng", "Hóa đơn thuê phòng", "Hóa đơn hoàn thành", "Tất cả"}));
         cbb_TrangThaiHoaDon.setBounds(10, 101, 270, 30);
         pnlBoLocHoaDon.add(cbb_TrangThaiHoaDon);
 
@@ -116,9 +120,9 @@ public class HoaDonPanel extends JPanel {
         rdbtn_SoDTKH.setBounds(10, 10, 221, 21);
         pnlBoLocHoaDon.add(rdbtn_SoDTKH);
 
-        btn_TimHoaDon_1 = new JButton("Tìm");
-        btn_TimHoaDon_1.setBounds(1370, 26, 120, 30);
-        pnlBoLocHoaDon.add(btn_TimHoaDon_1);
+//        btn_TimHoaDon_1 = new JButton("Tìm");
+//        btn_TimHoaDon_1.setBounds(1370, 26, 120, 30);
+//        pnlBoLocHoaDon.add(btn_TimHoaDon_1);
 
         ChonNgay = new JDateChooser();
         ChonNgay.setDateFormatString("dd/MM/yyyy");
@@ -208,12 +212,13 @@ public class HoaDonPanel extends JPanel {
         header.setBackground(new Color(10, 100, 189));
         header.setForeground(Color.WHITE);
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
-    //        hoaDonController = new HoaDonController(this);
-        
+        //        hoaDonController = new HoaDonController(this);
+
         panel_1 = new JPanel();
         panel_1.setBounds(1326, 10, 210, 844);
         add(panel_1);
-//        hoaDonController.getTatCaHoaDon();
-//
+        hoaDonController = new HoaDonController(this);
+        hoaDonController.hienThiThongTin();
+
     }
 }
