@@ -1,8 +1,8 @@
 package controllers.dialogs;
 
+import database.dao.KhachHangDao;
 import entitys.KhachHang;
 import entitys.NhanVien;
-import services.KhachHangService;
 import view.dialogs.KhachHangDialog;
 import view.dialogs.NhanVienDialog;
 
@@ -14,10 +14,10 @@ import java.util.Date;
 public class KhachHangDialogController {
     public KhachHang khachHang;
     public KhachHangDialog khachHangDialog;
-    public KhachHangService khachHangService;
+    public KhachHangDao khachHangDao;
 
     public KhachHangDialogController(KhachHangDialog khachHangDialog , KhachHang khachHang){
-        khachHangService = new KhachHangService();
+        khachHangDao = new KhachHangDao();
         this.khachHangDialog = khachHangDialog;
         this.khachHang = khachHang;
 
@@ -40,7 +40,7 @@ public class KhachHangDialogController {
         String email = khachHangDialog.txt_Email.getText().strip();
         String soCCCD = khachHangDialog.txt_SoCCCD.getText().strip();
         KhachHang khachHang = new KhachHang(maKH,tenKH,gioiTinh, ngaySinh, email, sdt,soCCCD);
-        if(khachHangService.CapNhatKhachHang(khachHang)){
+        if(khachHangDao.CapNhatKhachHang(khachHang)){
             JOptionPane.showMessageDialog(khachHangDialog, "Cập nhật thành công");
             Dong();
         }else{

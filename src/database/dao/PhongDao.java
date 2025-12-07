@@ -160,4 +160,33 @@ public class PhongDao {
         }
         return dsp;
     }
+
+    public ArrayList<Phong> locPhongTheoLoai2(String s) {
+        Connection con = ConnectDB.getConnection();
+        ArrayList<Phong> dsp = new ArrayList<>();
+
+        String sql = "SELECT maPhong, lp.maLoaiPhong, lp.tenLoaiPhong, tang, soPhong, sucChuaToiDa, giaPhong, tienCoc, trangThaiPhong " +
+                "FROM Phong p JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
+                "WHERE lp.tenLoaiPhong = ?";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, s);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                LoaiPhong loaiPhong= new LoaiPhong(rs.getString(2),rs.getString(3));
+                Phong p = new Phong(rs.getString("maPhong"),loaiPhong,
+                        rs.getInt(4),rs.getInt(5),rs.getInt(6),rs.getDouble(7),
+                        rs.getDouble(8),TrangThaiPhong.valueOf(rs.getString(9)));
+                dsp.add(p);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectDB.closeConnection(con);
+        }
+
+        return dsp;
+    }
 }

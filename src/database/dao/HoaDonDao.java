@@ -326,42 +326,11 @@ public class HoaDonDao {
 	        }
 	        return dsHoaDon;
 	    };
-	    public ArrayList<HoaDon> getHoaDonTheoTrangThai(String trangThaiHD){
-	        Connection connection = ConnectDB.getConnection();
-	        ArrayList<HoaDon> dsHoaDon = new ArrayList<>();
-	        String sql = "{CALL locHoaDonTheoTrangThai(?)}";
-	        HoaDon hd = null;
-	        try {
-	            CallableStatement st = connection.prepareCall(sql);
-	            st.setString(1, trangThaiHD);
-	            ResultSet rs = st.executeQuery();
-	            while(rs.next()) {
-	                String maHD = rs.getString("maHD");
-	                LocalDateTime ngayLap = rs.getTimestamp("ngayLap").toLocalDateTime();
-	                String tenKH = rs.getString("tenKH");
-	                String sdt = rs.getString("sdt");
-	                KhachHang kh = new KhachHang(tenKH,sdt);
-	                String tenNV = rs.getString("tenNV");
-	                TrangThaiHoaDon trangThaiHD1 = TrangThaiHoaDon.valueOf(rs.getString("trangThaiHD"));
-	                NhanVien nv = new NhanVien();
-	                nv.setTenNV(tenNV);
-	                PhuongThucThanhToan pttt = PhuongThucThanhToan.valueOf(rs.getString("phuongThucTT"));
-	                //Lay du lieu tu chi tiet hoa don
-	                ArrayList<ChiTietHoaDon> dsCTDH = this.getChiTietHoaDon(maHD);
-	                hd = new HoaDon(maHD, ngayLap, pttt,trangThaiHD1 , kh, dsCTDH , nv);
-	                hd.setTongTien();
-	                dsHoaDon.add(hd);
-	            }
 
-	        } catch (Exception e) {
-	            // TODO: handle exception
-	            e.printStackTrace();
-	        }finally {
-	            ConnectDB.closeConnection(connection);
-	        }
-	        return dsHoaDon;
+    public ArrayList<HoaDon> getHoaDonTheoTrangThai(String trangThaiHD) {
+        return null;
+    }
 
-
-	    }
-
+    public void TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(Date ngayBatDau, Date ngayKetThuc) {
+    }
 }

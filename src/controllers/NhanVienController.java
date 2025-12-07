@@ -1,10 +1,10 @@
 package controllers;
 
+import database.dao.NhanVienDao;
 import entitys.NhanVien;
 import entitys.TaiKhoan;
 import enums.ChucVuNhanVien;
 import enums.TrangThaiTaiKhoan;
-import services.NhanVienService;
 import view.dialogs.NhanVienDialog;
 import view.panels.NhanVienPanel;
 
@@ -20,11 +20,11 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 public class NhanVienController implements MouseListener {
-    private NhanVienService nhanVienService;
+    private NhanVienDao nhanVienDao;
     private NhanVienPanel nhanVienPanel;
 
     public NhanVienController(NhanVienPanel nhanVienPanel){
-        nhanVienService = new NhanVienService();
+        nhanVienDao = new NhanVienDao();
         this.nhanVienPanel = nhanVienPanel;
 
         nhanVienPanel.btn_ThemNhanVien.addActionListener(e -> ThemNhanVien());
@@ -39,7 +39,7 @@ public class NhanVienController implements MouseListener {
 
     public void getTatCaNhanVien(){
         try {
-            ArrayList<NhanVien> dsNhanVien = nhanVienService.getTatCaNhanVien();
+            ArrayList<NhanVien> dsNhanVien = nhanVienDao.getTatCaNhanVien();
             DefaultTableModel model = nhanVienPanel.model;
             model.setRowCount(0); // Xóa dữ liệu cũ trong bảng trước khi load mới
             for (NhanVien nv : dsNhanVien) {
@@ -65,7 +65,7 @@ public class NhanVienController implements MouseListener {
     public void ThemNhanVien(){
         if(kiemTraDuLieu()){
             int namHienTai = LocalDate.now().getYear();
-            String maNV = "NV" + (namHienTai % 100) +  String.format("%03d", nhanVienService.getSoLuongNhanVien() + 1);
+            String maNV = "NV" + (namHienTai % 100) +  String.format("%03d", nhanVienDao.getSoLuongNhanVien() + 1);
             String tenNV = nhanVienPanel.txt_TenNhanVien.getText().strip();
             String sdt = nhanVienPanel.txt_SoDienThoai.getText().strip();
             boolean gioiTinh = nhanVienPanel.rdbtn_Nam.isSelected() ? true : false;
@@ -81,7 +81,7 @@ public class NhanVienController implements MouseListener {
             String email = nhanVienPanel.txt_Email.getText().strip();
 
             NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu);
-            if(nhanVienService.themNhanVien(nhanVien)){
+            if(nhanVienDao.themNhanVien(nhanVien)){
                 JOptionPane.showMessageDialog(nhanVienPanel, "Thêm thành công");
                 LamMoi();
                 getTatCaNhanVien();
@@ -96,10 +96,10 @@ public class NhanVienController implements MouseListener {
             NhanVien nv;
             if (nhanVienPanel.rdbtn_TimMaNhanVien.isSelected()) {
                 String maNV = nhanVienPanel.txt_TimMaNhanVien.getText().strip();
-                nv = nhanVienService.TimNhanVien(maNV, "MA");
+                nv = nhanVienDao.TimNhanVien(maNV, "MA");
             } else {
                 String soDT = nhanVienPanel.txt_TimSoDienThoai.getText().strip();
-                nv = nhanVienService.TimNhanVien(soDT, "SDT");
+                nv = nhanVienDao.TimNhanVien(soDT, "SDT");
             }
 
             if (nv != null) {
@@ -130,10 +130,10 @@ public class NhanVienController implements MouseListener {
         String chucVuChon = nhanVienPanel.cbb_LocChucVu.getSelectedItem().toString();
         ArrayList<NhanVien> dsNhanVien;
         if (chucVuChon.equals("Tất cả")) {
-            dsNhanVien = nhanVienService.getTatCaNhanVien(); // gọi lấy toàn bộ
+            dsNhanVien = nhanVienDao.getTatCaNhanVien(); // gọi lấy toàn bộ
         } else {
             ChucVuNhanVien chucVu = getChucVu(chucVuChon);
-            dsNhanVien = nhanVienService.getNhanVienTheoChucVu(chucVu.toString());
+            dsNhanVien = nhanVienDao.getNhanVienTheoChucVu(chucVu.toString());
         }
         DefaultTableModel model = nhanVienPanel.model;
         model.setRowCount(0);

@@ -6,10 +6,8 @@
 package controllers.dialogs;
 
 
-import controllers.PhongController;
+import database.dao.LoaiPhongDao;
 import entitys.LoaiPhong;
-import services.LoaiPhongService;
-import services.PhongService;
 import view.dialogs.LoaiPhongDialog;
 
 import javax.swing.*;
@@ -23,12 +21,12 @@ import javax.swing.*;
 public class LoaiPhongDialogController {
     LoaiPhongDialog loaiPhongDialog;
     LoaiPhong loaiPhong;
-    LoaiPhongService loaiPhongService;
+    LoaiPhongDao loaiPhongDao;
 
     public LoaiPhongDialogController(LoaiPhongDialog loaiPhongDialog, LoaiPhong loaiPhong) {
         this.loaiPhongDialog = loaiPhongDialog;
         this.loaiPhong = loaiPhong;
-        loaiPhongService= new LoaiPhongService();
+        loaiPhongDao= new LoaiPhongDao();
 
         loaiPhongDialog.btn_Dong.addActionListener(e -> {
             loaiPhongDialog.dispose();
@@ -56,7 +54,7 @@ public class LoaiPhongDialogController {
             int sucChuaMoi=Integer.parseInt(loaiPhongDialog.txt_SucChuaToiThieu.getText());
 
             LoaiPhong loaiPhongMoi= new LoaiPhong(maMoi,tenLPMoi,giaMoi,tyLCMoi/100,sucChuaMoi);
-            if(loaiPhongService.capNhatLoaiPhong(loaiPhongMoi)){
+            if(loaiPhongDao.capNhatLoaiPhong(loaiPhongMoi)){
 //                loaiPhongPanel.table.setValueAt(loaiPhongMoi.getMaLoaiPhong(),r,0);
 //                loaiPhongPanel.table.setValueAt(loaiPhongMoi.getMaLoaiPhong(),r,0);
 //                loaiPhongPanel.table.setValueAt(loaiPhongMoi.getMaLoaiPhong(),r,0);

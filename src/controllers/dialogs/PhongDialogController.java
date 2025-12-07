@@ -1,11 +1,11 @@
 package controllers.dialogs;
 
 import controllers.PhongController;
+import database.dao.LoaiPhongDao;
+import database.dao.PhongDao;
 import entitys.LoaiPhong;
 import entitys.Phong;
 import enums.TrangThaiPhong;
-import services.LoaiPhongService;
-import services.PhongService;
 import view.dialogs.PhongDialog;
 
 import javax.swing.*;
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 public class PhongDialogController {
 	private PhongDialog phongDialog;
 	private Phong phong;
-    private PhongService phongService;
-    private LoaiPhongService loaiPhongService;
+    private PhongDao phongDao;
+    private LoaiPhongDao loaiPhongDao;
 	public PhongDialogController(PhongDialog phongDialog, Phong phong) {
-        phongService= new PhongService();
-        loaiPhongService= new LoaiPhongService();
+        phongDao= new PhongDao();
+        loaiPhongDao= new LoaiPhongDao();
 		this.phongDialog = phongDialog;
 		this.phong = phong;
 		phongDialog.btn_CapNhat.addActionListener(e->{
@@ -57,7 +57,7 @@ public class PhongDialogController {
 
     public void chinhSuaTienCocTheoGiaPhong(){
         String tenLoaiPhong=phongDialog.cbb_LoaiPhong.getSelectedItem()+"";
-        LoaiPhong loaiPhong=loaiPhongService.getThongTinLoaiPhong(tenLoaiPhong);
+        LoaiPhong loaiPhong=loaiPhongDao.getThongTinLoaiPhong(tenLoaiPhong);
         try {
             double giaPhong = Double.parseDouble(phongDialog.txt_GiaPhong.getText());
             double tienCoc = giaPhong * loaiPhong.getTyLeCoc();
@@ -71,7 +71,7 @@ public class PhongDialogController {
         if(kiemTraDuLieu()==false) return;
         String ma=phongDialog.txt_MaPhong.getText();
         String tenLoaiPhong=phongDialog.cbb_LoaiPhong.getSelectedItem()+"";
-        LoaiPhong loaiPhong=loaiPhongService.getThongTinLoaiPhong(tenLoaiPhong);
+        LoaiPhong loaiPhong=loaiPhongDao.getThongTinLoaiPhong(tenLoaiPhong);
         int tang=Integer.parseInt(phongDialog.txt_Tang.getText());
         int soPhong=Integer.parseInt(phongDialog.txt_SoPhong.getText());
         int sucChua=Integer.parseInt(phongDialog.txt_SucChuaToiDa.getText());
@@ -79,7 +79,7 @@ public class PhongDialogController {
         double tienCoc=Double.parseDouble(phongDialog.txt_TienCoc.getText());
         TrangThaiPhong trangThaiPhong=doiTuMoTaSangEnum(phongDialog.txt_TrangThai.getText());
         Phong p=new Phong(ma,loaiPhong,tang,soPhong,sucChua,giaPhong,tienCoc,trangThaiPhong);
-        if(!phongService.capNhatPhong(p)){
+        if(!phongDao.capNhatPhong(p)){
             baoLoi("Lỗi khi cập nhật thông tin phòng!"); return;
         }
         // cập nhật trạng thái phòng
@@ -89,7 +89,7 @@ public class PhongDialogController {
         }else {
             trangThai= doiTuMoTaSangEnum(phongDialog.btn_NgungHoatDong.getText());
         }
-        if(phongService.capNhatTrangThaiPhong(ma,trangThai)){
+        if(phongDao.capNhatTrangThaiPhong(ma,trangThai)){
             baoLoi("Cập nhật thành công!");
             phongDialog.dispose();
             // LOAD LẠI BẢNG
@@ -104,7 +104,7 @@ public class PhongDialogController {
     public void hienThiThongTinPhong() {
         taiLen=true;
         phongDialog.txt_MaPhong.setText(phong.getMaPhong().trim());
-        ArrayList<LoaiPhong> dslp=loaiPhongService.getDanhSachLoaiPhong();
+        ArrayList<LoaiPhong> dslp=loaiPhongDao.getDanhSachLoaiPhong();
         phongDialog.cbb_LoaiPhong.removeAllItems();
         for(LoaiPhong lp : dslp){
             phongDialog.cbb_LoaiPhong.addItem(lp.getTenLoaiPhong());
@@ -133,7 +133,7 @@ public class PhongDialogController {
     public void chinhSuaThongTinTheoLoaiPhongVaSucChua(){
         if(taiLen) return;
         String tenLoaiPhong=phongDialog.cbb_LoaiPhong.getSelectedItem()+"";
-        LoaiPhong loaiPhong=loaiPhongService.getThongTinLoaiPhong(tenLoaiPhong);
+        LoaiPhong loaiPhong=loaiPhongDao.getThongTinLoaiPhong(tenLoaiPhong);
         int sucChuaToiThieu= loaiPhong.getSucChuaToiThieu();
         int sucChuaToiDa=0;
         try {
@@ -164,7 +164,7 @@ public class PhongDialogController {
 		if(kiemTraDuLieu()==false) return;
         String ma=phongDialog.txt_MaPhong.getText();
         String tenLoaiPhong=phongDialog.cbb_LoaiPhong.getSelectedItem()+"";
-        LoaiPhong loaiPhong=loaiPhongService.getThongTinLoaiPhong(tenLoaiPhong);
+        LoaiPhong loaiPhong=loaiPhongDao.getThongTinLoaiPhong(tenLoaiPhong);
         int tang=Integer.parseInt(phongDialog.txt_Tang.getText());
         int soPhong=Integer.parseInt(phongDialog.txt_SoPhong.getText());
         int sucChua=Integer.parseInt(phongDialog.txt_SucChuaToiDa.getText());
@@ -172,7 +172,7 @@ public class PhongDialogController {
         double tienCoc=Double.parseDouble(phongDialog.txt_TienCoc.getText());
         TrangThaiPhong trangThaiPhong=doiTuMoTaSangEnum(phongDialog.txt_TrangThai.getText());
         Phong p=new Phong(ma,loaiPhong,tang,soPhong,sucChua,giaPhong,tienCoc,trangThaiPhong);
-        if(phongService.capNhatPhong(p)){
+        if(phongDao.capNhatPhong(p)){
             baoLoi("Cập nhật thành công!");
             phongDialog.dispose();
 
@@ -202,7 +202,7 @@ public class PhongDialogController {
             return false;
         }
         String tenLoaiPhong=phongDialog.cbb_LoaiPhong.getSelectedItem()+"";
-        LoaiPhong loaiPhong=loaiPhongService.getThongTinLoaiPhong(tenLoaiPhong);
+        LoaiPhong loaiPhong=loaiPhongDao.getThongTinLoaiPhong(tenLoaiPhong);
         int sucChuaToiThieu= loaiPhong.getSucChuaToiThieu();
         int sucChuaToiDa=0;
         try {

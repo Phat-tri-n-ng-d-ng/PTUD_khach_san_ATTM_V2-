@@ -4,28 +4,25 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
+import database.dao.LoaiPhongDao;
+import database.dao.PhongDao;
 import entitys.LoaiPhong;
 import entitys.Phong;
 import enums.TrangThaiPhong;
-import services.LoaiPhongService;
-import services.PhongService;
-import view.dialogs.NhanVienDialog;
 import view.dialogs.PhongDialog;
 import view.panels.PhongPanel;
 
 public class PhongController implements MouseListener{
 	PhongPanel phongPanel;
-    PhongService phongService;
-    LoaiPhongService loaiPhongService;
+    PhongDao phongDao;
+    LoaiPhongDao loaiPhongDao;
 
 	public PhongController(PhongPanel phongPanel) {
 		this.phongPanel = phongPanel;
-		phongService= new PhongService();
-        loaiPhongService= new LoaiPhongService();
+		phongDao= new PhongDao();
+        loaiPhongDao= new LoaiPhongDao();
 		phongPanel.btn_LamMoi.addActionListener(e->{
 			lamMoi();
 		});
@@ -73,10 +70,10 @@ public class PhongController implements MouseListener{
         ArrayList<Phong> danhSachPhong= new ArrayList<>();
         if(!chuoiLoaiPhongDaChon.isEmpty()){
             chuoiLoaiPhongDaChon=chuoiLoaiPhongDaChon.substring(0,chuoiLoaiPhongDaChon.length()-1);
-            danhSachPhong=phongService.locPhongTheoLoai(chuoiLoaiPhongDaChon);
+            danhSachPhong=phongDao.locPhongTheoLoai(chuoiLoaiPhongDaChon);
         }
         if(chuoiLoaiPhongDaChon.isEmpty()){
-            danhSachPhong=phongService.getDanhSachPhong();
+            danhSachPhong=phongDao.getDanhSachPhong();
         }
         phongPanel.model.setRowCount(0);
         for (Phong p : danhSachPhong) {
@@ -94,7 +91,7 @@ public class PhongController implements MouseListener{
             baoLoi("Hãy nhập mã để tìm"); return;
         }
         phongPanel.model.setRowCount(0);
-        Phong p = phongService.timPhongBangMa(ma);
+        Phong p = phongDao.timPhongBangMa(ma);
         if(p!=null){
             String tang=String.format("%02d",Integer.parseInt(p.getTang()+""));
             String soPhong= String.format("%03d",Integer.parseInt(p.getSoPhong()+""));
@@ -107,7 +104,7 @@ public class PhongController implements MouseListener{
 
     }
 	public void hienThiDanhSachPhong(){
-        ArrayList<Phong> dsp= phongService.getDanhSachPhong();
+        ArrayList<Phong> dsp= phongDao.getDanhSachPhong();
         phongPanel.model.setRowCount(0);
         for (Phong p : dsp) {
             String tang=String.format("%02d",Integer.parseInt(p.getTang()+""));
@@ -143,10 +140,10 @@ public class PhongController implements MouseListener{
         String ma= "P"+tang+soPhong;
         String tenlp= phongPanel.cbb_LoaiPhong.getSelectedItem()+"";
         int sltd= Integer.parseInt(phongPanel.txt_SucChuaToiDa.getText());
-        LoaiPhong loaiPhong = loaiPhongService.getThongTinLoaiPhong(tenlp);
+        LoaiPhong loaiPhong = loaiPhongDao.getThongTinLoaiPhong(tenlp);
         // giá , tiền cọc get và tính theo loại phòng
         Phong p = new Phong(ma,loaiPhong,Integer.parseInt(phongPanel.txt_Tang.getText()),Integer.parseInt(phongPanel.txt_SoPhong.getText()),sltd,TrangThaiPhong.Trong);
-                if(phongService.themPhong(p)){
+                if(phongDao.themPhong(p)){
             phongPanel.model.addRow(new Object[] {ma,tenlp,tang,soPhong,sltd,p.getGiaPhong(),p.getTienCoc(),TrangThaiPhong.Trong.getMoTa()});
             baoLoi("Thêm phòng thành công!");
             lamMoi();
@@ -156,7 +153,7 @@ public class PhongController implements MouseListener{
 	}
 
     public void hienThiLoaiPhongLenCombobox(){
-        ArrayList<LoaiPhong> dsLoaiPhong=loaiPhongService.getDanhSachLoaiPhong();
+        ArrayList<LoaiPhong> dsLoaiPhong=loaiPhongDao.getDanhSachLoaiPhong();
         for(LoaiPhong lp:dsLoaiPhong){
             phongPanel.cbb_LoaiPhong.addItem(lp.getTenLoaiPhong());
         }
@@ -172,7 +169,7 @@ public class PhongController implements MouseListener{
             return false;
         }
         String tenLoaiPhong=phongPanel.cbb_LoaiPhong.getSelectedItem()+"";
-        LoaiPhong loaiPhong=loaiPhongService.getThongTinLoaiPhong(tenLoaiPhong);
+        LoaiPhong loaiPhong=loaiPhongDao.getThongTinLoaiPhong(tenLoaiPhong);
         int sucChuaToiThieu= loaiPhong.getSucChuaToiThieu();
         int sucChuaToiDa=0;
         try {

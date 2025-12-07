@@ -269,9 +269,9 @@ public class MainFrame extends JFrame {
 //            case "TrangChu":
 //                mainController.showMangHinhChinh();
 //                break;
-//            case "ThueDatPhong":
-//                mainController.showThue_Dat_Phong_Panel();
-//                break;
+            case "ThueDatPhong":
+                mainController.showThue_Dat_Phong_Panel();
+                break;
             case "Phong":
                 mainController.showPhong_Panel();
                 break;
