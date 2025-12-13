@@ -1,3 +1,56 @@
+<<<<<<< HEAD
+--IF DB_ID('QuanLyKhachSan_ATTM') IS NOT NULL DROP DATABASE QuanLyKhachSan_ATTM;
+CREATE DATABASE QuanLyKhachSan_ATTM;
+GO
+USE QuanLyKhachSan_ATTM;
+GO
+
+CREATE TABLE NhanVien (
+    maNV CHAR(10) PRIMARY KEY,
+    tenNV NVARCHAR(100) NOT NULL,
+    chucVu NVARCHAR(50) NOT NULL,
+    sdt VARCHAR(20) NOT NULL UNIQUE,
+    email NVARCHAR(100) NOT NULL UNIQUE,
+    ngaySinh DATE NULL,
+    gioiTinh BIT NULL,
+);
+GO
+
+CREATE TABLE TaiKhoan (
+    tenDangNhap VARCHAR(50) PRIMARY KEY,
+    matKhau NVARCHAR(50) NOT NULL,
+    vaiTro NVARCHAR(30) NOT NULL,
+    trangThaiTK NVARCHAR(30) NOT NULL,
+    maNV CHAR(10) NULL
+    CONSTRAINT FK_NhanVien_TaiKhoan FOREIGN KEY (maNV) REFERENCES NhanVien(maNV)
+);
+GO
+
+CREATE TABLE HangKhachHang (
+    maHang CHAR(10) PRIMARY KEY,
+    tenHang NVARCHAR(50) NOT NULL,
+    diemToiThieu FLOAT NOT NULL,
+    tyLeGiam FLOAT NOT NULL
+);
+GO
+
+
+CREATE TABLE KhachHang (
+    maKH CHAR(10) PRIMARY KEY,
+    tenKH NVARCHAR(100) NOT NULL,
+    gioiTinh BIT NULL,
+    ngaySinh DATE NULL,
+    email NVARCHAR(100) NULL,
+    sdt VARCHAR(20) NOT NULL UNIQUE,
+    soCCCD VARCHAR(20) NOT NULL UNIQUE,
+    diemTichLuy FLOAT DEFAULT 0,
+    maHang CHAR(10) DEFAULT 'HG001',
+    CONSTRAINT FK_KhachHang_Hang FOREIGN KEY (maHang) REFERENCES HangKhachHang(maHang)
+);
+GO
+
+
+=======
 ﻿CREATE DATABASE QuanLyKhachSan_ATTM;
 GO
 USE QuanLyKhachSan_ATTM;
@@ -36,6 +89,7 @@ CREATE TABLE KhachHang (
     maHang CHAR(10) NOT NULL,
     CONSTRAINT FK_KhachHang_Hang FOREIGN KEY (maHang) REFERENCES HangKhachHang(maHang)
 );
+>>>>>>> theanh
 CREATE TABLE LoaiPhong (
     maLoaiPhong CHAR(10) PRIMARY KEY,
     tenLoaiPhong NVARCHAR(50) NOT NULL,
@@ -43,7 +97,14 @@ CREATE TABLE LoaiPhong (
     tyLeCoc FLOAT NOT NULL,
     sucChuaToiThieu INT NOT NULL
 );
+<<<<<<< HEAD
+GO
+
+
+CREATE TABLE Phong(
+=======
 CREATE TABLE Phong (
+>>>>>>> theanh
     maPhong CHAR(6) PRIMARY KEY,
     tang INT NOT NULL,
     soPhong INT NOT NULL,
@@ -51,9 +112,18 @@ CREATE TABLE Phong (
     giaPhong FLOAT NOT NULL,
     tienCoc FLOAT NOT NULL,
     maLoaiPhong CHAR(10) NOT NULL,
+<<<<<<< HEAD
+    trangThaiPhong NVARCHAR(30) NOT NULL
+    CONSTRAINT FK_Phong_LoaiPhong FOREIGN KEY (maLoaiPhong) REFERENCES LoaiPhong(maLoaiPhong)
+);
+GO
+
+
+=======
     TrangThaiPhong NVARCHAR(30) NOT NULL,
     CONSTRAINT FK_Phong_LoaiPhong FOREIGN KEY (maLoaiPhong) REFERENCES LoaiPhong(maLoaiPhong)
 );
+>>>>>>> theanh
 CREATE TABLE KhuyenMai (
     maKM CHAR(10) PRIMARY KEY,
     tenKM NVARCHAR(200) NOT NULL,
@@ -61,6 +131,48 @@ CREATE TABLE KhuyenMai (
     tyLeGiam FLOAT NOT NULL,
     ngayBatDau DATETIME NOT NULL,
     ngayKetThuc DATETIME NOT NULL,
+<<<<<<< HEAD
+    trangThaiKM NVARCHAR(30) NOT NULL
+);
+GO
+
+
+CREATE TABLE HoaDon (
+    maHD CHAR(12) PRIMARY KEY,
+    ngayLap DATETIME NOT NULL,
+    phuongThucTT NVARCHAR(30) NOT NULL,
+    trangThaiHD NVARCHAR(30) NOT NULL,
+    tongTien FLOAT NULL,
+    tienThue FLOAT NULL,
+    phiDoiPhong FLOAT NULL,
+    tongTienThanhToan FLOAT NULL,
+    tienGiamHangKH FLOAT NULL,
+    tongTienSauGiam FLOAT NULL,
+    tienNhan FLOAT NULL,
+    maKH CHAR(10) NOT NULL,
+    maNV CHAR(10) NOT NULL,
+    CONSTRAINT FK_HoaDon_Khach FOREIGN KEY (maKH) REFERENCES KhachHang(maKH),
+    CONSTRAINT FK_HoaDon_NhanVien FOREIGN KEY (maNV) REFERENCES NhanVien(maNV)
+);
+GO
+
+CREATE TABLE ChiTietHoaDon (
+    maHD CHAR(12) NOT NULL,
+    maPhong CHAR(6) NOT NULL,
+    maKM CHAR(10) NULL,
+    ngayNhanPhong DATETIME NOT NULL,
+    ngayTraPhong DATETIME NOT NULL,
+    soNgayO INT NOT NULL,
+    tienGiam FLOAT NULL,
+    thanhTien FLOAT NOT NULL,
+    CONSTRAINT FK_CT_HoaDon FOREIGN KEY (maHD) REFERENCES HoaDon(maHD),
+    CONSTRAINT FK_CT_Phong FOREIGN KEY (maPhong) REFERENCES Phong(maPhong),
+    CONSTRAINT FK_CT_KM FOREIGN KEY (maKM) REFERENCES KhuyenMai(maKM)
+);
+GO
+
+
+=======
     tenTrangThaiKM NVARCHAR(30) NOT NULL
 );
 CREATE TABLE HoaDon (
@@ -87,15 +199,25 @@ CREATE TABLE ChiTietHoaDon (
     CONSTRAINT FK_CTHD_HoaDon FOREIGN KEY (maHD) REFERENCES HoaDon(maHD),
     CONSTRAINT FK_CTHD_Phong FOREIGN KEY (maPhong) REFERENCES Phong(maPhong)
 );
+>>>>>>> theanh
 CREATE TABLE HoaDonHuyPhong (
     maHuy CHAR(12) PRIMARY KEY,
     ngayHuy DATETIME NOT NULL,
     lyDoHuy NVARCHAR(200) NOT NULL,
     maKH CHAR(10) NOT NULL,
     maHD CHAR(12) NOT NULL,
+<<<<<<< HEAD
+    CONSTRAINT FK_PH_KH FOREIGN KEY (maKH) REFERENCES KhachHang(maKH),
+    CONSTRAINT FK_PH_HD FOREIGN KEY (maHD) REFERENCES HoaDon(maHD)
+);
+GO
+
+
+=======
     CONSTRAINT FK_Huy_KhachHang FOREIGN KEY (maKH) REFERENCES KhachHang(maKH),
     CONSTRAINT FK_Huy_HoaDon FOREIGN KEY (maHD) REFERENCES HoaDon(maHD)
 );
+>>>>>>> theanh
 CREATE TABLE NguoiO (
     tenNguoiO NVARCHAR(100) NOT NULL,
     ngaySinh DATE NOT NULL,
@@ -104,6 +226,1660 @@ CREATE TABLE NguoiO (
     soCCCD VARCHAR(20) NULL,
     maHD CHAR(12) NOT NULL,
     maPhong CHAR(6) NOT NULL,
+<<<<<<< HEAD
+    CONSTRAINT FK_NO_HD FOREIGN KEY (maHD) REFERENCES HoaDon(maHD),
+    CONSTRAINT FK_NO_Phong FOREIGN KEY (maPhong) REFERENCES Phong(maPhong)
+);
+GO
+
+-- INSERT HangKhachHang
+INSERT INTO HangKhachHang (maHang, tenHang, diemToiThieu, tyLeGiam) VALUES
+('HG001', N'Đồng', 0.0, 0.0),
+('HG002', N'Bạc', 10.0, 0.1),
+('HG003', N'Vàng', 20.0, 0.2),
+('HG004', N'Kim cương', 40.0, 0.4);
+GO
+
+-- INSERT LoaiPhong
+INSERT INTO LoaiPhong (maLoaiPhong, tenLoaiPhong, giaNiemYet, tyLeCoc, sucChuaToiThieu) VALUES
+('LP001', N'Standard', 1000000, 0.3, 2),
+('LP002', N'Superior', 1500000, 0.3, 2),
+('LP003', N'Deluxe', 2000000, 0.3, 2),
+('LP004', N'Suite', 3000000, 0.3, 2),
+('LP005', N'FamilyRoom', 4000000, 0.3, 8);
+GO
+
+INSERT INTO Phong (maPhong, tang, soPhong, sucChuaToiDa, giaPhong, tienCoc, maLoaiPhong, trangThaiPhong) VALUES
+('P01001', 1, 1, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P01002', 1, 2, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P01003', 1, 3, 2, 1000000, 300000, 'LP001', N'Trong'),
+('P01004', 1, 4, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P01005', 1, 5, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P01006', 1, 6, 2, 1000000, 300000, 'LP001', N'DaDat'),
+('P01007', 1, 7, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P01008', 1, 8, 2, 1000000, 300000, 'LP001', N'Trong'),
+('P01009', 1, 9, 4, 1500000, 450000, 'LP001', N'Trong'),
+('P01010', 1, 10, 4, 1500000, 450000, 'LP001', N'DangSuDung'),
+('P02001', 2, 1, 2, 1000000, 300000, 'LP001', N'DaDat'),
+('P02002', 2, 2, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P02003', 2, 3, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P02004', 2, 4, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P02005', 2, 5, 2, 1000000, 300000, 'LP001', N'DaDat'),
+('P02006', 2, 6, 4, 1500000, 450000, 'LP001', N'DangSuDung'),
+('P02007', 2, 7, 4, 1500000, 450000, 'LP001', N'DangSuDung'),
+('P02008', 2, 8, 4, 1500000, 450000, 'LP001', N'NgungHoatDong'),
+('P02009', 2, 9, 4, 1500000, 450000, 'LP001', N'DangSuDung'),
+('P02010', 2, 10, 4, 1500000, 450000, 'LP001', N'Trong'),
+('P03001', 3, 1, 2, 1000000, 300000, 'LP001', N'Trong'),
+('P03002', 3, 2, 2, 1000000, 300000, 'LP001', N'Trong'),
+('P03003', 3, 3, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P03004', 3, 4, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P03005', 3, 5, 2, 1000000, 300000, 'LP001', N'DaDat'),
+('P03006', 3, 6, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P03007', 3, 7, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P03008', 3, 8, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P03009', 3, 9, 4, 1500000, 450000, 'LP001', N'Trong'),
+('P03010', 3, 10, 4, 1500000, 450000, 'LP001', N'Trong'),
+('P04001', 4, 1, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P04002', 4, 2, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P04003', 4, 3, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P04004', 4, 4, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P04005', 4, 5, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P04006', 4, 6, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P04007', 4, 7, 2, 1000000, 300000, 'LP001', N'Trong'),
+('P04008', 4, 8, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P04009', 4, 9, 4, 1500000, 450000, 'LP001', N'DangSuDung'),
+('P04010', 4, 10, 4, 1500000, 450000, 'LP001', N'NgungHoatDong'),
+('P05001', 5, 1, 2, 1000000, 300000, 'LP001', N'Trong'),
+('P05002', 5, 2, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P05003', 5, 3, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P05004', 5, 4, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P05005', 5, 5, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P05006', 5, 6, 2, 1000000, 300000, 'LP001', N'NgungHoatDong'),
+('P05007', 5, 7, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P05008', 5, 8, 2, 1000000, 300000, 'LP001', N'DangSuDung'),
+('P05009', 5, 9, 4, 1500000, 450000, 'LP001', N'Trong'),
+('P05010', 5, 10, 4, 1500000, 450000, 'LP001', N'NgungHoatDong'),
+('P06001', 6, 1, 2, 1500000, 450000, 'LP002', N'DangSuDung'),
+('P06002', 6, 2, 2, 1500000, 450000, 'LP002', N'NgungHoatDong'),
+('P06003', 6, 3, 2, 1500000, 450000, 'LP002', N'NgungHoatDong'),
+('P06004', 6, 4, 2, 1500000, 450000, 'LP002', N'DangSuDung'),
+('P06005', 6, 5, 2, 1500000, 450000, 'LP002', N'DaDat'),
+('P06006', 6, 6, 4, 2000000, 600000, 'LP002', N'DangSuDung'),
+('P06007', 6, 7, 4, 2000000, 600000, 'LP002', N'DangSuDung'),
+('P06008', 6, 8, 4, 2000000, 600000, 'LP002', N'NgungHoatDong'),
+('P06009', 6, 9, 4, 2000000, 600000, 'LP002', N'NgungHoatDong'),
+('P06010', 6, 10, 4, 2000000, 600000, 'LP002', N'Trong'),
+('P07001', 7, 1, 2, 1500000, 450000, 'LP002', N'NgungHoatDong'),
+('P07002', 7, 2, 2, 1500000, 450000, 'LP002', N'NgungHoatDong'),
+('P07003', 7, 3, 2, 1500000, 450000, 'LP002', N'DangSuDung'),
+('P07004', 7, 4, 2, 1500000, 450000, 'LP002', N'Trong'),
+('P07005', 7, 5, 2, 1500000, 450000, 'LP002', N'DaDat'),
+('P07006', 7, 6, 4, 2000000, 600000, 'LP002', N'NgungHoatDong'),
+('P07007', 7, 7, 4, 2000000, 600000, 'LP002', N'DaDat'),
+('P07008', 7, 8, 4, 2000000, 600000, 'LP002', N'NgungHoatDong'),
+('P07009', 7, 9, 4, 2000000, 600000, 'LP002', N'DangSuDung'),
+('P07010', 7, 10, 4, 2000000, 600000, 'LP002', N'DangSuDung'),
+('P08001', 8, 1, 2, 2000000, 600000, 'LP003', N'NgungHoatDong'),
+('P08002', 8, 2, 2, 2000000, 600000, 'LP003', N'Trong'),
+('P08003', 8, 3, 2, 2000000, 600000, 'LP003', N'DangSuDung'),
+('P08004', 8, 4, 2, 2000000, 600000, 'LP003', N'NgungHoatDong'),
+('P08005', 8, 5, 2, 2000000, 600000, 'LP003', N'NgungHoatDong'),
+('P08006', 8, 6, 4, 2500000, 750000, 'LP003', N'DangSuDung'),
+('P08007', 8, 7, 4, 2500000, 750000, 'LP003', N'NgungHoatDong'),
+('P08008', 8, 8, 4, 2500000, 750000, 'LP003', N'NgungHoatDong'),
+('P08009', 8, 9, 4, 2500000, 750000, 'LP003', N'NgungHoatDong'),
+('P08010', 8, 10, 4, 2500000, 750000, 'LP003', N'Trong'),
+('P09001', 9, 1, 2, 2000000, 600000, 'LP003', N'NgungHoatDong'),
+('P09002', 9, 2, 2, 2000000, 600000, 'LP003', N'NgungHoatDong'),
+('P09003', 9, 3, 2, 2000000, 600000, 'LP003', N'Trong'),
+('P09004', 9, 4, 4, 2500000, 750000, 'LP003', N'DangSuDung'),
+('P09005', 9, 5, 4, 2500000, 750000, 'LP003', N'DangSuDung'),
+('P09006', 9, 6, 2, 3000000, 900000, 'LP004', N'DangSuDung'),
+('P09007', 9, 7, 2, 3000000, 900000, 'LP004', N'DangSuDung'),
+('P09008', 9, 8, 2, 3000000, 900000, 'LP004', N'NgungHoatDong'),
+('P09009', 9, 9, 2, 3000000, 900000, 'LP004', N'DaDat'),
+('P09010', 9, 10, 2, 3000000, 900000, 'LP004', N'Trong'),
+('P10001', 10, 1, 2, 3000000, 900000, 'LP004', N'Trong'),
+('P10002', 10, 2, 2, 3000000, 900000, 'LP004', N'DangSuDung'),
+('P10003', 10, 3, 2, 3000000, 900000, 'LP004', N'NgungHoatDong'),
+('P10004', 10, 4, 2, 3000000, 900000, 'LP004', N'NgungHoatDong'),
+('P10005', 10, 5, 2, 3000000, 900000, 'LP004', N'DangSuDung'),
+('P10006', 10, 6, 8, 4000000, 1200000, 'LP005', N'DangSuDung'),
+('P10007', 10, 7, 8, 4000000, 1200000, 'LP005', N'NgungHoatDong'),
+('P10008', 10, 8, 8, 4000000, 1200000, 'LP005', N'Trong'),
+('P10009', 10, 9, 8, 4000000, 1200000, 'LP005', N'DaDat'),
+('P10010', 10, 10, 8, 4000000, 1200000, 'LP005', N'NgungHoatDong');
+GO
+
+
+-- INSERT KhuyenMai (10)
+INSERT INTO KhuyenMai VALUES('KM25001', N'KM Giảm 7%', N'LP002', 0.05, '2025-10-12 10:00:00', '2025-11-10 10:00:00', N'SapDienRa');
+INSERT INTO KhuyenMai VALUES('KM25002', N'KM Giảm 16%', N'LP005', 0.25, '2025-09-11 10:00:00', '2025-10-01 10:00:00', N'HetHan');
+INSERT INTO KhuyenMai VALUES('KM25003', N'KM Giảm 25%', N'LP001,LP003', 0.1, '2025-09-06 10:00:00', '2025-09-25 10:00:00', N'DangHoatDong');
+INSERT INTO KhuyenMai VALUES('KM25004', N'KM Giảm 30%', N'LP004', 0.18, '2025-10-11 10:00:00', '2025-10-21 10:00:00', N'HetHan');
+INSERT INTO KhuyenMai VALUES('KM25005', N'KM Giảm 5%', N'LP002,LP003', 0.4, '2025-10-24 10:00:00', '2025-12-07 10:00:00', N'SapDienRa');
+INSERT INTO KhuyenMai VALUES('KM25006', N'KM Giảm 34%', N'LP005,LP004', 0.15, '2025-09-05 10:00:00', '2025-09-10 10:00:00', N'HetHan');
+INSERT INTO KhuyenMai VALUES('KM25007', N'KM Giảm 6%', N'LP005', 0.2, '2025-09-11 10:00:00', '2025-09-16 10:00:00', N'HetHan');
+INSERT INTO KhuyenMai VALUES('KM25008', N'KM Giảm 24%', N'LP002', 0.35, '2025-09-14 10:00:00', '2025-10-20 10:00:00', N'DangHoatDong');
+INSERT INTO KhuyenMai VALUES('KM25009', N'KM Giảm 14%', N'LP003,LP001,LP004', 0.15, '2025-10-23 10:00:00', '2025-11-20 10:00:00', N'HetHan');
+INSERT INTO KhuyenMai VALUES('KM25010', N'KM Giảm 10%', N'LP001,LP002,LP003', 0.25, '2025-09-19 10:00:00', '2025-10-30 10:00:00', N'DangHoatDong');
+GO
+
+-- INSERT NhanVien (50)
+INSERT INTO NhanVien VALUES('NV24001', N'Trần Văn Phương', N'QuanLy', '08332181960', 'trần.văn.phương.1@example.com', '1993-05-26 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV25002', N'Lê Thanh Hồng', N'LeTan', '08235116155', 'lê.thanh.hồng.2@example.com', '1981-12-03 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV24003', N'Phạm Thảo Bình', N'QuanLy', '07164752553', 'phạm.thảo.bình.3@example.com', '1985-01-08 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV25004', N'Vũ Thanh Hà', N'LeTan', '03395376724', 'vũ.thanh.hà.4@example.com', '1990-02-25 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV25005', N'Trần Minh Oanh', N'QuanLy', '07691669784', 'trần.minh.oanh.5@example.com', '1998-05-17 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV23006', N'Trần Thảo Sơn', N'LeTan', '05932528809', 'trần.thảo.sơn.6@example.com', '1990-02-25 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV20007', N'Bùi Phước Cường', N'QuanLy', '08896383465', 'bùi.phước.cường.7@example.com', '1982-01-03 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV20008', N'Trần Văn Sơn', N'LeTan', '08183473829', 'trần.văn.sơn.8@example.com', '1998-01-22 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV19009', N'Phan Hữu Quang', N'QuanLy', '03333872624', 'phan.hữu.quang.9@example.com', '1990-08-07 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV19010', N'Lê Thanh An', N'LeTan', '09474687234', 'lê.thanh.an.10@example.com', '1976-09-03 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV19011', N'Đặng Thị Oanh', N'BaoVe', '07619399091', 'đặng.thị.oanh.11@example.com', '1995-05-15 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV25012', N'Trần Văn Lan', N'LeTan', '05911838425', 'trần.văn.lan.12@example.com', '1996-02-05 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV19013', N'Trần Phước Cường', N'BaoVe', '08493534874', 'trần.phước.cường.13@example.com', '1988-09-01 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV19014', N'Lê Phước An', N'BuongPhong', '08982620450', 'lê.phước.an.14@example.com', '1975-03-24 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV25015', N'Phan Tuấn Hà', N'BaoVe', '07160733754', 'phan.tuấn.hà.15@example.com', '1992-06-01 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV21016', N'Lê Ngọc Hà', N'KeToan', '03196556981', 'lê.ngọc.hà.16@example.com', '1996-06-20 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV24017', N'Trần Thảo Mai', N'Bep', '08656482366', 'trần.thảo.mai.17@example.com', '1995-06-15 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV22018', N'Phạm Phước Lan', N'BaoVe', '07148951343', 'phạm.phước.lan.18@example.com', '1997-07-16 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV20019', N'Lê Văn Tú', N'BuongPhong', '03632870831', 'lê.văn.tú.19@example.com', '1980-12-28 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV22020', N'Hoàng Tuấn Sơn', N'BuongPhong', '08873471434', 'hoàng.tuấn.sơn.20@example.com', '1985-09-15 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV19021', N'Phạm Thanh Khoa', N'BaoVe', '05096705466', 'phạm.thanh.khoa.21@example.com', '1996-07-24 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV25022', N'Bùi Minh Nhung', N'LeTan', '05069901627', 'bùi.minh.nhung.22@example.com', '1977-08-01 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV21023', N'Phạm Thị Quang', N'KeToan', '03033092327', 'phạm.thị.quang.23@example.com', '1993-01-10 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV22024', N'Phạm Thị Nhung', N'BuongPhong', '07149190586', 'phạm.thị.nhung.24@example.com', '1980-12-17 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV23025', N'Đỗ Quốc Lan', N'LeTan', '09945314737', 'đỗ.quốc.lan.25@example.com', '1983-10-23 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV23026', N'Nguyễn Phước Dũng', N'BuongPhong', '03367837770', 'nguyễn.phước.dũng.26@example.com', '1998-09-11 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV24027', N'Bùi Thảo Hà', N'LeTan', '08313518233', 'bùi.thảo.hà.27@example.com','1975-12-18 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV21028', N'Nguyễn Văn Mai', N'KyThuat', '08271094777', 'nguyễn.văn.mai.28@example.com', '1979-10-10 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV20029', N'Trần Phước Quang', N'KyThuat', '09999386774', 'trần.phước.quang.29@example.com', '1982-03-18 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV20030', N'Nguyễn Thanh Lan', N'KyThuat', '05740344713', 'nguyễn.thanh.lan.30@example.com', '1984-10-24 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV22031', N'Trần Quốc Phương', N'KeToan', '08648877190', 'trần.quốc.phương.31@example.com', '1980-08-17 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV21032', N'Lê Ngọc Khoa', N'QuanLy', '09175655125', 'lê.ngọc.khoa.32@example.com','1987-09-27 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV24033', N'Đỗ Quốc Khoa', N'KeToan', '03385977034', 'đỗ.quốc.khoa.33@example.com','1992-07-03 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV25034', N'Trần Quốc Bình', N'LeTan', '07748467737', 'trần.quốc.bình.34@example.com', '1975-05-24 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV25035', N'Đặng Ngọc Oanh', N'BuongPhong', '09278755886', 'đặng.ngọc.oanh.35@example.com','1996-11-05 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV19036', N'Lê Phước Nhung', N'QuanLy', '08171870262', 'lê.phước.nhung.36@example.com','1992-01-20 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV20037', N'Hoàng Tuấn Phương', N'KyThuat', '03611724005', 'hoàng.tuấn.phương.37@example.com','1977-10-28 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV23038', N'Phạm Quốc Tú', N'BuongPhong', '05237474074', 'phạm.quốc.tú.38@example.com','1990-02-08 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV23039', N'Vũ Ngọc Hà', N'KeToan', '08064090974', 'vũ.ngọc.hà.39@example.com','1993-06-24 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV19040', N'Hoàng Hữu Phương', N'KeToan', '09232858842', 'hoàng.hữu.phương.40@example.com','1987-01-09 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV22041', N'Vũ Thảo Nhung', N'KeToan', '09513709859', 'vũ.thảo.nhung.41@example.com','1982-09-05 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV22042', N'Vũ Phước Khoa', N'KyThuat', '05261796405', 'vũ.phước.khoa.42@example.com','1978-08-03 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV24043', N'Đặng Văn An', N'BaoVe', '08329318393', 'đặng.văn.an.43@example.com','1975-03-01 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV25044', N'Phạm Ngọc Hồng', N'BuongPhong', '03240268117', 'phạm.ngọc.hồng.44@example.com','1995-01-02 00:00:00', 1);
+INSERT INTO NhanVien VALUES('NV25045', N'Phan Thanh Oanh', N'BuongPhong', '03771159212', 'phan.thanh.oanh.45@example.com','1978-12-04 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV22046', N'Bùi Tuấn Khoa', N'Bep', '08766156545', 'bùi.tuấn.khoa.46@example.com','1992-09-11 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV22047', N'Vũ Thanh Sơn', N'QuanLy', '03494519832', 'vũ.thanh.sơn.47@example.com','1994-10-22 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV23048', N'Hoàng Văn Cường', N'BaoVe', '08455022961', 'hoàng.văn.cường.48@example.com','1985-10-20 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV19049', N'Lê Minh Quang', N'KeToan', '05014767976', 'lê.minh.quang.49@example.com','1982-07-20 00:00:00', 0);
+INSERT INTO NhanVien VALUES('NV19050', N'Phạm Thảo Dũng', N'KeToan', '07445107622', 'phạm.thảo.dũng.50@example.com','1985-10-14 00:00:00', 1);
+GO
+
+-- INSERT TaiKhoan (10)
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('08332181960','12345678',N'QuanLy',N'VoHieuHoa','NV24001');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('08235116155','12345678',N'LeTan',N'VoHieuHoa','NV25002');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('07164752553','12345678',N'QuanLy',N'DangHoatDong','NV24003');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('03395376724','12345678',N'LeTan',N'VoHieuHoa','NV25004');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('07691669784','12345678',N'QuanLy',N'DangHoatDong','NV25005');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('05932528809','12345678',N'LeTan',N'VoHieuHoa','NV23006');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('08896383465','12345678',N'QuanLy',N'DangHoatDong','NV20007');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('08183473829','12345678',N'LeTan',N'VoHieuHoa','NV20008');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('03333872624','12345678',N'QuanLy',N'VoHieuHoa','NV19009');
+INSERT INTO TaiKhoan (tenDangNhap, matKhau, vaiTro, trangThaiTK, maNV) VALUES('09474687234','12345678',N'LeTan',N'DangHoatDong','NV19010');
+GO
+
+-- INSERT KhachHang (50)
+INSERT INTO KhachHang VALUES('KH24001', N'Trần Tuấn Khoa', 0, '1966-10-05 00:00:00', 'trần.tuấn.khoa.101@example.com', '05681645352', '181883552312', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH25002', N'Trần Minh Quang', 1, '1957-01-12 00:00:00', 'trần.minh.quang.102@example.com', '09799799552', '717744905814', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH24003', N'Trần Thị Nhung', 0, '2000-08-15 00:00:00', 'trần.thị.nhung.103@example.com', '05867980793', '597820715182', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH25004', N'Đỗ Ngọc Cường', 1, '1996-12-22 00:00:00', 'đỗ.ngọc.cường.104@example.com', '08546659051', '518644925192', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH24005', N'Lê Ngọc Phương', 1, '1961-09-25 00:00:00', 'lê.ngọc.phương.105@example.com', '03486528168', '505423573322', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH25006', N'Đỗ Văn Oanh', 1, '1967-06-22 00:00:00', 'đỗ.văn.oanh.106@example.com', '08929622292', '706537947383', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH25007', N'Bùi Quốc Quang', 1, '1960-04-27 00:00:00', 'bùi.quốc.quang.107@example.com', '08688623924', '075818141247', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24008', N'Vũ Văn Khoa', 0, '1956-05-07 00:00:00', 'vũ.văn.khoa.108@example.com', '03685361530', '515220472779', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH23009', N'Đỗ Ngọc Mai', 0, '1994-06-08 00:00:00', 'đỗ.ngọc.mai.109@example.com', '09143410369', '711798089324', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH25010', N'Phan Minh Oanh', 0, '1957-06-18 00:00:00', 'phan.minh.oanh.110@example.com', '03851888880', '670654051531', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH24011', N'Lê Quốc Phương', 1, '1972-02-26 00:00:00', 'lê.quốc.phương.111@example.com', '09221704303', '054868740345', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH24012', N'Phan Thanh Phương', 1, '1993-12-14 00:00:00', 'phan.thanh.phương.112@example.com', '09652775841', '616928451154', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH23013', N'Bùi Hữu Lan', 0, '1998-08-12 00:00:00', 'bùi.hữu.lan.113@example.com', '03596401658', '202970213556', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH24014', N'Bùi Thị Nhung', 0, '1963-02-15 00:00:00', 'bùi.thị.nhung.114@example.com', '07856543102', '786814473947', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH23015', N'Bùi Thị Quang', 0, '1994-02-03 00:00:00', 'bùi.thị.quang.115@example.com', '08518844225', '831323705895', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH24016', N'Phan Quốc Mai', 0, '1965-06-23 00:00:00', 'phan.quốc.mai.116@example.com', '09691251778', '528922680182', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH23017', N'Vũ Phước Tú', 0, '1957-11-25 00:00:00', 'vũ.phước.tú.117@example.com', '08143842498', '182992299590', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH25018', N'Hoàng Tuấn Quang', 1, '2000-06-24 00:00:00', 'hoàng.tuấn.quang.118@example.com', '05690784473', '647102767735', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24019', N'Phan Minh Quang', 0, '2003-03-16 00:00:00', 'phan.minh.quang.119@example.com', '08881537147', '321046963259', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH25020', N'Bùi Quốc Tú', 1, '2001-06-25 00:00:00', 'bùi.quốc.tú.120@example.com', '08701687339', '500479748016', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24021', N'Vũ Văn Khoa', 0, '1967-10-17 00:00:00', 'vũ.văn.khoa.121@example.com', '03983584168', '784991216558', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH24022', N'Đỗ Văn An', 1, '1985-01-12 00:00:00', 'đỗ.văn.an.122@example.com', '03257872982', '595269495888', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH24023', N'Trần Thanh Nhung', 1, '1981-03-14 00:00:00', 'trần.thanh.nhung.123@example.com', '08097499309', '728962309130', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH25024', N'Phạm Thanh Mai', 1, '1990-05-08 00:00:00', 'phạm.thanh.mai.124@example.com', '05702838578', '652785854973', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24025', N'Hoàng Tuấn Phương', 0, '1989-05-18 00:00:00', 'hoàng.tuấn.phương.125@example.com', '09575844198', '665240415747', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH25026', N'Hoàng Minh Bình', 1, '1973-11-02 00:00:00', 'hoàng.minh.bình.126@example.com', '05933083301', '657120826773', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH23027', N'Đặng Tuấn Mai', 1, '1967-02-11 00:00:00', 'đặng.tuấn.mai.127@example.com', '03262067240', '049915478872', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH23028', N'Bùi Thảo Phương', 0, '1983-05-11 00:00:00', 'bùi.thảo.phương.128@example.com', '07054932966', '851612275304', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH24029', N'Đặng Ngọc An', 1, '1999-09-16 00:00:00', 'đặng.ngọc.an.129@example.com', '08530174268', '414593327279', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH25030', N'Phạm Tuấn Oanh', 0, '1987-08-26 00:00:00', 'phạm.tuấn.oanh.130@example.com', '05187851910', '883982258713', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH23031', N'Bùi Minh Mai', 1, '1981-03-25 00:00:00', 'bùi.minh.mai.131@example.com', '09790874064', '039106518017', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH23032', N'Phan Hữu Tú', 0, '1970-08-12 00:00:00', 'phan.hữu.tú.132@example.com', '09766182512', '868230047868', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH23033', N'Hoàng Tuấn Tú', 1, '1969-12-19 00:00:00', 'hoàng.tuấn.tú.133@example.com', '03069033119', '079030673830', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24034', N'Đặng Ngọc Quang', 0, '1974-07-06 00:00:00', 'đặng.ngọc.quang.134@example.com', '08342836440', '892687056856', 0, 'HG004');
+INSERT INTO KhachHang VALUES('KH25035', N'Bùi Tuấn Sơn', 1, '1979-11-20 00:00:00', 'bùi.tuấn.sơn.135@example.com', '07427086688', '263435175183', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH25036', N'Nguyễn Thị Dũng', 1, '1971-06-17 00:00:00', 'nguyễn.thị.dũng.136@example.com', '05837354033', '173936385467', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH24037', N'Bùi Thị Quang', 1, '1990-11-22 00:00:00', 'bùi.thị.quang.137@example.com', '09535560932', '048996423536', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24038', N'Hoàng Quốc Phương', 1, '1978-01-20 00:00:00', 'hoàng.quốc.phương.138@example.com', '09725228728', '080100623120', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH25039', N'Đặng Quốc Oanh', 1, '1972-07-03 00:00:00', 'đặng.quốc.oanh.139@example.com', '09008860084', '840862118233', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH24040', N'Phan Quốc Nhung', 0, '1999-10-16 00:00:00', 'phan.quốc.nhung.140@example.com', '07341016668', '700217659180', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24041', N'Nguyễn Thị Oanh', 1, '1958-02-14 00:00:00', 'nguyễn.thị.oanh.141@example.com', '08890250392', '614293968562', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH23042', N'Trần Hữu Nhung', 0, '1979-12-26 00:00:00', 'trần.hữu.nhung.142@example.com', '05965047735', '866296194311', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH25043', N'Lê Thanh Hồng', 1, '1979-01-10 00:00:00', 'lê.thanh.hồng.143@example.com', '08110475412', '126788861015', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH24044', N'Phan Thị Phương', 0, '2001-11-16 00:00:00', 'phan.thị.phương.144@example.com', '05398262244', '472126464715', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH25045', N'Đặng Tuấn Lan', 1, '2002-12-21 00:00:00', 'đặng.tuấn.lan.145@example.com', '03240659657', '569245937526', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH24046', N'Đặng Tuấn Hồng', 0, '2000-07-26 00:00:00', 'đặng.tuấn.hồng.146@example.com', '09465193982', '807374167243', 0, 'HG003');
+INSERT INTO KhachHang VALUES('KH24047', N'Trần Quốc Nhung', 0, '1961-05-08 00:00:00', 'trần.quốc.nhung.147@example.com', '09968868058', '911352909656', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH25048', N'Đỗ Phước Nhung', 1, '1977-08-04 00:00:00', 'đỗ.phước.nhung.148@example.com', '05375679825', '071461125457', 0, 'HG002');
+INSERT INTO KhachHang VALUES('KH24049', N'Bùi Hữu Bình', 0, '1983-10-14 00:00:00', 'bùi.hữu.bình.149@example.com', '08010512382', '825867362266', 0, 'HG001');
+INSERT INTO KhachHang VALUES('KH24050', N'Nguyễn Tuấn Dũng', 1, '1994-03-27 00:00:00', 'nguyễn.tuấn.dũng.150@example.com', '08191825537', '147859696915', 0, 'HG003');
+GO
+
+-- INSERT HoaDon (200)
+INSERT INTO HoaDon VALUES('HD102825001', '2025-10-28 18:15:00', N'ChuyenKhoan', N'PhieuThuePhong', 9200000, 920000, 50000, 10170000, 2034000, 8136000, 8136000, 'KH25045', 'NV23048');
+INSERT INTO HoaDon VALUES('HD101725002', '2025-10-17 09:00:00', N'TienMat', N'HoaDonHoanThanh', 5575000, 557500, 0, 6132500, 1226500, 4906000, 4906000, 'KH25006', 'NV25022');
+INSERT INTO HoaDon VALUES('HD101625003', '2025-10-16 18:15:00', N'TienMat', N'PhieuThuePhong', 3937500, 393750, 50000, 4381250, 1752500, 2628750, 2628750, 'KH24023', 'NV25012');
+INSERT INTO HoaDon VALUES('HD102525004', '2025-10-25 12:30:00', N'TienMat', N'PhieuDatPhong', 31490000, 3149000, 0, 34639000, 6927800, 27711200, 27711200, 'KH24012', 'NV23039');
+INSERT INTO HoaDon VALUES('HD101625005', '2025-10-16 13:30:00', N'TienMat', N'PhieuDatPhong', 32500000, 3250000, 50000, 35800000, 7160000, 28640000, 28690000, 'KH24001', 'NV24017');
+INSERT INTO HoaDon VALUES('HD100125006', '2025-10-01 08:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 15600000, 1560000, 50000, 17210000, 6884000, 10326000, 10326000, 'KH23032', 'NV23025');
+INSERT INTO HoaDon VALUES('HD100725007', '2025-10-07 08:15:00', N'ChuyenKhoan', N'PhieuDatPhong', 10000000, 1000000, 50000, 11050000, 0, 11050000, 11050000, 'KH24008', 'NV22020');
+INSERT INTO HoaDon VALUES('HD101725008', '2025-10-17 09:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 35200000, 3520000, 0, 38720000, 7744000, 30976000, 30976000, 'KH24029', 'NV24003');
+INSERT INTO HoaDon VALUES('HD111425009', '2025-11-14 18:00:00', N'ChuyenKhoan', N'PhieuDatPhong', 30000000, 3000000, 0, 33000000, 6600000, 26400000, 26400000, 'KH25036', 'NV25004');
+INSERT INTO HoaDon VALUES('HD103125010', '2025-10-31 12:00:00', N'TienMat', N'PhieuThuePhong', 4500000, 450000, 0, 4950000, 0, 4950000, 4980000, 'KH24049', 'NV20029');
+INSERT INTO HoaDon VALUES('HD110725011', '2025-11-07 17:00:00', N'TienMat', N'HoaDonHoanThanh', 12010000, 1201000, 20000, 13231000, 5292400, 7938600, 7958600, 'KH23027', 'NV24017');
+INSERT INTO HoaDon VALUES('HD111025012', '2025-11-10 09:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 11275000, 1127500, 0, 12402500, 0, 12402500, 12402500, 'KH23031', 'NV23038');
+INSERT INTO HoaDon VALUES('HD112525013', '2025-11-25 18:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 22000000, 2200000, 0, 24200000, 9680000, 14520000, 14520000, 'KH23009', 'NV19013');
+INSERT INTO HoaDon VALUES('HD110825014', '2025-11-08 16:30:00', N'TienMat', N'PhieuThuePhong', 13200000, 1320000, 50000, 14570000, 5828000, 8742000, 8792000, 'KH24023', 'NV19049');
+INSERT INTO HoaDon VALUES('HD112925015', '2025-11-29 15:30:00', N'TienMat', N'PhieuThuePhong', 4000000, 400000, 0, 4400000, 440000, 3960000, 3970000, 'KH24037', 'NV24043');
+INSERT INTO HoaDon VALUES('HD101225016', '2025-10-12 09:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 29250000, 2925000, 50000, 32225000, 6445000, 25780000, 25780000, 'KH25045', 'NV22031');
+INSERT INTO HoaDon VALUES('HD100925017', '2025-10-09 19:45:00', N'TienMat', N'PhieuDatPhong', 12000000, 1200000, 0, 13200000, 2640000, 10560000, 10570000, 'KH25026', 'NV19014');
+INSERT INTO HoaDon VALUES('HD100725018', '2025-10-07 20:45:00', N'TienMat', N'PhieuDatPhong', 17075000, 1707500, 50000, 18832500, 0, 18832500, 18862500, 'KH25043', 'NV23038');
+INSERT INTO HoaDon VALUES('HD103125019', '2025-10-31 16:15:00', N'TienMat', N'PhieuThuePhong', 16975000, 1697500, 0, 18672500, 1867250, 16805250, 16815250, 'KH24025', 'NV24043');
+INSERT INTO HoaDon VALUES('HD112225020', '2025-11-22 15:00:00', N'TienMat', N'PhieuThuePhong', 9050000, 905000, 0, 9955000, 995500, 8959500, 8979500, 'KH23033', 'NV25045');
+INSERT INTO HoaDon VALUES('HD110125021', '2025-11-01 08:30:00', N'TienMat', N'HoaDonHoanThanh', 21787500, 2178750, 0, 23966250, 2396625, 21569625, 21569625, 'KH25007', 'NV19011');
+INSERT INTO HoaDon VALUES('HD110925022', '2025-11-09 12:15:00', N'TienMat', N'PhieuDatPhong', 35787500, 3578750, 0, 39366250, 7873250, 31493000, 31543000, 'KH24019', 'NV24043');
+INSERT INTO HoaDon VALUES('HD111125023', '2025-11-11 11:00:00', N'TienMat', N'PhieuThuePhong', 11250000, 1125000, 20000, 12395000, 4958000, 7437000, 7457000, 'KH23032', 'NV20029');
+INSERT INTO HoaDon VALUES('HD110225024', '2025-11-02 16:00:00', N'TienMat', N'PhieuThuePhong', 21450000, 2145000, 0, 23595000, 0, 23595000, 23595000, 'KH24049', 'NV24033');
+INSERT INTO HoaDon VALUES('HD100425025', '2025-10-04 10:30:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 8750000, 875000, 20000, 9645000, 1929000, 7716000, 7716000, 'KH25006', 'NV19014');
+INSERT INTO HoaDon VALUES('HD101225026', '2025-10-12 15:00:00', N'TienMat', N'HoaDonHoanThanh', 27500000, 2750000, 50000, 30300000, 0, 30300000, 30300000, 'KH25043', 'NV19009');
+INSERT INTO HoaDon VALUES('HD100525027', '2025-10-05 12:15:00', N'TienMat', N'PhieuThuePhong', 21435000, 2143500, 50000, 23628500, 2362850, 21265650, 21265650, 'KH24040', 'NV22042');
+INSERT INTO HoaDon VALUES('HD111425028', '2025-11-14 16:45:00', N'TienMat', N'PhieuThuePhong', 9262500, 926250, 0, 10188750, 1018875, 9169875, 9219875, 'KH24025', 'NV23038');
+INSERT INTO HoaDon VALUES('HD102225029', '2025-10-22 12:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 29665000, 2966500, 0, 32631500, 13052600, 19578900, 19578900, 'KH23027', 'NV20008');
+INSERT INTO HoaDon VALUES('HD111525030', '2025-11-15 15:00:00', N'TienMat', N'PhieuThuePhong', 3000000, 300000, 50000, 3350000, 335000, 3015000, 3065000, 'KH24014', 'NV25022');
+INSERT INTO HoaDon VALUES('HD110825031', '2025-11-08 10:30:00', N'TienMat', N'HoaDonHoanThanh', 6000000, 600000, 50000, 6650000, 1330000, 5320000, 5320000, 'KH25006', 'NV25044');
+INSERT INTO HoaDon VALUES('HD110425032', '2025-11-04 13:30:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 4550000, 455000, 0, 5005000, 2002000, 3003000, 3003000, 'KH24034', 'NV19010');
+INSERT INTO HoaDon VALUES('HD112225033', '2025-11-22 13:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 7125000, 712500, 0, 7837500, 783750, 7053750, 7053750, 'KH25020', 'NV25005');
+INSERT INTO HoaDon VALUES('HD112725034', '2025-11-27 13:30:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 25565000, 2556500, 20000, 28141500, 5628300, 22513200, 22513200, 'KH25039', 'NV21016');
+INSERT INTO HoaDon VALUES('HD111825035', '2025-11-18 19:00:00', N'TienMat', N'PhieuDatPhong', 8800000, 880000, 0, 9680000, 1936000, 7744000, 7744000, 'KH24019', 'NV24001');
+INSERT INTO HoaDon VALUES('HD102225036', '2025-10-22 11:15:00', N'ChuyenKhoan', N'PhieuThuePhong', 26400000, 2640000, 0, 29040000, 5808000, 23232000, 23232000, 'KH25045', 'NV25045');
+INSERT INTO HoaDon VALUES('HD111625037', '2025-11-16 14:15:00', N'TienMat', N'PhieuThuePhong', 11200000, 1120000, 20000, 12340000, 2468000, 9872000, 9872000, 'KH25039', 'NV25022');
+INSERT INTO HoaDon VALUES('HD112925038', '2025-11-29 12:45:00', N'TienMat', N'PhieuThuePhong', 4000000, 400000, 0, 4400000, 880000, 3520000, 3520000, 'KH24012', 'NV20029');
+INSERT INTO HoaDon VALUES('HD103025039', '2025-10-30 17:15:00', N'TienMat', N'HoaDonHoanThanh', 13500000, 1350000, 20000, 14870000, 2974000, 11896000, 11896000, 'KH25045', 'NV22042');
+INSERT INTO HoaDon VALUES('HD101225040', '2025-10-12 10:00:00', N'TienMat', N'PhieuThuePhong', 16500000, 1650000, 0, 18150000, 0, 18150000, 18150000, 'KH25043', 'NV20037');
+INSERT INTO HoaDon VALUES('HD111425041', '2025-11-14 11:00:00', N'TienMat', N'PhieuDatPhong', 21500000, 2150000, 20000, 23670000, 9468000, 14202000, 14222000, 'KH23028', 'NV23039');
+INSERT INTO HoaDon VALUES('HD110325042', '2025-11-03 19:45:00', N'TienMat', N'PhieuThuePhong', 3575000, 357500, 20000, 3952500, 0, 3952500, 3962500, 'KH23013', 'NV24001');
+INSERT INTO HoaDon VALUES('HD112325043', '2025-11-23 13:45:00', N'TienMat', N'HoaDonHoanThanh', 14550000, 1455000, 50000, 16055000, 3211000, 12844000, 12854000, 'KH25010', 'NV22041');
+INSERT INTO HoaDon VALUES('HD111925044', '2025-11-19 13:15:00', N'TienMat', N'HoaDonHoanThanh', 12000000, 1200000, 0, 13200000, 0, 13200000, 13200000, 'KH24047', 'NV24003');
+INSERT INTO HoaDon VALUES('HD112525045', '2025-11-25 17:30:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 1312500, 131250, 20000, 1463750, 292750, 1171000, 1171000, 'KH24021', 'NV20030');
+INSERT INTO HoaDon VALUES('HD102525046', '2025-10-25 09:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 9000000, 900000, 20000, 9920000, 0, 9920000, 9920000, 'KH25035', 'NV25045');
+INSERT INTO HoaDon VALUES('HD100925047', '2025-10-09 09:15:00', N'ChuyenKhoan', N'PhieuThuePhong', 30900000, 3090000, 50000, 34040000, 3404000, 30636000, 30636000, 'KH24040', 'NV25012');
+INSERT INTO HoaDon VALUES('HD101825048', '2025-10-18 20:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 12212500, 1221250, 0, 13433750, 0, 13433750, 13433750, 'KH24047', 'NV25044');
+INSERT INTO HoaDon VALUES('HD101225049', '2025-10-12 18:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 3900000, 390000, 0, 4290000, 858000, 3432000, 3432000, 'KH24029', 'NV22046');
+INSERT INTO HoaDon VALUES('HD110625050', '2025-11-06 19:30:00', N'TienMat', N'HoaDonHoanThanh', 8000000, 800000, 0, 8800000, 1760000, 7040000, 7040000, 'KH23042', 'NV22041');
+INSERT INTO HoaDon VALUES('HD100325051', '2025-10-03 13:00:00', N'TienMat', N'PhieuThuePhong', 30125000, 3012500, 0, 33137500, 3313750, 29823750, 29823750, 'KH24014', 'NV22042');
+INSERT INTO HoaDon VALUES('HD111225052', '2025-11-12 08:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 3950000, 395000, 50000, 4395000, 0, 4395000, 4395000, 'KH23017', 'NV25022');
+INSERT INTO HoaDon VALUES('HD110125053', '2025-11-01 08:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 12000000, 1200000, 50000, 13250000, 1325000, 11925000, 11925000, 'KH25024', 'NV19009');
+INSERT INTO HoaDon VALUES('HD102325054', '2025-10-23 12:15:00', N'TienMat', N'PhieuThuePhong', 8550000, 855000, 20000, 9425000, 3770000, 5655000, 5705000, 'KH23009', 'NV20008');
+INSERT INTO HoaDon VALUES('HD103025055', '2025-10-30 17:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 14000000, 1400000, 50000, 15450000, 3090000, 12360000, 12360000, 'KH24012', 'NV22024');
+INSERT INTO HoaDon VALUES('HD101925056', '2025-10-19 14:15:00', N'ChuyenKhoan', N'PhieuThuePhong', 5750000, 575000, 0, 6325000, 1265000, 5060000, 5060000, 'KH24019', 'NV19013');
+INSERT INTO HoaDon VALUES('HD100225057', '2025-10-02 14:15:00', N'TienMat', N'PhieuThuePhong', 28525000, 2852500, 0, 31377500, 6275500, 25102000, 25112000, 'KH25039', 'NV22042');
+INSERT INTO HoaDon VALUES('HD110125058', '2025-11-01 09:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 11850000, 1185000, 50000, 13085000, 2617000, 10468000, 10468000, 'KH25045', 'NV20008');
+INSERT INTO HoaDon VALUES('HD101225059', '2025-10-12 18:30:00', N'TienMat', N'PhieuDatPhong', 57510000, 5751000, 20000, 63281000, 25312400, 37968600, 37998600, 'KH24023', 'NV19011');
+INSERT INTO HoaDon VALUES('HD101425060', '2025-10-14 19:15:00', N'TienMat', N'HoaDonHoanThanh', 7700000, 770000, 0, 8470000, 847000, 7623000, 7643000, 'KH24014', 'NV24033');
+INSERT INTO HoaDon VALUES('HD110825061', '2025-11-08 19:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 5500000, 550000, 50000, 6100000, 1220000, 4880000, 4880000, 'KH24019', 'NV21028');
+INSERT INTO HoaDon VALUES('HD111825062', '2025-11-18 19:30:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 26475000, 2647500, 50000, 29172500, 0, 29172500, 29172500, 'KH25043', 'NV23039');
+INSERT INTO HoaDon VALUES('HD100425063', '2025-10-04 12:45:00', N'TienMat', N'HoaDonHoanThanh', 15112500, 1511250, 20000, 16643750, 1664375, 14979375, 14999375, 'KH25018', 'NV25005');
+INSERT INTO HoaDon VALUES('HD110525064', '2025-11-05 14:45:00', N'TienMat', N'PhieuThuePhong', 5200000, 520000, 0, 5720000, 572000, 5148000, 5148000, 'KH25018', 'NV19009');
+INSERT INTO HoaDon VALUES('HD111925065', '2025-11-19 20:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 3000000, 300000, 50000, 3350000, 335000, 3015000, 3015000, 'KH24014', 'NV19010');
+INSERT INTO HoaDon VALUES('HD110225066', '2025-11-02 09:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 22250000, 2225000, 0, 24475000, 0, 24475000, 24475000, 'KH24049', 'NV25004');
+INSERT INTO HoaDon VALUES('HD102525067', '2025-10-25 12:45:00', N'TienMat', N'PhieuThuePhong', 22000000, 2200000, 0, 24200000, 0, 24200000, 24200000, 'KH23017', 'NV19011');
+INSERT INTO HoaDon VALUES('HD101025068', '2025-10-10 08:15:00', N'ChuyenKhoan', N'PhieuDatPhong', 17925000, 1792500, 0, 19717500, 3943500, 15774000, 15774000, 'KH24046', 'NV20030');
+INSERT INTO HoaDon VALUES('HD100825069', '2025-10-08 19:15:00', N'TienMat', N'PhieuDatPhong', 47300000, 4730000, 20000, 52050000, 10410000, 41640000, 41690000, 'KH24012', 'NV19011');
+INSERT INTO HoaDon VALUES('HD110725070', '2025-11-07 11:00:00', N'TienMat', N'PhieuThuePhong', 3300000, 330000, 0, 3630000, 726000, 2904000, 2924000, 'KH24016', 'NV19050');
+INSERT INTO HoaDon VALUES('HD100625071', '2025-10-06 20:45:00', N'TienMat', N'HoaDonHoanThanh', 7160000, 716000, 50000, 7926000, 1585200, 6340800, 6370800, 'KH25006', 'NV24003');
+INSERT INTO HoaDon VALUES('HD112325072', '2025-11-23 14:00:00', N'TienMat', N'PhieuThuePhong', 21500000, 2150000, 50000, 23700000, 9480000, 14220000, 14220000, 'KH23032', 'NV23048');
+INSERT INTO HoaDon VALUES('HD101625073', '2025-10-16 20:45:00', N'TienMat', N'PhieuThuePhong', 13475000, 1347500, 20000, 14842500, 1484250, 13358250, 13358250, 'KH25024', 'NV22046');
+INSERT INTO HoaDon VALUES('HD111025074', '2025-11-10 19:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 22100000, 2210000, 20000, 24330000, 4866000, 19464000, 19464000, 'KH24001', 'NV22018');
+INSERT INTO HoaDon VALUES('HD101225075', '2025-10-12 19:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 15437500, 1543750, 0, 16981250, 6792500, 10188750, 10188750, 'KH23027', 'NV22031');
+INSERT INTO HoaDon VALUES('HD102225076', '2025-10-22 20:45:00', N'TienMat', N'PhieuThuePhong', 22000000, 2200000, 50000, 24250000, 0, 24250000, 24270000, 'KH24049', 'NV20029');
+INSERT INTO HoaDon VALUES('HD101725077', '2025-10-17 09:00:00', N'TienMat', N'HoaDonHoanThanh', 6212500, 621250, 0, 6833750, 1366750, 5467000, 5467000, 'KH24012', 'NV24017');
+INSERT INTO HoaDon VALUES('HD100125078', '2025-10-01 15:30:00', N'TienMat', N'PhieuThuePhong', 10500000, 1050000, 0, 11550000, 0, 11550000, 11550000, 'KH23031', 'NV22018');
+INSERT INTO HoaDon VALUES('HD112325079', '2025-11-23 20:00:00', N'ChuyenKhoan', N'PhieuDatPhong', 3300000, 330000, 50000, 3680000, 736000, 2944000, 2944000, 'KH24001', 'NV25015');
+INSERT INTO HoaDon VALUES('HD111525080', '2025-11-15 13:15:00', N'ChuyenKhoan', N'PhieuDatPhong', 27500000, 2750000, 0, 30250000, 12100000, 18150000, 18150000, 'KH23032', 'NV22024');
+INSERT INTO HoaDon VALUES('HD111525081', '2025-11-15 17:15:00', N'ChuyenKhoan', N'PhieuDatPhong', 5700000, 570000, 20000, 6290000, 629000, 5661000, 5661000, 'KH24037', 'NV24033');
+INSERT INTO HoaDon VALUES('HD111725082', '2025-11-17 17:15:00', N'TienMat', N'PhieuDatPhong', 20250000, 2025000, 0, 22275000, 0, 22275000, 22285000, 'KH23017', 'NV20037');
+INSERT INTO HoaDon VALUES('HD101325083', '2025-10-13 18:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 9162500, 916250, 0, 10078750, 4031500, 6047250, 6047250, 'KH23028', 'NV22042');
+INSERT INTO HoaDon VALUES('HD102125084', '2025-10-21 19:00:00', N'TienMat', N'HoaDonHoanThanh', 21875000, 2187500, 0, 24062500, 2406250, 21656250, 21666250, 'KH25020', 'NV19040');
+INSERT INTO HoaDon VALUES('HD110825085', '2025-11-08 13:30:00', N'TienMat', N'PhieuThuePhong', 4400000, 440000, 0, 4840000, 968000, 3872000, 3892000, 'KH24016', 'NV24033');
+INSERT INTO HoaDon VALUES('HD111725086', '2025-11-17 20:30:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 750000, 75000, 50000, 875000, 175000, 700000, 700000, 'KH24012', 'NV24001');
+INSERT INTO HoaDon VALUES('HD102225087', '2025-10-22 11:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 5487500, 548750, 0, 6036250, 2414500, 3621750, 3621750, 'KH24034', 'NV19040');
+INSERT INTO HoaDon VALUES('HD101525088', '2025-10-15 12:00:00', N'TienMat', N'PhieuThuePhong', 29937500, 2993750, 0, 32931250, 3293125, 29638125, 29638125, 'KH25018', 'NV25015');
+INSERT INTO HoaDon VALUES('HD110425089', '2025-11-04 14:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 11700000, 1170000, 0, 12870000, 1287000, 11583000, 11583000, 'KH24014', 'NV22020');
+INSERT INTO HoaDon VALUES('HD111925090', '2025-11-19 20:30:00', N'TienMat', N'PhieuThuePhong', 3937500, 393750, 0, 4331250, 433125, 3898125, 3898125, 'KH23033', 'NV24003');
+INSERT INTO HoaDon VALUES('HD100225091', '2025-10-02 14:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 11000000, 1100000, 0, 12100000, 4840000, 7260000, 7260000, 'KH23015', 'NV20007');
+INSERT INTO HoaDon VALUES('HD111125092', '2025-11-11 17:30:00', N'TienMat', N'PhieuDatPhong', 28750000, 2875000, 20000, 31645000, 6329000, 25316000, 25316000, 'KH24050', 'NV23039');
+INSERT INTO HoaDon VALUES('HD110825093', '2025-11-08 13:45:00', N'TienMat', N'PhieuThuePhong', 14500000, 1450000, 0, 15950000, 0, 15950000, 15980000, 'KH24041', 'NV19049');
+INSERT INTO HoaDon VALUES('HD102925094', '2025-10-29 18:15:00', N'ChuyenKhoan', N'PhieuThuePhong', 6387500, 638750, 20000, 7046250, 1409250, 5637000, 5637000, 'KH25026', 'NV23025');
+INSERT INTO HoaDon VALUES('HD110325095', '2025-11-03 11:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 13187500, 1318750, 20000, 14526250, 1452625, 13073625, 13073625, 'KH23033', 'NV25035');
+INSERT INTO HoaDon VALUES('HD111925096', '2025-11-19 20:30:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 4125000, 412500, 50000, 4587500, 917500, 3670000, 3670000, 'KH25045', 'NV22020');
+INSERT INTO HoaDon VALUES('HD100725097', '2025-10-07 18:15:00', N'TienMat', N'PhieuDatPhong', 7537500, 753750, 0, 8291250, 829125, 7462125, 7462125, 'KH25018', 'NV25005');
+INSERT INTO HoaDon VALUES('HD111225098', '2025-11-12 17:00:00', N'TienMat', N'PhieuDatPhong', 27625000, 2762500, 20000, 30407500, 12163000, 18244500, 18254500, 'KH23032', 'NV22031');
+INSERT INTO HoaDon VALUES('HD111225099', '2025-11-12 14:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 9000000, 900000, 0, 9900000, 1980000, 7920000, 7920000, 'KH24001', 'NV20030');
+INSERT INTO HoaDon VALUES('HD111925100', '2025-11-19 12:15:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 8000000, 800000, 0, 8800000, 0, 8800000, 8800000, 'KH25035', 'NV22041');
+INSERT INTO HoaDon VALUES('HD101025101', '2025-10-10 19:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 9075000, 907500, 20000, 10002500, 2000500, 8002000, 8002000, 'KH24046', 'NV20037');
+INSERT INTO HoaDon VALUES('HD102325102', '2025-10-23 15:15:00', N'TienMat', N'HoaDonHoanThanh', 11640000, 1164000, 50000, 12854000, 2570800, 10283200, 10303200, 'KH25010', 'NV22041');
+INSERT INTO HoaDon VALUES('HD111125103', '2025-11-11 10:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 8750000, 875000, 0, 9625000, 0, 9625000, 9625000, 'KH25035', 'NV19014');
+INSERT INTO HoaDon VALUES('HD110925104', '2025-11-09 11:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 8435000, 843500, 0, 9278500, 1855700, 7422800, 7422800, 'KH25039', 'NV20029');
+INSERT INTO HoaDon VALUES('HD111925105', '2025-11-19 18:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 11950000, 1195000, 20000, 13165000, 1316500, 11848500, 11848500, 'KH25024', 'NV21028');
+INSERT INTO HoaDon VALUES('HD102725106', '2025-10-27 16:30:00', N'TienMat', N'HoaDonHoanThanh', 8400000, 840000, 20000, 9260000, 3704000, 5556000, 5586000, 'KH23028', 'NV22031');
+INSERT INTO HoaDon VALUES('HD110925107', '2025-11-09 13:30:00', N'TienMat', N'HoaDonHoanThanh', 5000000, 500000, 0, 5500000, 2200000, 3300000, 3330000, 'KH23009', 'NV19013');
+INSERT INTO HoaDon VALUES('HD101625108', '2025-10-16 12:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 4625000, 462500, 20000, 5107500, 1021500, 4086000, 4086000, 'KH25004', 'NV22042');
+INSERT INTO HoaDon VALUES('HD112225109', '2025-11-22 14:15:00', N'TienMat', N'PhieuDatPhong', 16750000, 1675000, 0, 18425000, 7370000, 11055000, 11055000, 'KH25030', 'NV22042');
+INSERT INTO HoaDon VALUES('HD110825110', '2025-11-08 09:45:00', N'TienMat', N'PhieuThuePhong', 1050000, 105000, 0, 1155000, 462000, 693000, 723000, 'KH23009', 'NV21016');
+INSERT INTO HoaDon VALUES('HD112625111', '2025-11-26 14:15:00', N'TienMat', N'PhieuDatPhong', 7500000, 750000, 0, 8250000, 3300000, 4950000, 4960000, 'KH23028', 'NV23025');
+INSERT INTO HoaDon VALUES('HD101525112', '2025-10-15 18:45:00', N'TienMat', N'PhieuThuePhong', 10050000, 1005000, 0, 11055000, 0, 11055000, 11085000, 'KH24008', 'NV25015');
+INSERT INTO HoaDon VALUES('HD110225113', '2025-11-02 12:15:00', N'TienMat', N'PhieuThuePhong', 7530000, 753000, 0, 8283000, 3313200, 4969800, 4979800, 'KH24034', 'NV23025');
+INSERT INTO HoaDon VALUES('HD102725114', '2025-10-27 19:00:00', N'TienMat', N'PhieuThuePhong', 15950000, 1595000, 50000, 17595000, 0, 17595000, 17645000, 'KH23031', 'NV23038');
+INSERT INTO HoaDon VALUES('HD112925115', '2025-11-29 10:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 8750000, 875000, 20000, 9645000, 1929000, 7716000, 7716000, 'KH24019', 'NV23026');
+INSERT INTO HoaDon VALUES('HD111225116', '2025-11-12 09:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 5700000, 570000, 0, 6270000, 1254000, 5016000, 5016000, 'KH24012', 'NV22047');
+INSERT INTO HoaDon VALUES('HD110425117', '2025-11-04 19:15:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 34225000, 3422500, 50000, 37697500, 7539500, 30158000, 30158000, 'KH24001', 'NV19036');
+INSERT INTO HoaDon VALUES('HD100825118', '2025-10-08 11:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 23000000, 2300000, 50000, 25350000, 5070000, 20280000, 20280000, 'KH23042', 'NV22046');
+INSERT INTO HoaDon VALUES('HD100725119', '2025-10-07 10:30:00', N'TienMat', N'PhieuThuePhong', 20625000, 2062500, 0, 22687500, 9075000, 13612500, 13612500, 'KH23032', 'NV22024');
+INSERT INTO HoaDon VALUES('HD101325120', '2025-10-13 17:00:00', N'TienMat', N'PhieuThuePhong', 5800000, 580000, 20000, 6400000, 0, 6400000, 6430000, 'KH24008', 'NV19014');
+INSERT INTO HoaDon VALUES('HD101425121', '2025-10-14 09:30:00', N'TienMat', N'HoaDonHoanThanh', 16500000, 1650000, 50000, 18200000, 3640000, 14560000, 14590000, 'KH24021', 'NV19021');
+INSERT INTO HoaDon VALUES('HD112625122', '2025-11-26 14:45:00', N'TienMat', N'PhieuThuePhong', 11185000, 1118500, 50000, 12353500, 1235350, 11118150, 11118150, 'KH25018', 'NV19021');
+INSERT INTO HoaDon VALUES('HD111325123', '2025-11-13 08:15:00', N'TienMat', N'HoaDonHoanThanh', 3500000, 350000, 0, 3850000, 0, 3850000, 3880000, 'KH24003', 'NV20037');
+INSERT INTO HoaDon VALUES('HD110225124', '2025-11-02 10:15:00', N'TienMat', N'HoaDonHoanThanh', 9125000, 912500, 20000, 10057500, 2011500, 8046000, 8056000, 'KH24029', 'NV21032');
+INSERT INTO HoaDon VALUES('HD112625125', '2025-11-26 12:15:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 4230000, 423000, 0, 4653000, 1861200, 2791800, 2791800, 'KH23028', 'NV23038');
+INSERT INTO HoaDon VALUES('HD110925126', '2025-11-09 16:30:00', N'ChuyenKhoan', N'PhieuDatPhong', 20250000, 2025000, 50000, 22325000, 0, 22325000, 22325000, 'KH25043', 'NV24001');
+INSERT INTO HoaDon VALUES('HD100625127', '2025-10-06 08:30:00', N'TienMat', N'HoaDonHoanThanh', 24325000, 2432500, 0, 26757500, 5351500, 21406000, 21456000, 'KH24019', 'NV20037');
+INSERT INTO HoaDon VALUES('HD110325128', '2025-11-03 12:15:00', N'ChuyenKhoan', N'PhieuThuePhong', 11830000, 1183000, 0, 13013000, 0, 13013000, 13013000, 'KH24003', 'NV25002');
+INSERT INTO HoaDon VALUES('HD111525129', '2025-11-15 13:00:00', N'TienMat', N'HoaDonHoanThanh', 10250000, 1025000, 0, 11275000, 0, 11275000, 11275000, 'KH25035', 'NV20037');
+INSERT INTO HoaDon VALUES('HD102925130', '2025-10-29 10:30:00', N'ChuyenKhoan', N'PhieuDatPhong', 10000000, 1000000, 20000, 11020000, 4408000, 6612000, 6612000, 'KH23009', 'NV23039');
+INSERT INTO HoaDon VALUES('HD100825131', '2025-10-08 18:00:00', N'TienMat', N'PhieuDatPhong', 25250000, 2525000, 20000, 27795000, 11118000, 16677000, 16687000, 'KH23015', 'NV20029');
+INSERT INTO HoaDon VALUES('HD111425132', '2025-11-14 16:00:00', N'ChuyenKhoan', N'PhieuDatPhong', 54135000, 5413500, 20000, 59568500, 11913700, 47654800, 47654800, 'KH25006', 'NV19014');
+INSERT INTO HoaDon VALUES('HD112225133', '2025-11-22 20:15:00', N'TienMat', N'PhieuDatPhong', 10700000, 1070000, 50000, 11820000, 0, 11820000, 11850000, 'KH24008', 'NV25002');
+INSERT INTO HoaDon VALUES('HD102525134', '2025-10-25 15:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 7300000, 730000, 0, 8030000, 3212000, 4818000, 4818000, 'KH23015', 'NV19014');
+INSERT INTO HoaDon VALUES('HD101625135', '2025-10-16 11:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 6000000, 600000, 50000, 6650000, 1330000, 5320000, 5320000, 'KH24019', 'NV19010');
+INSERT INTO HoaDon VALUES('HD111425136', '2025-11-14 11:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 7675000, 767500, 0, 8442500, 3377000, 5065500, 5065500, 'KH24023', 'NV19036');
+INSERT INTO HoaDon VALUES('HD102025137', '2025-10-20 15:30:00', N'ChuyenKhoan', N'PhieuDatPhong', 19650000, 1965000, 20000, 21635000, 2163500, 19471500, 19471500, 'KH24025', 'NV19021');
+INSERT INTO HoaDon VALUES('HD110625138', '2025-11-06 17:30:00', N'ChuyenKhoan', N'PhieuDatPhong', 14000000, 1400000, 0, 15400000, 3080000, 12320000, 12320000, 'KH24019', 'NV22018');
+INSERT INTO HoaDon VALUES('HD101925139', '2025-10-19 12:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 1950000, 195000, 0, 2145000, 214500, 1930500, 1930500, 'KH24014', 'NV19036');
+INSERT INTO HoaDon VALUES('HD111725140', '2025-11-17 20:15:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 17500000, 1750000, 20000, 19270000, 1927000, 17343000, 17343000, 'KH25018', 'NV20030');
+INSERT INTO HoaDon VALUES('HD100125141', '2025-10-01 14:00:00', N'TienMat', N'PhieuThuePhong', 9600000, 960000, 0, 10560000, 4224000, 6336000, 6386000, 'KH23027', 'NV25045');
+INSERT INTO HoaDon VALUES('HD100825142', '2025-10-08 13:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 8125000, 812500, 50000, 8987500, 1797500, 7190000, 7190000, 'KH24044', 'NV21016');
+INSERT INTO HoaDon VALUES('HD100725143', '2025-10-07 19:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 25450000, 2545000, 50000, 28045000, 2804500, 25240500, 25240500, 'KH23033', 'NV23048');
+INSERT INTO HoaDon VALUES('HD110625144', '2025-11-06 15:45:00', N'TienMat', N'PhieuThuePhong', 16500000, 1650000, 50000, 18200000, 3640000, 14560000, 14580000, 'KH25036', 'NV22018');
+INSERT INTO HoaDon VALUES('HD100125145', '2025-10-01 12:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 14312500, 1431250, 20000, 15763750, 1576375, 14187375, 14187375, 'KH24040', 'NV22024');
+INSERT INTO HoaDon VALUES('HD100725146', '2025-10-07 10:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 15500000, 1550000, 0, 17050000, 0, 17050000, 17050000, 'KH24011', 'NV24001');
+INSERT INTO HoaDon VALUES('HD112125147', '2025-11-21 09:00:00', N'TienMat', N'PhieuThuePhong', 3575000, 357500, 0, 3932500, 786500, 3146000, 3176000, 'KH25006', 'NV24027');
+INSERT INTO HoaDon VALUES('HD101325148', '2025-10-13 19:45:00', N'TienMat', N'PhieuDatPhong', 34075000, 3407500, 20000, 37502500, 7500500, 30002000, 30002000, 'KH25036', 'NV21023');
+INSERT INTO HoaDon VALUES('HD100825149', '2025-10-08 09:15:00', N'TienMat', N'HoaDonHoanThanh', 5000000, 500000, 0, 5500000, 1100000, 4400000, 4420000, 'KH24050', 'NV19011');
+INSERT INTO HoaDon VALUES('HD110725150', '2025-11-07 17:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 9275000, 927500, 20000, 10222500, 0, 10222500, 10222500, 'KH24047', 'NV22024');
+INSERT INTO HoaDon VALUES('HD112825151', '2025-11-28 15:45:00', N'TienMat', N'HoaDonHoanThanh', 7000000, 700000, 50000, 7750000, 3100000, 4650000, 4680000, 'KH23009', 'NV19021');
+INSERT INTO HoaDon VALUES('HD110225152', '2025-11-02 14:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 19750000, 1975000, 0, 21725000, 2172500, 19552500, 19552500, 'KH25020', 'NV21028');
+INSERT INTO HoaDon VALUES('HD111525153', '2025-11-15 13:30:00', N'TienMat', N'PhieuDatPhong', 20700000, 2070000, 50000, 22820000, 4564000, 18256000, 18286000, 'KH24044', 'NV23006');
+INSERT INTO HoaDon VALUES('HD111625154', '2025-11-16 15:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 750000, 75000, 0, 825000, 330000, 495000, 495000, 'KH23032', 'NV20030');
+INSERT INTO HoaDon VALUES('HD101725155', '2025-10-17 14:30:00', N'TienMat', N'PhieuThuePhong', 6900000, 690000, 0, 7590000, 1518000, 6072000, 6122000, 'KH24019', 'NV21023');
+INSERT INTO HoaDon VALUES('HD110125156', '2025-11-01 16:30:00', N'ChuyenKhoan', N'PhieuDatPhong', 23537500, 2353750, 20000, 25911250, 0, 25911250, 25911250, 'KH24049', 'NV19021');
+INSERT INTO HoaDon VALUES('HD102825157', '2025-10-28 14:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 19000000, 1900000, 0, 20900000, 2090000, 18810000, 18810000, 'KH24025', 'NV25035');
+INSERT INTO HoaDon VALUES('HD101625158', '2025-10-16 10:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 9075000, 907500, 50000, 10032500, 2006500, 8026000, 8026000, 'KH25036', 'NV24033');
+INSERT INTO HoaDon VALUES('HD111725159', '2025-11-17 08:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 19950000, 1995000, 0, 21945000, 8778000, 13167000, 13167000, 'KH23027', 'NV24017');
+INSERT INTO HoaDon VALUES('HD100325160', '2025-10-03 17:30:00', N'TienMat', N'PhieuThuePhong', 4510000, 451000, 0, 4961000, 1984400, 2976600, 3026600, 'KH23009', 'NV25034');
+INSERT INTO HoaDon VALUES('HD110925161', '2025-11-09 20:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 9412500, 941250, 20000, 10373750, 4149500, 6224250, 6224250, 'KH23032', 'NV22041');
+INSERT INTO HoaDon VALUES('HD100725162', '2025-10-07 08:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 10000000, 1000000, 20000, 11020000, 0, 11020000, 11020000, 'KH24008', 'NV22031');
+INSERT INTO HoaDon VALUES('HD100125163', '2025-10-01 17:45:00', N'TienMat', N'PhieuDatPhong', 35237500, 3523750, 50000, 38811250, 7762250, 31049000, 31099000, 'KH25010', 'NV24017');
+INSERT INTO HoaDon VALUES('HD101325164', '2025-10-13 20:30:00', N'TienMat', N'HoaDonHoanThanh', 950000, 95000, 0, 1045000, 104500, 940500, 960500, 'KH24014', 'NV22020');
+INSERT INTO HoaDon VALUES('HD101325165', '2025-10-13 11:45:00', N'TienMat', N'PhieuThuePhong', 9500000, 950000, 0, 10450000, 1045000, 9405000, 9455000, 'KH23033', 'NV23038');
+INSERT INTO HoaDon VALUES('HD102025166', '2025-10-20 11:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 14850000, 1485000, 0, 16335000, 1633500, 14701500, 14701500, 'KH25018', 'NV22047');
+INSERT INTO HoaDon VALUES('HD111525167', '2025-11-15 14:30:00', N'TienMat', N'HoaDonHoanThanh', 3000000, 300000, 0, 3300000, 0, 3300000, 3300000, 'KH23017', 'NV25012');
+INSERT INTO HoaDon VALUES('HD100725168', '2025-10-07 11:45:00', N'TienMat', N'HoaDonHoanThanh', 12000000, 1200000, 0, 13200000, 5280000, 7920000, 7970000, 'KH24023', 'NV22020');
+INSERT INTO HoaDon VALUES('HD102925169', '2025-10-29 12:00:00', N'ChuyenKhoan', N'PhieuThuePhong', 16225000, 1622500, 0, 17847500, 0, 17847500, 17847500, 'KH24049', 'NV22047');
+INSERT INTO HoaDon VALUES('HD102425170', '2025-10-24 17:45:00', N'TienMat', N'HoaDonHoanThanh', 16000000, 1600000, 50000, 17650000, 7060000, 10590000, 10590000, 'KH25030', 'NV20037');
+INSERT INTO HoaDon VALUES('HD110725171', '2025-11-07 12:30:00', N'TienMat', N'HoaDonHoanThanh', 29000000, 2900000, 0, 31900000, 0, 31900000, 31900000, 'KH23013', 'NV23006');
+INSERT INTO HoaDon VALUES('HD110525172', '2025-11-05 15:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 4812500, 481250, 0, 5293750, 1058750, 4235000, 4235000, 'KH24044', 'NV21023');
+INSERT INTO HoaDon VALUES('HD100125173', '2025-10-01 13:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 7800000, 780000, 0, 8580000, 0, 8580000, 8580000, 'KH23013', 'NV22041');
+INSERT INTO HoaDon VALUES('HD110625174', '2025-11-06 17:45:00', N'TienMat', N'HoaDonHoanThanh', 10300000, 1030000, 20000, 11350000, 4540000, 6810000, 6810000, 'KH23009', 'NV20029');
+INSERT INTO HoaDon VALUES('HD111025175', '2025-11-10 19:45:00', N'ChuyenKhoan', N'PhieuDatPhong', 4000000, 400000, 0, 4400000, 0, 4400000, 4400000, 'KH24005', 'NV22041');
+INSERT INTO HoaDon VALUES('HD110125176', '2025-11-01 09:15:00', N'TienMat', N'PhieuThuePhong', 6937500, 693750, 50000, 7681250, 1536250, 6145000, 6145000, 'KH24019', 'NV25035');
+INSERT INTO HoaDon VALUES('HD101025177', '2025-10-10 16:30:00', N'TienMat', N'PhieuDatPhong', 16162500, 1616250, 0, 17778750, 1777875, 16000875, 16030875, 'KH24040', 'NV22047');
+INSERT INTO HoaDon VALUES('HD100425178', '2025-10-04 14:00:00', N'TienMat', N'HoaDonHoanThanh', 11700000, 1170000, 0, 12870000, 2574000, 10296000, 10316000, 'KH23042', 'NV22031');
+INSERT INTO HoaDon VALUES('HD110525179', '2025-11-05 20:45:00', N'ChuyenKhoan', N'PhieuThuePhong', 7500000, 750000, 50000, 8300000, 1660000, 6640000, 6640000, 'KH25010', 'NV22031');
+INSERT INTO HoaDon VALUES('HD111525180', '2025-11-15 10:30:00', N'TienMat', N'PhieuThuePhong', 12000000, 1200000, 0, 13200000, 5280000, 7920000, 7940000, 'KH23027', 'NV20008');
+INSERT INTO HoaDon VALUES('HD100325181', '2025-10-03 19:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 25000000, 2500000, 50000, 27550000, 11020000, 16530000, 16530000, 'KH23027', 'NV22046');
+INSERT INTO HoaDon VALUES('HD101725182', '2025-10-17 13:15:00', N'ChuyenKhoan', N'PhieuThuePhong', 16100000, 1610000, 0, 17710000, 0, 17710000, 17710000, 'KH24005', 'NV25004');
+INSERT INTO HoaDon VALUES('HD110325183', '2025-11-03 15:15:00', N'TienMat', N'PhieuThuePhong', 22150000, 2215000, 0, 24365000, 9746000, 14619000, 14619000, 'KH24022', 'NV22041');
+INSERT INTO HoaDon VALUES('HD111625184', '2025-11-16 19:15:00', N'TienMat', N'PhieuThuePhong', 3500000, 350000, 0, 3850000, 385000, 3465000, 3475000, 'KH25007', 'NV25034');
+INSERT INTO HoaDon VALUES('HD111425185', '2025-11-14 09:30:00', N'TienMat', N'PhieuThuePhong', 39000000, 3900000, 0, 42900000, 8580000, 34320000, 34330000, 'KH25010', 'NV25035');
+INSERT INTO HoaDon VALUES('HD102425186', '2025-10-24 09:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 9700000, 970000, 20000, 10690000, 0, 10690000, 10690000, 'KH25043', 'NV22024');
+INSERT INTO HoaDon VALUES('HD100225187', '2025-10-02 12:00:00', N'TienMat', N'PhieuThuePhong', 3000000, 300000, 20000, 3320000, 664000, 2656000, 2656000, 'KH24029', 'NV20008');
+INSERT INTO HoaDon VALUES('HD111325188', '2025-11-13 10:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 7500000, 750000, 0, 8250000, 3300000, 4950000, 4950000, 'KH25030', 'NV22018');
+INSERT INTO HoaDon VALUES('HD112025189', '2025-11-20 18:15:00', N'TienMat', N'PhieuThuePhong', 11000000, 1100000, 0, 12100000, 0, 12100000, 12130000, 'KH23013', 'NV19010');
+INSERT INTO HoaDon VALUES('HD113025190', '2025-11-30 20:45:00', N'TienMat', N'PhieuThuePhong', 4687500, 468750, 20000, 5176250, 2070500, 3105750, 3115750, 'KH23032', 'NV19050');
+INSERT INTO HoaDon VALUES('HD100625191', '2025-10-06 19:45:00', N'TienMat', N'HoaDonHoanThanh', 31445000, 3144500, 20000, 34609500, 3460950, 31148550, 31148550, 'KH25018', 'NV20019');
+INSERT INTO HoaDon VALUES('HD100125192', '2025-10-01 11:30:00', N'ChuyenKhoan', N'PhieuThuePhong', 6800000, 680000, 0, 7480000, 2992000, 4488000, 4488000, 'KH23015', 'NV20007');
+INSERT INTO HoaDon VALUES('HD101025193', '2025-10-10 12:15:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 8312500, 831250, 0, 9143750, 3657500, 5486250, 5486250, 'KH23027', 'NV22020');
+INSERT INTO HoaDon VALUES('HD101625194', '2025-10-16 20:00:00', N'TienMat', N'PhieuThuePhong', 10237500, 1023750, 0, 11261250, 1126125, 10135125, 10135125, 'KH23033', 'NV24033');
+INSERT INTO HoaDon VALUES('HD102325195', '2025-10-23 15:45:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 6000000, 600000, 20000, 6620000, 2648000, 3972000, 3972000, 'KH24023', 'NV24033');
+INSERT INTO HoaDon VALUES('HD100325196', '2025-10-03 12:00:00', N'TienMat', N'HoaDonHoanThanh', 9250000, 925000, 0, 10175000, 4070000, 6105000, 6115000, 'KH23027', 'NV19010');
+INSERT INTO HoaDon VALUES('HD102025197', '2025-10-20 09:15:00', N'ChuyenKhoan', N'PhieuDatPhong', 24150000, 2415000, 20000, 26585000, 5317000, 21268000, 21268000, 'KH25004', 'NV21028');
+INSERT INTO HoaDon VALUES('HD100225198', '2025-10-02 13:30:00', N'TienMat', N'PhieuDatPhong', 15500000, 1550000, 50000, 17100000, 3420000, 13680000, 13690000, 'KH25026', 'NV23038');
+INSERT INTO HoaDon VALUES('HD101125199', '2025-10-11 17:30:00', N'TienMat', N'PhieuThuePhong', 3237500, 323750, 0, 3561250, 712250, 2849000, 2879000, 'KH25006', 'NV23048');
+INSERT INTO HoaDon VALUES('HD101925200', '2025-10-19 17:00:00', N'ChuyenKhoan', N'HoaDonHoanThanh', 4000000, 400000, 0, 4400000, 1760000, 2640000, 2640000, 'KH25030', 'NV23039');
+GO
+
+
+-- ChiTietHoaDon
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102825001','P09004',NULL,'2025-10-28','2025-10-31',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102825001','P01007',NULL,'2025-10-28','2025-11-01',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725002','P10002',NULL,'2025-10-14','2025-10-17',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625003','P06007','KM25003','2025-10-16','2025-10-20',4,800000,7200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625003','P02006',NULL,'2025-10-16','2025-10-19',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625003','P04009',NULL,'2025-10-16','2025-10-20',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525004','P07005','KM25003','2025-10-25','2025-10-29',4,600000,5400000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525004','P03005','KM25003','2025-10-25','2025-10-27',2,200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525004','P02001',NULL,'2025-10-25','2025-10-28',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625005','P01006','KM25001','2025-10-16','2025-10-20',4,200000,3800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625005','P07007',NULL,'2025-10-17','2025-10-21',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625005','P06005',NULL,'2025-10-18','2025-10-23',5,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125006','P05007',NULL,'2025-10-01','2025-10-04',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725007','P03005',NULL,'2025-10-08','2025-10-11',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725007','P07005',NULL,'2025-10-08','2025-10-13',5,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725007','P02001',NULL,'2025-10-07','2025-10-10',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725008','P02001','KM25003','2025-10-18','2025-10-22',4,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425009','P02001','KM25003','2025-11-15','2025-11-19',4,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425009','P06005',NULL,'2025-11-17','2025-11-22',5,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD103125010','P07010',NULL,'2025-10-31','2025-11-03',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD103125010','P02007',NULL,'2025-10-31','2025-11-03',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725011','P07003','KM25010','2025-11-04','2025-11-07',3,1125000,3375000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725011','P06006',NULL,'2025-11-04','2025-11-07',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111025012','P08003','KM25010','2025-11-10','2025-11-12',2,1000000,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112525013','P09005',NULL,'2025-11-25','2025-11-27',2,0,5000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825014','P10005','KM25001','2025-11-08','2025-11-11',3,450000,8550000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112925015','P04002',NULL,'2025-11-29','2025-12-03',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112925015','P02009',NULL,'2025-11-29','2025-12-03',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225016','P04002',NULL,'2025-10-12','2025-10-16',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225016','P08003',NULL,'2025-10-12','2025-10-15',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225016','P06004',NULL,'2025-10-12','2025-10-15',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100925017','P07007',NULL,'2025-10-12','2025-10-17',5,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100925017','P03005','KM25005','2025-10-10','2025-10-13',3,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100925017','P02005',NULL,'2025-10-09','2025-10-12',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725018','P01006','KM25010','2025-10-08','2025-10-12',4,1000000,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD103125019','P03006',NULL,'2025-10-31','2025-11-03',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD103125019','P08003',NULL,'2025-10-31','2025-11-02',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225020','P05003',NULL,'2025-11-22','2025-11-26',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225020','P05005',NULL,'2025-11-22','2025-11-24',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225020','P02007',NULL,'2025-11-22','2025-11-24',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125021','P04002',NULL,'2025-10-30','2025-11-01',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125021','P05003','KM25003','2025-10-28','2025-11-01',4,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125021','P01001','KM25003','2025-10-30','2025-11-01',2,200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925022','P06005',NULL,'2025-11-10','2025-11-13',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925022','P02005','KM25001','2025-11-09','2025-11-14',5,250000,4750000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925022','P03005',NULL,'2025-11-12','2025-11-16',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111125023','P08003','KM25005','2025-11-11','2025-11-14',3,2400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225024','P04002',NULL,'2025-11-02','2025-11-04',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225024','P09006',NULL,'2025-11-02','2025-11-04',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225024','P08006','KM25001','2025-11-02','2025-11-04',2,250000,4750000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100425025','P05008',NULL,'2025-10-01','2025-10-04',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225026','P06006',NULL,'2025-10-10','2025-10-12',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225026','P07003','KM25010','2025-10-08','2025-10-12',4,1500000,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100525027','P08006',NULL,'2025-10-05','2025-10-07',2,0,5000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100525027','P09007',NULL,'2025-10-05','2025-10-07',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425028','P02006',NULL,'2025-11-14','2025-11-16',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425028','P02007',NULL,'2025-11-14','2025-11-16',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425028','P08006','KM25003','2025-11-14','2025-11-17',3,750000,6750000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225029','P04004','KM25010','2025-10-22','2025-10-26',4,1000000,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225029','P05005',NULL,'2025-10-22','2025-10-26',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225029','P06006',NULL,'2025-10-22','2025-10-24',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525030','P06007','KM25010','2025-11-15','2025-11-18',3,1500000,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525030','P09007','KM25003','2025-11-15','2025-11-18',3,900000,8100000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825031','P02006',NULL,'2025-11-05','2025-11-08',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825031','P01001','KM25001','2025-11-06','2025-11-08',2,100000,1900000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825031','P09007',NULL,'2025-11-05','2025-11-08',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110425032','P06004',NULL,'2025-10-31','2025-11-04',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225033','P05008','KM25001','2025-11-20','2025-11-22',2,100000,1900000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225033','P06001',NULL,'2025-11-20','2025-11-22',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225033','P05005',NULL,'2025-11-18','2025-11-22',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112725034','P10002',NULL,'2025-11-25','2025-11-27',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112725034','P06004',NULL,'2025-11-25','2025-11-27',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112725034','P04003',NULL,'2025-11-24','2025-11-27',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111825035','P06005',NULL,'2025-11-19','2025-11-22',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111825035','P01006',NULL,'2025-11-20','2025-11-24',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225036','P09006',NULL,'2025-10-22','2025-10-25',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225036','P05005',NULL,'2025-10-22','2025-10-24',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111625037','P01007','KM25005','2025-11-16','2025-11-18',2,800000,1200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112925038','P09005',NULL,'2025-11-29','2025-12-02',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112925038','P04002',NULL,'2025-11-29','2025-12-03',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD103025039','P04003',NULL,'2025-10-26','2025-10-30',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225040','P09007',NULL,'2025-10-12','2025-10-15',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225040','P04002',NULL,'2025-10-12','2025-10-16',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225040','P01007',NULL,'2025-10-12','2025-10-14',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425041','P01006',NULL,'2025-11-16','2025-11-19',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425041','P06005',NULL,'2025-11-15','2025-11-18',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110325042','P06004',NULL,'2025-11-03','2025-11-06',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110325042','P06007',NULL,'2025-11-03','2025-11-07',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112325043','P08003','KM25008','2025-11-20','2025-11-23',3,2100000,3900000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112325043','P09005','KM25010','2025-11-19','2025-11-23',4,2500000,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112325043','P06001','KM25008','2025-11-20','2025-11-23',3,1575000,2925000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925044','P04003',NULL,'2025-11-16','2025-11-19',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112525045','P05008',NULL,'2025-11-23','2025-11-25',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525046','P06001',NULL,'2025-10-25','2025-10-28',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525046','P06007','KM25001','2025-10-25','2025-10-27',2,200000,3800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525046','P01005',NULL,'2025-10-25','2025-10-29',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100925047','P02007',NULL,'2025-10-09','2025-10-11',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100925047','P04004','KM25008','2025-10-09','2025-10-11',2,700000,1300000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100925047','P05008',NULL,'2025-10-09','2025-10-11',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101825048','P09005',NULL,'2025-10-18','2025-10-22',4,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225049','P01006',NULL,'2025-10-14','2025-10-16',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225049','P02005',NULL,'2025-10-14','2025-10-17',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110625050','P04004',NULL,'2025-11-03','2025-11-06',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100325051','P01010',NULL,'2025-10-03','2025-10-07',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111225052','P07003',NULL,'2025-11-12','2025-11-16',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111225052','P04003',NULL,'2025-11-12','2025-11-14',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125053','P07007',NULL,'2025-11-04','2025-11-08',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102325054','P01005',NULL,'2025-10-23','2025-10-25',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD103025055','P04002',NULL,'2025-10-26','2025-10-30',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101925056','P07010','KM25008','2025-10-19','2025-10-23',4,2800000,5200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100225057','P09005','KM25008','2025-10-02','2025-10-05',3,2625000,4875000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125058','P01005','KM25005','2025-11-01','2025-11-04',3,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125058','P10002',NULL,'2025-11-01','2025-11-05',4,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125058','P05007',NULL,'2025-11-01','2025-11-04',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225059','P01006',NULL,'2025-10-15','2025-10-17',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225059','P06005',NULL,'2025-10-12','2025-10-17',5,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101425060','P01005','KM25008','2025-10-10','2025-10-14',4,1400000,2600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825061','P04002',NULL,'2025-11-08','2025-11-10',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825061','P08003',NULL,'2025-11-08','2025-11-10',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825061','P06006',NULL,'2025-11-08','2025-11-11',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111825062','P09006',NULL,'2025-11-14','2025-11-18',4,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111825062','P07010','KM25003','2025-11-16','2025-11-18',2,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111825062','P05008',NULL,'2025-11-16','2025-11-18',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100425063','P10002','KM25005','2025-10-02','2025-10-04',2,2400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100425063','P05008',NULL,'2025-10-02','2025-10-04',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525064','P01010','KM25008','2025-11-05','2025-11-07',2,1050000,1950000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525064','P03006',NULL,'2025-11-05','2025-11-07',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525064','P04009',NULL,'2025-11-05','2025-11-09',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925065','P08006',NULL,'2025-11-19','2025-11-21',2,0,5000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925065','P06004',NULL,'2025-11-19','2025-11-23',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225066','P01001',NULL,'2025-11-02','2025-11-05',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225066','P02007','KM25005','2025-11-02','2025-11-04',2,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525067','P03003',NULL,'2025-10-25','2025-10-29',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025068','P07007','KM25008','2025-10-11','2025-10-14',3,2100000,3900000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025068','P02001','KM25003','2025-10-10','2025-10-12',2,200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025068','P06005',NULL,'2025-10-13','2025-10-15',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825069','P07007',NULL,'2025-10-10','2025-10-13',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825069','P02001',NULL,'2025-10-11','2025-10-15',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725070','P04003',NULL,'2025-11-07','2025-11-10',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725070','P09007',NULL,'2025-11-07','2025-11-09',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100625071','P06007','KM25003','2025-10-04','2025-10-06',2,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100625071','P04009',NULL,'2025-10-03','2025-10-06',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112325072','P04002',NULL,'2025-11-23','2025-11-26',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625073','P02007',NULL,'2025-10-16','2025-10-19',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111025074','P02007',NULL,'2025-11-10','2025-11-12',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111025074','P01005',NULL,'2025-11-10','2025-11-14',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225075','P06005',NULL,'2025-10-13','2025-10-17',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225075','P02001',NULL,'2025-10-13','2025-10-16',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101225075','P01006',NULL,'2025-10-15','2025-10-17',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225076','P01005','KM25001','2025-10-22','2025-10-25',3,150000,2850000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225076','P05008',NULL,'2025-10-22','2025-10-26',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725077','P05005',NULL,'2025-10-13','2025-10-17',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725077','P08006',NULL,'2025-10-14','2025-10-17',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725077','P04009','KM25001','2025-10-15','2025-10-17',2,150000,2850000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125078','P04004',NULL,'2025-10-01','2025-10-03',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125078','P06004',NULL,'2025-10-01','2025-10-05',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112325079','P01006','KM25005','2025-11-25','2025-11-28',3,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112325079','P07007','KM25005','2025-11-26','2025-11-28',2,1600000,2400000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112325079','P03005',NULL,'2025-11-26','2025-11-28',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525080','P02005',NULL,'2025-11-16','2025-11-20',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525081','P07007',NULL,'2025-11-16','2025-11-19',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525081','P02005',NULL,'2025-11-15','2025-11-18',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525081','P02001',NULL,'2025-11-18','2025-11-22',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725082','P02001',NULL,'2025-11-20','2025-11-23',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725082','P09009','KM25003','2025-11-19','2025-11-22',3,900000,8100000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725082','P10009',NULL,'2025-11-20','2025-11-25',5,0,20000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325083','P02009',NULL,'2025-10-11','2025-10-13',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325083','P05008',NULL,'2025-10-11','2025-10-13',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325083','P01001','KM25003','2025-10-09','2025-10-13',4,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102125084','P04004','KM25010','2025-10-17','2025-10-21',4,1000000,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102125084','P10005',NULL,'2025-10-18','2025-10-21',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825085','P06001',NULL,'2025-11-08','2025-11-12',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825085','P10005',NULL,'2025-11-08','2025-11-11',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825085','P10002',NULL,'2025-11-08','2025-11-12',4,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725086','P03003',NULL,'2025-11-14','2025-11-17',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102225087','P08006',NULL,'2025-10-22','2025-10-24',2,0,5000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101525088','P05008',NULL,'2025-10-15','2025-10-18',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101525088','P05003','KM25001','2025-10-15','2025-10-19',4,200000,3800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110425089','P07003',NULL,'2025-11-01','2025-11-04',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110425089','P10005',NULL,'2025-10-31','2025-11-04',4,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925090','P08003',NULL,'2025-11-19','2025-11-23',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100225091','P10002',NULL,'2025-09-28','2025-10-02',4,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100225091','P08006','KM25001','2025-09-28','2025-10-02',4,500000,9500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100225091','P06007',NULL,'2025-09-29','2025-10-02',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111125092','P02005',NULL,'2025-11-13','2025-11-18',5,0,5000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111125092','P09009','KM25003','2025-11-13','2025-11-16',3,900000,8100000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111125092','P10009',NULL,'2025-11-12','2025-11-14',2,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825093','P09006',NULL,'2025-11-08','2025-11-11',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825093','P06006',NULL,'2025-11-08','2025-11-12',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825093','P09004',NULL,'2025-11-08','2025-11-12',4,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925094','P06006',NULL,'2025-10-29','2025-11-02',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925094','P04002','KM25005','2025-10-29','2025-11-02',4,1600000,2400000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110325095','P01006','KM25010','2025-11-06','2025-11-09',3,750000,2250000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925096','P09006',NULL,'2025-11-15','2025-11-19',4,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925096','P05005',NULL,'2025-11-15','2025-11-19',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925096','P06001','KM25010','2025-11-16','2025-11-19',3,1125000,3375000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725097','P10009','KM25005','2025-10-08','2025-10-10',2,3200000,4800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725097','P03005',NULL,'2025-10-10','2025-10-12',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111225098','P10009',NULL,'2025-11-13','2025-11-16',3,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111225099','P02007',NULL,'2025-11-12','2025-11-15',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111225099','P05005',NULL,'2025-11-12','2025-11-15',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111225099','P03006',NULL,'2025-11-12','2025-11-16',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925100','P10005','KM25010','2025-11-15','2025-11-19',4,3000000,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925100','P07009','KM25008','2025-11-17','2025-11-19',2,1400000,2600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925100','P04002',NULL,'2025-11-17','2025-11-19',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025101','P08003',NULL,'2025-10-10','2025-10-12',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025101','P04003',NULL,'2025-10-10','2025-10-12',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102325102','P06001','KM25008','2025-10-21','2025-10-23',2,1050000,1950000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111125103','P08003',NULL,'2025-11-11','2025-11-14',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111125103','P01005',NULL,'2025-11-11','2025-11-13',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925104','P07003',NULL,'2025-11-05','2025-11-09',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925105','P04002',NULL,'2025-11-19','2025-11-21',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111925105','P09006','KM25001','2025-11-19','2025-11-21',2,300000,5700000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102725106','P10005','KM25005','2025-10-23','2025-10-27',4,4800000,7200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102725106','P06001',NULL,'2025-10-25','2025-10-27',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102725106','P04004',NULL,'2025-10-23','2025-10-27',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925107','P08003',NULL,'2025-11-05','2025-11-09',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625108','P07003','KM25005','2025-10-16','2025-10-18',2,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625108','P01001','KM25001','2025-10-16','2025-10-19',3,150000,2850000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625108','P04002',NULL,'2025-10-16','2025-10-18',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225109','P02005',NULL,'2025-11-25','2025-11-29',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225109','P10009',NULL,'2025-11-25','2025-11-27',2,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825110','P07010',NULL,'2025-11-08','2025-11-12',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825110','P04004',NULL,'2025-11-08','2025-11-12',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110825110','P09005',NULL,'2025-11-08','2025-11-11',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112625111','P03005',NULL,'2025-11-27','2025-11-29',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101525112','P06001',NULL,'2025-10-15','2025-10-17',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101525112','P05003',NULL,'2025-10-15','2025-10-17',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225113','P05005',NULL,'2025-11-02','2025-11-05',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225113','P06004',NULL,'2025-11-02','2025-11-05',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225113','P10005','KM25005','2025-11-02','2025-11-06',4,4800000,7200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102725114','P10005',NULL,'2025-10-27','2025-10-29',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112925115','P09005',NULL,'2025-11-26','2025-11-29',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112925115','P04004',NULL,'2025-11-27','2025-11-29',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112925115','P06004',NULL,'2025-11-25','2025-11-29',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111225116','P07010','KM25001','2025-11-12','2025-11-14',2,200000,3800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110425117','P10002','KM25003','2025-10-31','2025-11-04',4,1200000,10800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825118','P03003',NULL,'2025-10-05','2025-10-08',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825118','P04009','KM25005','2025-10-04','2025-10-08',4,2400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825118','P02009',NULL,'2025-10-04','2025-10-08',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725119','P03006',NULL,'2025-10-07','2025-10-09',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725119','P06001',NULL,'2025-10-07','2025-10-09',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725119','P05008',NULL,'2025-10-07','2025-10-09',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325120','P01007','KM25005','2025-10-13','2025-10-17',4,1600000,2400000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325120','P06001','KM25003','2025-10-13','2025-10-15',2,300000,2700000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101425121','P04003','KM25008','2025-10-11','2025-10-14',3,1050000,1950000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112625122','P09006','KM25001','2025-11-26','2025-11-29',3,450000,8550000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112625122','P07003',NULL,'2025-11-26','2025-11-30',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112625122','P07009','KM25003','2025-11-26','2025-11-30',4,800000,7200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111325123','P09004',NULL,'2025-11-10','2025-11-13',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111325123','P06007',NULL,'2025-11-10','2025-11-13',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111325123','P09005',NULL,'2025-11-09','2025-11-13',4,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225124','P07003',NULL,'2025-10-31','2025-11-02',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225124','P05005','KM25001','2025-10-30','2025-11-02',3,150000,2850000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112625125','P05008',NULL,'2025-11-23','2025-11-26',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112625125','P02007',NULL,'2025-11-24','2025-11-26',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112625125','P06006',NULL,'2025-11-23','2025-11-26',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925126','P02001',NULL,'2025-11-11','2025-11-15',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925126','P10009',NULL,'2025-11-10','2025-11-13',3,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925126','P03005','KM25010','2025-11-09','2025-11-13',4,1000000,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100625127','P09006','KM25008','2025-10-02','2025-10-06',4,4200000,7800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100625127','P06001',NULL,'2025-10-02','2025-10-06',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100625127','P07003',NULL,'2025-10-03','2025-10-06',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110325128','P07003',NULL,'2025-11-03','2025-11-07',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110325128','P10002',NULL,'2025-11-03','2025-11-06',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525129','P08003',NULL,'2025-11-11','2025-11-15',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525129','P09004',NULL,'2025-11-11','2025-11-15',4,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525129','P06007',NULL,'2025-11-13','2025-11-15',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925130','P10009',NULL,'2025-10-30','2025-11-04',5,0,20000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925130','P07005',NULL,'2025-10-31','2025-11-05',5,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925130','P03005',NULL,'2025-11-01','2025-11-04',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825131','P06005',NULL,'2025-10-09','2025-10-12',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425132','P10009',NULL,'2025-11-14','2025-11-16',2,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225133','P02005',NULL,'2025-11-23','2025-11-26',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112225133','P07005','KM25005','2025-11-24','2025-11-28',4,2400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525134','P09005',NULL,'2025-10-22','2025-10-25',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102525134','P05007','KM25001','2025-10-22','2025-10-25',3,150000,2850000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625135','P07003',NULL,'2025-10-16','2025-10-19',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625135','P09007',NULL,'2025-10-16','2025-10-19',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625135','P02006','KM25010','2025-10-16','2025-10-18',2,750000,2250000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425136','P05008',NULL,'2025-11-10','2025-11-14',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425136','P09006',NULL,'2025-11-12','2025-11-14',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102025137','P07007',NULL,'2025-10-22','2025-10-26',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102025137','P02005',NULL,'2025-10-20','2025-10-23',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110625138','P09009',NULL,'2025-11-06','2025-11-08',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101925139','P02007',NULL,'2025-10-15','2025-10-19',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101925139','P04002',NULL,'2025-10-15','2025-10-19',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101925139','P07010',NULL,'2025-10-17','2025-10-19',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725140','P05005',NULL,'2025-11-13','2025-11-17',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125141','P01005',NULL,'2025-10-01','2025-10-05',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125141','P06007',NULL,'2025-10-01','2025-10-04',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825142','P04009','KM25005','2025-10-06','2025-10-08',2,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825142','P05003','KM25008','2025-10-05','2025-10-08',3,1050000,1950000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825142','P01007',NULL,'2025-10-04','2025-10-08',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725143','P02005','KM25005','2025-10-08','2025-10-13',5,2000000,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110625144','P06001',NULL,'2025-11-06','2025-11-08',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110625144','P09004',NULL,'2025-11-06','2025-11-09',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110625144','P01010',NULL,'2025-11-06','2025-11-08',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125145','P08006',NULL,'2025-10-01','2025-10-05',4,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125145','P01005',NULL,'2025-10-01','2025-10-05',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725146','P06007',NULL,'2025-10-07','2025-10-09',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725146','P02009','KM25001','2025-10-07','2025-10-11',4,300000,5700000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112125147','P03003',NULL,'2025-11-21','2025-11-25',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325148','P01006','KM25005','2025-10-15','2025-10-18',3,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825149','P10005','KM25001','2025-10-04','2025-10-08',4,600000,11400000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825149','P06004',NULL,'2025-10-06','2025-10-08',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100825149','P07003',NULL,'2025-10-04','2025-10-08',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725150','P06007',NULL,'2025-11-05','2025-11-07',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112825151','P07010',NULL,'2025-11-26','2025-11-28',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112825151','P05007',NULL,'2025-11-26','2025-11-28',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112825151','P02007',NULL,'2025-11-24','2025-11-28',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110225152','P07007',NULL,'2025-11-05','2025-11-10',5,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525153','P06005',NULL,'2025-11-15','2025-11-19',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525153','P10009',NULL,'2025-11-15','2025-11-17',2,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111625154','P02001',NULL,'2025-11-16','2025-11-19',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111625154','P07005',NULL,'2025-11-16','2025-11-19',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725155','P10006',NULL,'2025-10-17','2025-10-20',3,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725155','P06006',NULL,'2025-10-17','2025-10-19',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725155','P06007',NULL,'2025-10-17','2025-10-20',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125156','P07007',NULL,'2025-11-02','2025-11-04',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125156','P07005','KM25005','2025-11-04','2025-11-09',5,3000000,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125156','P01006',NULL,'2025-11-03','2025-11-06',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102825157','P01005',NULL,'2025-10-26','2025-10-28',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625158','P09004','KM25005','2025-10-16','2025-10-19',3,3000000,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725159','P05008','KM25003','2025-11-13','2025-11-17',4,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725159','P04002','KM25003','2025-11-13','2025-11-17',4,400000,3600000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111725159','P05003','KM25003','2025-11-15','2025-11-17',2,200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100325160','P09007',NULL,'2025-10-03','2025-10-07',4,0,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925161','P02009','KM25003','2025-11-06','2025-11-09',3,450000,4050000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110925161','P01010',NULL,'2025-11-07','2025-11-09',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725162','P09005','KM25010','2025-10-07','2025-10-09',2,1250000,3750000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725162','P05005',NULL,'2025-10-07','2025-10-10',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125163','P09009',NULL,'2025-10-02','2025-10-05',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325164','P04003',NULL,'2025-10-11','2025-10-13',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325164','P04002','KM25005','2025-10-11','2025-10-13',2,800000,1200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325165','P05008',NULL,'2025-10-13','2025-10-15',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325165','P02009',NULL,'2025-10-13','2025-10-17',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101325165','P01010',NULL,'2025-10-13','2025-10-17',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102025166','P08006',NULL,'2025-10-20','2025-10-22',2,0,5000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102025166','P04002',NULL,'2025-10-20','2025-10-24',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525167','P03006',NULL,'2025-11-11','2025-11-15',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525167','P06001',NULL,'2025-11-13','2025-11-15',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525167','P05007',NULL,'2025-11-13','2025-11-15',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725168','P02009','KM25005','2025-10-04','2025-10-07',3,1800000,2700000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725168','P01007',NULL,'2025-10-04','2025-10-07',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100725168','P06007',NULL,'2025-10-05','2025-10-07',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925169','P10002',NULL,'2025-10-29','2025-11-01',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925169','P05008','KM25010','2025-10-29','2025-10-31',2,500000,1500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102925169','P04009','KM25010','2025-10-29','2025-11-01',3,1125000,3375000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102425170','P02009',NULL,'2025-10-21','2025-10-24',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102425170','P09004',NULL,'2025-10-20','2025-10-24',4,0,10000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725171','P01007','KM25003','2025-11-04','2025-11-07',3,300000,2700000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725171','P05003',NULL,'2025-11-03','2025-11-07',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110725171','P09004','KM25003','2025-11-04','2025-11-07',3,750000,6750000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525172','P04009',NULL,'2025-11-03','2025-11-05',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525172','P01007','KM25001','2025-11-01','2025-11-05',4,200000,3800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525172','P08003',NULL,'2025-11-01','2025-11-05',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125173','P09004','KM25003','2025-10-01','2025-10-05',4,1000000,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110625174','P04003',NULL,'2025-11-04','2025-11-06',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111025175','P01006','KM25005','2025-11-11','2025-11-14',3,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110125176','P03006',NULL,'2025-11-01','2025-11-03',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025177','P09009',NULL,'2025-10-10','2025-10-13',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025177','P02005','KM25008','2025-10-13','2025-10-16',3,1050000,1950000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100425178','P03003',NULL,'2025-09-30','2025-10-04',4,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100425178','P02009',NULL,'2025-09-30','2025-10-04',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100425178','P05003',NULL,'2025-10-02','2025-10-04',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525179','P07010',NULL,'2025-11-05','2025-11-09',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525179','P05008',NULL,'2025-11-05','2025-11-08',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110525179','P09007',NULL,'2025-11-05','2025-11-08',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525180','P01007','KM25003','2025-11-15','2025-11-18',3,300000,2700000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111525180','P07009',NULL,'2025-11-15','2025-11-19',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100325181','P01007','KM25001','2025-10-03','2025-10-07',4,200000,3800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100325181','P04009',NULL,'2025-10-03','2025-10-05',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100325181','P06004',NULL,'2025-10-03','2025-10-05',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725182','P08003',NULL,'2025-10-17','2025-10-20',3,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101725182','P06001',NULL,'2025-10-17','2025-10-19',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110325183','P06006','KM25008','2025-11-03','2025-11-07',4,2800000,5200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD110325183','P01007','KM25010','2025-11-03','2025-11-05',2,500000,1500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111625184','P09007',NULL,'2025-11-16','2025-11-18',2,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111425185','P04003',NULL,'2025-11-14','2025-11-17',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102425186','P02006',NULL,'2025-10-24','2025-10-26',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102425186','P06006',NULL,'2025-10-24','2025-10-28',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100225187','P03003',NULL,'2025-10-02','2025-10-05',3,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111325188','P04002',NULL,'2025-11-11','2025-11-13',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD111325188','P09006','KM25008','2025-11-11','2025-11-13',2,2100000,3900000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD112025189','P10005',NULL,'2025-11-20','2025-11-23',3,0,9000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD113025190','P04009',NULL,'2025-11-30','2025-12-03',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD113025190','P05003','KM25008','2025-11-30','2025-12-02',2,700000,1300000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD113025190','P10006','KM25010','2025-11-30','2025-12-04',4,4000000,12000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100625191','P06004',NULL,'2025-10-03','2025-10-06',3,0,4500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100625191','P07010',NULL,'2025-10-04','2025-10-06',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100125192','P06004',NULL,'2025-10-01','2025-10-05',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101025193','P07009',NULL,'2025-10-06','2025-10-10',4,0,8000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625194','P07010',NULL,'2025-10-16','2025-10-18',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101625194','P05007',NULL,'2025-10-16','2025-10-18',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102325195','P09004',NULL,'2025-10-20','2025-10-23',3,0,7500000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102325195','P07003',NULL,'2025-10-19','2025-10-23',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100325196','P02009',NULL,'2025-09-29','2025-10-03',4,0,6000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD102025197','P07005','KM25005','2025-10-22','2025-10-24',2,1200000,1800000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100225198','P02001',NULL,'2025-10-03','2025-10-08',5,0,5000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD100225198','P07007',NULL,'2025-10-02','2025-10-04',2,0,4000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101125199','P08003','KM25003','2025-10-11','2025-10-15',4,800000,7200000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101125199','P01001',NULL,'2025-10-11','2025-10-13',2,0,2000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101925200','P07003',NULL,'2025-10-17','2025-10-19',2,0,3000000);
+INSERT INTO ChiTietHoaDon (maHD,maPhong,maKM,ngayNhanPhong,ngayTraPhong,soNgayO,tienGiam,thanhTien) VALUES('HD101925200','P02009',NULL,'2025-10-17','2025-10-19',2,0,3000000);
+
+-- NguoiO
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Khánh Phúc','1979-09-11',1,'0900000001','100000001','HD102825001','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Lan Mai','1999-08-06',0,'0900000002','100000002','HD102825001','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Bích Vy','1978-11-12',0,'0900000003','100000003','HD102825001','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Ngọc Trang','2002-07-22',0,'0900000004','100000004','HD102825001','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Duy Hùng','1977-02-19',1,'0900000005','100000005','HD102825001','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Thị Hương','1987-12-22',0,'0900000006','100000006','HD101725002','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Linh Mai','1994-12-03',0,'0900000007','100000007','HD101725002','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Hoa Vy','1983-12-01',0,'0900000008','100000008','HD101625003','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Vy Mai','2000-04-07',0,'0900000009','100000009','HD101625003','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Huy Hùng','1981-04-26',1,'0900000010','100000010','HD101625003','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Minh Hùng','1988-08-06',1,'0900000011','100000011','HD101625003','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Lan Hương','1978-05-18',0,'0900000012','100000012','HD101625003','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Minh Khoa','2000-01-09',1,'0900000013','100000013','HD101625003','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Ngọc Trang','1981-08-12',0,'0900000014','100000014','HD101625003','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Phương Ngọc','1979-11-11',0,'0900000015','100000015','HD101625003','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Khánh Phúc','2002-03-03',1,'0900000016','100000016','HD101625003','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Minh Duy','1979-07-13',1,'0900000017','100000017','HD101625003','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Trang Hương','2001-05-08',0,'0900000018','100000018','HD102525004','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hằng Hương','1980-02-14',0,'0900000019','100000019','HD102525004','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Duy Khoa','2004-03-25',1,'0900000020','100000020','HD102525004','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hằng Trang','2003-02-15',0,'0900000021','100000021','HD102525004','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Quốc Khoa','1983-04-10',1,'0900000022','100000022','HD101625005','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Khoa','1988-04-24',1,'0900000023','100000023','HD101625005','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hằng Hương','1998-10-07',0,'0900000024','100000024','HD101625005','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Vy Mai','2000-08-09',0,'0900000025','100000025','HD101625005','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Quốc Khoa','1984-09-15',1,'0900000026','100000026','HD101625005','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Đức Phúc','1976-10-02',1,'0900000027','100000027','HD101625005','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Thị Ngọc','2002-04-26',0,'0900000028','100000028','HD101625005','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Văn Hùng','1993-04-07',1,'0900000029','100000029','HD101625005','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Sơn Quân','1991-12-12',1,'0900000030','100000030','HD100125006','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Nam Khoa','2005-10-18',1,'0900000031','100000031','HD100125006','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Nam Hùng','1987-02-07',1,'0900000032','100000032','HD100725007','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Linh Hương','1994-03-27',0,'0900000033','100000033','HD100725007','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Linh Mai','1991-11-13',0,'0900000034','100000034','HD100725007','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Nam Quân','1981-04-04',1,'0900000035','100000035','HD100725007','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Văn Quân','2005-03-22',1,'0900000036','100000036','HD100725007','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Vy Vy','2001-06-23',0,'0900000037','100000037','HD100725007','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Minh Khoa','1993-07-17',1,'0900000038','100000038','HD101725008','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Thị Lan','1994-03-20',0,'0900000039','100000039','HD111425009','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Sơn Khoa','1978-08-11',1,'0900000040','100000040','HD111425009','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Trang Vy','1992-10-22',0,'0900000041','100000041','HD111425009','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Lan Mai','1990-11-28',0,'0900000042','100000042','HD111425009','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Lan Lan','1979-09-10',0,'0900000043','100000043','HD103125010','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Khánh Quân','2003-09-13',1,'0900000044','100000044','HD103125010','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Đức Khoa','1992-04-15',1,'0900000045','100000045','HD103125010','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Duy Khoa','1984-05-16',1,'0900000046','100000046','HD110725011','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Linh Ngọc','2004-03-02',0,'0900000047','100000047','HD110725011','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Phương Ngọc','1977-03-16',0,'0900000048','100000048','HD110725011','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Ngọc Lan','1995-12-13',0,'0900000049','100000049','HD110725011','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Sơn Quân','1986-11-20',1,'0900000050','100000050','HD111025012','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Hằng Mai','1979-08-12',0,'0900000051','100000051','HD111025012','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Linh Trang','1996-10-25',0,'0900000052','100000052','HD112525013','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Hằng Ngọc','1988-11-27',0,'0900000053','100000053','HD110825014','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Nam Hùng','1983-08-23',1,'0900000054','100000054','HD112925015','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Huy Hùng','1978-07-06',1,'0900000055','100000055','HD112925015','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hoa Trang','1991-08-03',0,'0900000056','100000056','HD112925015','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Đức Quân','1994-05-05',1,'0900000057','100000057','HD112925015','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Vy Hương','2002-11-20',0,'0900000058','100000058','HD101225016','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Thị Mai','2005-03-06',0,'0900000059','100000059','HD101225016','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Linh Mai','1983-03-19',0,'0900000060','100000060','HD101225016','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Vy Vy','2002-06-09',0,'0900000061','100000061','HD101225016','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Thị Trang','1997-09-13',0,'0900000062','100000062','HD100925017','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Sơn Phúc','1990-12-10',1,'0900000063','100000063','HD100925017','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Bích Mai','1987-07-24',0,'0900000064','100000064','HD100925017','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Văn Quân','1977-02-10',1,'0900000065','100000065','HD100925017','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Trang Lan','1983-10-20',0,'0900000066','100000066','HD100925017','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Duy','1988-07-08',1,'0900000067','100000067','HD100925017','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Minh Duy','1999-01-27',1,'0900000068','100000068','HD100925017','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Linh Hương','2003-03-02',0,'0900000069','100000069','HD100725018','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Duy Khoa','1977-12-17',1,'0900000070','100000070','HD100725018','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Trang Ngọc','1989-03-13',0,'0900000071','100000071','HD103125019','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Linh Mai','2004-09-01',0,'0900000072','100000072','HD103125019','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Quốc Duy','1980-06-22',1,'0900000073','100000073','HD112225020','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Minh Duy','2003-01-16',1,'0900000074','100000074','HD112225020','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Trang Trang','1987-02-27',0,'0900000075','100000075','HD112225020','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Duy Khoa','2000-06-02',1,'0900000076','100000076','HD112225020','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Văn Phúc','1990-04-05',1,'0900000077','100000077','HD112225020','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hằng Mai','2002-09-13',0,'0900000078','100000078','HD112225020','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Hoa Trang','2004-10-04',0,'0900000079','100000079','HD110125021','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Khánh Phúc','1994-04-13',1,'0900000080','100000080','HD110125021','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Tuấn Phúc','1981-01-18',1,'0900000081','100000081','HD110125021','P01001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Sơn Khoa','2001-04-06',1,'0900000082','100000082','HD110125021','P01001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Lan Mai','1989-02-26',0,'0900000083','100000083','HD110925022','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Văn Quân','1978-11-23',1,'0900000084','100000084','HD110925022','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Đức Duy','1999-06-25',1,'0900000085','100000085','HD110925022','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hoa Trang','1982-02-15',0,'0900000086','100000086','HD110925022','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Bích Ngọc','2001-10-12',0,'0900000087','100000087','HD111125023','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Bích Hương','1980-10-28',0,'0900000088','100000088','HD111125023','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Linh Mai','1982-05-22',0,'0900000089','100000089','HD110225024','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Linh Trang','1977-04-11',0,'0900000090','100000090','HD110225024','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Khánh Hùng','1985-02-20',1,'0900000091','100000091','HD110225024','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Linh Hương','1983-07-17',0,'0900000092','100000092','HD110225024','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Trang Mai','1977-07-06',0,'0900000093','100000093','HD110225024','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Bích Trang','2004-01-17',0,'0900000094','100000094','HD110225024','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Tuấn Phúc','1993-02-24',1,'0900000095','100000095','HD100425025','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Ngọc Hương','2002-09-14',0,'0900000096','100000096','HD100425025','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Trang Mai','1993-03-07',0,'0900000097','100000097','HD101225026','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Vy Trang','1996-06-06',0,'0900000098','100000098','HD101225026','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Khánh Phúc','1980-05-17',1,'0900000099','100000099','HD101225026','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Ngọc Trang','2000-06-16',0,'0900000100','100000100','HD101225026','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Khánh Duy','1996-02-01',1,'0900000101','100000101','HD100525027','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Đức Phúc','1983-10-06',1,'0900000102','100000102','HD100525027','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Bích Lan','1983-08-21',0,'0900000103','100000103','HD100525027','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Linh Ngọc','2005-05-30',0,'0900000104','100000104','HD100525027','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Bích Trang','1995-09-11',0,'0900000105','100000105','HD111425028','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Trang Ngọc','1991-01-20',0,'0900000106','100000106','HD111425028','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Duy Duy','1976-10-18',1,'0900000107','100000107','HD111425028','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Khánh Quân','1982-05-09',1,'0900000108','100000108','HD111425028','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Nam Duy','1988-05-22',1,'0900000109','100000109','HD111425028','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Linh Lan','1979-07-22',0,'0900000110','100000110','HD111425028','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Thị Lan','1977-06-18',0,'0900000111','100000111','HD111425028','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Hoa Hương','1977-03-29',0,'0900000112','100000112','HD111425028','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Khánh Khoa','1977-07-09',1,'0900000113','100000113','HD102225029','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Khánh Duy','1994-06-09',1,'0900000114','100000114','HD102225029','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Văn Khoa','1998-07-23',1,'0900000115','100000115','HD102225029','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Tuấn Khoa','1999-07-26',1,'0900000116','100000116','HD102225029','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Huy Duy','1997-03-19',1,'0900000117','100000117','HD102225029','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Minh Hùng','2002-01-09',1,'0900000118','100000118','HD102225029','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Ngọc Lan','1982-05-03',0,'0900000119','100000119','HD111525030','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Đức Duy','1994-06-10',1,'0900000120','100000120','HD111525030','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Huy Khoa','1992-02-23',1,'0900000121','100000121','HD111525030','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Khánh Duy','2000-07-25',1,'0900000122','100000122','HD110825031','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Khánh Hùng','2002-05-28',1,'0900000123','100000123','HD110825031','P01001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Hằng Ngọc','1995-12-29',0,'0900000124','100000124','HD110825031','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Hoa Mai','1986-05-11',0,'0900000125','100000125','HD110825031','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Đức Hùng','1985-02-19',1,'0900000126','100000126','HD110425032','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Huy Phúc','1976-04-10',1,'0900000127','100000127','HD112225033','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Trang Trang','1993-08-22',0,'0900000128','100000128','HD112225033','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Phương Mai','1995-07-26',0,'0900000129','100000129','HD112225033','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hằng Hương','1982-08-15',0,'0900000130','100000130','HD112225033','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Duy Quân','1989-02-14',1,'0900000131','100000131','HD112225033','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Văn Quân','1988-02-13',1,'0900000132','100000132','HD112725034','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Vy Hương','1999-10-13',0,'0900000133','100000133','HD112725034','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Lan Lan','1988-08-11',0,'0900000134','100000134','HD112725034','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Sơn Quân','1977-08-25',1,'0900000135','100000135','HD112725034','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Phương Mai','1983-12-02',0,'0900000136','100000136','HD112725034','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Duy Khoa','1994-03-28',1,'0900000137','100000137','HD111825035','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Trang Trang','1997-04-17',0,'0900000138','100000138','HD111825035','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hoa Trang','1994-09-01',0,'0900000139','100000139','HD111825035','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Duy Hùng','1981-08-30',1,'0900000140','100000140','HD102225036','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Khánh Khoa','2004-10-05',1,'0900000141','100000141','HD102225036','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Trang Lan','1996-02-25',0,'0900000142','100000142','HD111625037','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Văn Duy','1994-01-12',1,'0900000143','100000143','HD112925038','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Khoa','1987-07-10',1,'0900000144','100000144','HD112925038','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Văn Hùng','1999-08-31',1,'0900000145','100000145','HD112925038','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Hằng Lan','1994-10-17',0,'0900000146','100000146','HD112925038','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Phương Hương','1978-01-11',0,'0900000147','100000147','HD103025039','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Thị Ngọc','2001-11-04',0,'0900000148','100000148','HD101225040','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Quốc Duy','1995-04-09',1,'0900000149','100000149','HD101225040','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Khánh Duy','2005-03-14',1,'0900000150','100000150','HD101225040','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Tuấn Hùng','1984-10-30',1,'0900000151','100000151','HD101225040','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Trang Trang','2000-06-24',0,'0900000152','100000152','HD101225040','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Khánh Khoa','2004-12-08',1,'0900000153','100000153','HD101225040','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Huy Khoa','1980-06-22',1,'0900000154','100000154','HD111425041','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Sơn Hùng','1990-01-05',1,'0900000155','100000155','HD111425041','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Lan Mai','1989-07-28',0,'0900000156','100000156','HD111425041','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Lan Vy','2003-11-28',0,'0900000157','100000157','HD110325042','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Duy Khoa','1984-04-24',1,'0900000158','100000158','HD110325042','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Vy Ngọc','1993-05-12',0,'0900000159','100000159','HD110325042','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Lan Hương','1976-04-23',0,'0900000160','100000160','HD110325042','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Ngọc Vy','1977-07-05',0,'0900000161','100000161','HD110325042','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Đức Hùng','1991-08-09',1,'0900000162','100000162','HD112325043','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Nam Quân','2005-08-06',1,'0900000163','100000163','HD112325043','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Văn Hùng','1987-05-26',1,'0900000164','100000164','HD112325043','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hoa Vy','1998-10-02',0,'0900000165','100000165','HD112325043','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hoa Trang','1983-07-28',0,'0900000166','100000166','HD112325043','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hằng Vy','1995-01-02',0,'0900000167','100000167','HD112325043','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Khánh Hùng','2001-05-11',1,'0900000168','100000168','HD112325043','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Tuấn Duy','1989-11-20',1,'0900000169','100000169','HD111925044','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Tuấn Khoa','1983-10-09',1,'0900000170','100000170','HD111925044','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Nam Khoa','1979-09-23',1,'0900000171','100000171','HD112525045','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Sơn Quân','1980-07-18',1,'0900000172','100000172','HD112525045','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Phương Mai','1989-09-02',0,'0900000173','100000173','HD102525046','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Thị Mai','1988-04-01',0,'0900000174','100000174','HD102525046','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Bích Ngọc','1999-06-28',0,'0900000175','100000175','HD102525046','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Bích Vy','2003-03-07',0,'0900000176','100000176','HD102525046','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Lan Ngọc','1977-01-26',0,'0900000177','100000177','HD102525046','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Trang Lan','1990-05-27',0,'0900000178','100000178','HD102525046','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Đức Duy','1998-11-26',1,'0900000179','100000179','HD100925047','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Quốc Khoa','1977-06-28',1,'0900000180','100000180','HD100925047','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Vy Hương','1991-09-08',0,'0900000181','100000181','HD100925047','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Quốc Phúc','1976-06-22',1,'0900000182','100000182','HD100925047','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Hoa Hương','2002-04-11',0,'0900000183','100000183','HD100925047','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Đức Phúc','1977-04-23',1,'0900000184','100000184','HD101825048','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Hoa Hương','1997-09-03',0,'0900000185','100000185','HD101825048','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hoa Vy','1997-03-11',0,'0900000186','100000186','HD101825048','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Thị Trang','1991-11-26',0,'0900000187','100000187','HD101825048','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Sơn Phúc','1991-12-21',1,'0900000188','100000188','HD101225049','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Quốc Khoa','1985-07-06',1,'0900000189','100000189','HD101225049','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Minh Khoa','1990-02-16',1,'0900000190','100000190','HD101225049','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Đức Duy','1984-06-27',1,'0900000191','100000191','HD110625050','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Vy Hương','2002-04-09',0,'0900000192','100000192','HD100325051','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Minh Duy','2004-05-19',1,'0900000193','100000193','HD100325051','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Bích Hương','2005-10-31',0,'0900000194','100000194','HD100325051','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Hằng Vy','1991-02-20',0,'0900000195','100000195','HD111225052','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Hằng Trang','1993-03-26',0,'0900000196','100000196','HD111225052','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Huy Phúc','1995-09-22',1,'0900000197','100000197','HD111225052','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Văn Quân','1979-09-07',1,'0900000198','100000198','HD110125053','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Trang Trang','1998-02-24',0,'0900000199','100000199','HD110125053','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Ngọc Vy','1978-06-08',0,'0900000200','100000200','HD102325054','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Sơn Phúc','1994-09-28',1,'0900000201','100000201','HD103025055','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Phương Trang','1990-02-19',0,'0900000202','100000202','HD101925056','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Khánh Duy','1979-10-14',1,'0900000203','100000203','HD100225057','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Bích Vy','1989-03-09',0,'0900000204','100000204','HD100225057','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Thị Lan','1988-04-05',0,'0900000205','100000205','HD110125058','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Trang Ngọc','2001-02-28',0,'0900000206','100000206','HD110125058','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Hoa Ngọc','1987-06-04',0,'0900000207','100000207','HD110125058','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Bích Vy','2000-10-25',0,'0900000208','100000208','HD110125058','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Đức Khoa','1997-01-31',1,'0900000209','100000209','HD110125058','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Sơn Phúc','1992-08-01',1,'0900000210','100000210','HD110125058','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Huy Phúc','1999-11-05',1,'0900000211','100000211','HD101225059','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Phương Mai','1998-06-06',0,'0900000212','100000212','HD101225059','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Ngọc Ngọc','1981-06-03',0,'0900000213','100000213','HD101225059','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Lan Lan','1998-06-27',0,'0900000214','100000214','HD101225059','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Duy Khoa','1987-07-11',1,'0900000215','100000215','HD101425060','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Duy Hùng','1990-12-24',1,'0900000216','100000216','HD101425060','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Khánh Hùng','1992-02-17',1,'0900000217','100000217','HD110825061','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Minh Quân','1999-03-29',1,'0900000218','100000218','HD110825061','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Phương Vy','2000-11-16',0,'0900000219','100000219','HD110825061','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Văn Khoa','2000-09-08',1,'0900000220','100000220','HD110825061','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Khánh Phúc','2001-01-05',1,'0900000221','100000221','HD110825061','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Vy Hương','1983-01-29',0,'0900000222','100000222','HD111825062','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Trang Mai','2004-11-30',0,'0900000223','100000223','HD111825062','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Lan Ngọc','1980-07-09',0,'0900000224','100000224','HD111825062','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Ngọc Trang','1979-06-24',0,'0900000225','100000225','HD111825062','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Huy Hùng','1985-06-06',1,'0900000226','100000226','HD111825062','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Khánh Hùng','1976-12-06',1,'0900000227','100000227','HD111825062','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Quốc Duy','2002-10-11',1,'0900000228','100000228','HD100425063','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Linh Lan','2000-11-21',0,'0900000229','100000229','HD100425063','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Duy Khoa','1999-08-24',1,'0900000230','100000230','HD100425063','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Vy Mai','1990-06-23',0,'0900000231','100000231','HD110525064','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Thị Lan','1995-09-12',0,'0900000232','100000232','HD110525064','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Tuấn Quân','2005-06-18',1,'0900000233','100000233','HD110525064','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Đức Phúc','2001-10-02',1,'0900000234','100000234','HD110525064','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hoa Ngọc','1999-05-04',0,'0900000235','100000235','HD110525064','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Hằng Trang','1984-04-13',0,'0900000236','100000236','HD110525064','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Sơn Quân','2000-07-03',1,'0900000237','100000237','HD110525064','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Đức Duy','1995-08-10',1,'0900000238','100000238','HD110525064','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Duy Duy','1993-06-02',1,'0900000239','100000239','HD110525064','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Lan Mai','1994-12-09',0,'0900000240','100000240','HD111925065','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Linh Lan','2000-12-06',0,'0900000241','100000241','HD111925065','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Khánh Hùng','1985-02-24',1,'0900000242','100000242','HD111925065','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Tuấn Duy','1995-06-06',1,'0900000243','100000243','HD111925065','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Khoa','1987-08-18',1,'0900000244','100000244','HD110225066','P01001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Hoa Hương','1995-05-19',0,'0900000245','100000245','HD110225066','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Trang Vy','2005-08-30',0,'0900000246','100000246','HD110225066','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Linh Lan','2005-10-18',0,'0900000247','100000247','HD102525067','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Nam Quân','1988-10-05',1,'0900000248','100000248','HD101025068','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Bích Hương','1979-09-21',0,'0900000249','100000249','HD101025068','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Duy Phúc','1985-07-03',1,'0900000250','100000250','HD101025068','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Vy Hương','1994-07-28',0,'0900000251','100000251','HD101025068','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Sơn Phúc','1996-10-26',1,'0900000252','100000252','HD101025068','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Linh Ngọc','1997-11-06',0,'0900000253','100000253','HD101025068','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Duy Quân','1987-03-12',1,'0900000254','100000254','HD101025068','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Văn Duy','2005-08-05',1,'0900000255','100000255','HD100825069','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Huy Duy','1995-01-19',1,'0900000256','100000256','HD100825069','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Khánh Quân','1995-08-17',1,'0900000257','100000257','HD100825069','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Ngọc Lan','1992-05-30',0,'0900000258','100000258','HD100825069','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Lan Mai','2004-03-20',0,'0900000259','100000259','HD100825069','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Quốc Duy','2003-10-01',1,'0900000260','100000260','HD110725070','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Đức Quân','1991-02-24',1,'0900000261','100000261','HD110725070','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Phương Ngọc','1976-02-12',0,'0900000262','100000262','HD110725070','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Linh Hương','1994-12-19',0,'0900000263','100000263','HD110725070','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Sơn Quân','1976-03-21',1,'0900000264','100000264','HD100625071','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Trang Trang','1977-06-03',0,'0900000265','100000265','HD100625071','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Huy Quân','1989-02-23',1,'0900000266','100000266','HD100625071','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Khánh Duy','1986-03-06',1,'0900000267','100000267','HD100625071','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Minh Quân','1996-01-03',1,'0900000268','100000268','HD100625071','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Văn Khoa','1987-08-24',1,'0900000269','100000269','HD112325072','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Thị Trang','1999-09-30',0,'0900000270','100000270','HD101625073','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Nam Hùng','1981-10-07',1,'0900000271','100000271','HD101625073','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Phương Trang','1983-10-05',0,'0900000272','100000272','HD101625073','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Trang Vy','1989-09-18',0,'0900000273','100000273','HD101625073','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Khánh Phúc','2000-12-02',1,'0900000274','100000274','HD111025074','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Đức Phúc','1995-08-16',1,'0900000275','100000275','HD111025074','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Linh Ngọc','1991-07-15',0,'0900000276','100000276','HD101225075','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Văn Khoa','1986-05-21',1,'0900000277','100000277','HD101225075','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Văn Phúc','1994-01-05',1,'0900000278','100000278','HD101225075','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Vy Vy','2003-03-11',0,'0900000279','100000279','HD101225075','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Đức Khoa','1998-08-16',1,'0900000280','100000280','HD101225075','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Phương Hương','1982-07-04',0,'0900000281','100000281','HD102225076','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Lan Ngọc','2004-04-23',0,'0900000282','100000282','HD102225076','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Đức Quân','1997-11-30',1,'0900000283','100000283','HD102225076','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Tuấn Phúc','1981-04-25',1,'0900000284','100000284','HD101725077','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Linh Mai','2000-02-07',0,'0900000285','100000285','HD101725077','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hoa Mai','1991-05-13',0,'0900000286','100000286','HD101725077','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Bích Lan','1982-11-12',0,'0900000287','100000287','HD101725077','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Minh Duy','1983-04-25',1,'0900000288','100000288','HD101725077','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Minh Hùng','1985-02-04',1,'0900000289','100000289','HD101725077','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Thị Trang','1993-10-13',0,'0900000290','100000290','HD100125078','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hoa Mai','1981-04-16',0,'0900000291','100000291','HD100125078','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Vy Lan','1994-03-22',0,'0900000292','100000292','HD100125078','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Minh Duy','1989-01-24',1,'0900000293','100000293','HD112325079','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Thị Lan','1984-06-14',0,'0900000294','100000294','HD112325079','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Linh Hương','1989-08-14',0,'0900000295','100000295','HD112325079','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Nam Duy','1984-09-30',1,'0900000296','100000296','HD112325079','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Vy Mai','1996-10-12',0,'0900000297','100000297','HD112325079','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Văn Quân','1995-06-06',1,'0900000298','100000298','HD111525080','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Linh Lan','2003-01-25',0,'0900000299','100000299','HD111525081','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Nam Hùng','1988-06-18',1,'0900000300','100000300','HD111525081','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Vy Vy','1983-09-28',0,'0900000301','100000301','HD111525081','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hằng Trang','1988-02-09',0,'0900000302','100000302','HD111525081','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Minh Quân','1979-07-30',1,'0900000303','100000303','HD111525081','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hằng Hương','2003-06-16',0,'0900000304','100000304','HD111525081','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Lan Mai','1975-12-14',0,'0900000305','100000305','HD111725082','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Tuấn Hùng','1977-01-30',1,'0900000306','100000306','HD111725082','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Tuấn Duy','1999-08-13',1,'0900000307','100000307','HD111725082','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Duy Phúc','1977-04-02',1,'0900000308','100000308','HD111725082','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Trang Lan','1993-12-20',0,'0900000309','100000309','HD111725082','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Lan Vy','1982-08-28',0,'0900000310','100000310','HD111725082','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Tuấn Duy','1992-05-01',1,'0900000311','100000311','HD111725082','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Đức Khoa','1997-02-23',1,'0900000312','100000312','HD111725082','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Minh Khoa','1996-11-01',1,'0900000313','100000313','HD111725082','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hoa Vy','1993-11-09',0,'0900000314','100000314','HD101325083','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Thị Hương','1978-08-11',0,'0900000315','100000315','HD101325083','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Linh Trang','1989-07-27',0,'0900000316','100000316','HD101325083','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Sơn Duy','2000-09-09',1,'0900000317','100000317','HD101325083','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Huy Duy','1997-01-13',1,'0900000318','100000318','HD101325083','P01001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Thị Ngọc','1978-10-01',0,'0900000319','100000319','HD102125084','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Lan Vy','2002-01-15',0,'0900000320','100000320','HD102125084','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Lan Mai','1976-05-23',0,'0900000321','100000321','HD102125084','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Lan Hương','1982-11-17',0,'0900000322','100000322','HD110825085','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Nam Hùng','1985-10-11',1,'0900000323','100000323','HD110825085','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Ngọc Vy','2000-11-12',0,'0900000324','100000324','HD110825085','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Linh Mai','2001-05-18',0,'0900000325','100000325','HD110825085','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Duy Hùng','1981-10-26',1,'0900000326','100000326','HD110825085','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Thị Vy','2005-03-14',0,'0900000327','100000327','HD110825085','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Lan Hương','1988-04-11',0,'0900000328','100000328','HD111725086','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hằng Ngọc','2004-08-16',0,'0900000329','100000329','HD111725086','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Đức Khoa','1985-11-14',1,'0900000330','100000330','HD102225087','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Lan Trang','1996-07-25',0,'0900000331','100000331','HD102225087','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Phương Ngọc','1992-12-14',0,'0900000332','100000332','HD102225087','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Bích Lan','1999-07-19',0,'0900000333','100000333','HD101525088','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hoa Lan','1991-01-18',0,'0900000334','100000334','HD101525088','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Hoa Lan','1994-06-23',0,'0900000335','100000335','HD101525088','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Linh Ngọc','1987-10-10',0,'0900000336','100000336','HD110425089','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Lan Trang','1987-12-09',0,'0900000337','100000337','HD110425089','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Minh Quân','1998-11-14',1,'0900000338','100000338','HD110425089','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Tuấn Phúc','1976-01-03',1,'0900000339','100000339','HD111925090','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Đức Khoa','1988-08-23',1,'0900000340','100000340','HD100225091','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Đức Khoa','1994-08-29',1,'0900000341','100000341','HD100225091','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Huy Hùng','2004-10-10',1,'0900000342','100000342','HD100225091','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Phương Mai','2004-01-30',0,'0900000343','100000343','HD100225091','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Duy Phúc','1984-01-23',1,'0900000344','100000344','HD100225091','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hằng Trang','1976-07-03',0,'0900000345','100000345','HD100225091','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Duy Quân','2003-11-27',1,'0900000346','100000346','HD100225091','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Quốc Duy','1992-12-14',1,'0900000347','100000347','HD100225091','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Văn Duy','1977-11-30',1,'0900000348','100000348','HD100225091','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Huy Phúc','1988-10-09',1,'0900000349','100000349','HD111125092','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Sơn Phúc','1977-11-15',1,'0900000350','100000350','HD111125092','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Hằng Lan','1994-05-08',0,'0900000351','100000351','HD111125092','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Quốc Hùng','1989-10-22',1,'0900000352','100000352','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Ngọc Vy','1983-08-01',0,'0900000353','100000353','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Trang Mai','1982-11-28',0,'0900000354','100000354','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Trang Mai','2004-12-07',0,'0900000355','100000355','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Hằng Vy','1998-07-12',0,'0900000356','100000356','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Tuấn Hùng','1992-12-15',1,'0900000357','100000357','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Duy Duy','2003-06-03',1,'0900000358','100000358','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hoa Lan','1993-12-04',0,'0900000359','100000359','HD111125092','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Ngọc Vy','2005-01-28',0,'0900000360','100000360','HD110825093','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Hằng Hương','2004-01-06',0,'0900000361','100000361','HD110825093','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Bích Hương','1979-06-26',0,'0900000362','100000362','HD110825093','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Quốc Hùng','1978-06-14',1,'0900000363','100000363','HD110825093','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Quốc Quân','1979-05-20',1,'0900000364','100000364','HD110825093','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Lan Lan','1994-04-18',0,'0900000365','100000365','HD110825093','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Trang Lan','1996-12-10',0,'0900000366','100000366','HD102925094','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Vy Trang','1984-05-05',0,'0900000367','100000367','HD102925094','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Huy Khoa','1999-06-07',1,'0900000368','100000368','HD102925094','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Quốc Duy','1991-08-30',1,'0900000369','100000369','HD110325095','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Tuấn Phúc','1981-09-13',1,'0900000370','100000370','HD111925096','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Nam Khoa','1998-01-02',1,'0900000371','100000371','HD111925096','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Linh Lan','1986-11-28',0,'0900000372','100000372','HD111925096','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Trang Trang','1988-08-22',0,'0900000373','100000373','HD100725097','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Vy Vy','1999-01-18',0,'0900000374','100000374','HD100725097','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Phương Ngọc','1982-09-15',0,'0900000375','100000375','HD100725097','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Khánh Quân','1988-04-21',1,'0900000376','100000376','HD100725097','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Vy Ngọc','2000-05-29',0,'0900000377','100000377','HD100725097','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Quốc Khoa','1996-10-28',1,'0900000378','100000378','HD100725097','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Ngọc Vy','1988-11-28',0,'0900000379','100000379','HD100725097','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Linh Hương','1997-04-11',0,'0900000380','100000380','HD100725097','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Tuấn Duy','1977-02-25',1,'0900000381','100000381','HD111225098','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Hoa Lan','1976-12-14',0,'0900000382','100000382','HD111225098','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Linh Lan','1982-08-18',0,'0900000383','100000383','HD111225098','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Lan Lan','1985-07-05',0,'0900000384','100000384','HD111225098','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Sơn Phúc','1976-10-02',1,'0900000385','100000385','HD111225098','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Duy Phúc','2001-11-20',1,'0900000386','100000386','HD111225098','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hoa Vy','1977-12-28',0,'0900000387','100000387','HD111225098','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Bích Lan','1982-08-31',0,'0900000388','100000388','HD111225099','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Quốc Khoa','1983-01-30',1,'0900000389','100000389','HD111225099','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Huy Phúc','1982-06-22',1,'0900000390','100000390','HD111225099','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Quốc Duy','2002-05-28',1,'0900000391','100000391','HD111225099','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Quốc Hùng','1997-06-06',1,'0900000392','100000392','HD111225099','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Huy Khoa','1998-10-14',1,'0900000393','100000393','HD111925100','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Vy Ngọc','1997-10-24',0,'0900000394','100000394','HD111925100','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Minh Khoa','1983-09-10',1,'0900000395','100000395','HD111925100','P07009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Bích Trang','1979-08-02',0,'0900000396','100000396','HD111925100','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Huy Khoa','1995-09-15',1,'0900000397','100000397','HD101025101','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Phương Lan','2002-10-26',0,'0900000398','100000398','HD101025101','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Minh Quân','1985-08-11',1,'0900000399','100000399','HD102325102','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Hoa Mai','1977-04-12',0,'0900000400','100000400','HD102325102','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Lan Lan','1982-05-29',0,'0900000401','100000401','HD111125103','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Sơn Hùng','1981-04-18',1,'0900000402','100000402','HD111125103','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Ngọc Ngọc','1976-10-01',0,'0900000403','100000403','HD110925104','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Tuấn Phúc','2002-01-24',1,'0900000404','100000404','HD110925104','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Bích Vy','1977-12-18',0,'0900000405','100000405','HD111925105','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Sơn Hùng','1982-08-25',1,'0900000406','100000406','HD111925105','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Bích Lan','1984-02-13',0,'0900000407','100000407','HD111925105','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Đức Duy','1999-11-29',1,'0900000408','100000408','HD111925105','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Thị Ngọc','1991-12-14',0,'0900000409','100000409','HD102725106','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Huy Phúc','1987-06-17',1,'0900000410','100000410','HD102725106','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Linh Ngọc','1998-01-26',0,'0900000411','100000411','HD102725106','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Duy Hùng','2001-02-16',1,'0900000412','100000412','HD102725106','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Linh Lan','2001-07-22',0,'0900000413','100000413','HD102725106','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Thị Trang','1992-07-27',0,'0900000414','100000414','HD110925107','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Bích Vy','2000-04-13',0,'0900000415','100000415','HD110925107','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Hoa Trang','1980-03-24',0,'0900000416','100000416','HD101625108','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Đức Quân','1985-09-09',1,'0900000417','100000417','HD101625108','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Huy Phúc','1981-06-05',1,'0900000418','100000418','HD101625108','P01001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Vy Vy','1992-11-30',0,'0900000419','100000419','HD101625108','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Ngọc Trang','1998-06-26',0,'0900000420','100000420','HD101625108','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Sơn Khoa','1980-09-17',1,'0900000421','100000421','HD112225109','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Nam Quân','1994-05-11',1,'0900000422','100000422','HD112225109','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Khánh Hùng','1983-03-24',1,'0900000423','100000423','HD112225109','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Hoa Vy','1991-10-15',0,'0900000424','100000424','HD110825110','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Khánh Phúc','1990-05-29',1,'0900000425','100000425','HD110825110','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Quốc Quân','1985-02-16',1,'0900000426','100000426','HD110825110','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Văn Phúc','1984-08-03',1,'0900000427','100000427','HD110825110','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Ngọc Ngọc','1982-08-25',0,'0900000428','100000428','HD110825110','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Trang Trang','1978-11-16',0,'0900000429','100000429','HD110825110','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Khánh Duy','1989-05-14',1,'0900000430','100000430','HD110825110','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Vy Trang','1981-01-06',0,'0900000431','100000431','HD112625111','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Văn Quân','1978-03-15',1,'0900000432','100000432','HD101525112','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Khánh Hùng','1993-02-22',1,'0900000433','100000433','HD101525112','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Nam Duy','1976-12-06',1,'0900000434','100000434','HD101525112','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Khánh Quân','1987-12-18',1,'0900000435','100000435','HD110225113','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Sơn Hùng','1992-04-26',1,'0900000436','100000436','HD110225113','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Quốc Phúc','2004-03-11',1,'0900000437','100000437','HD110225113','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Khánh Phúc','2002-11-29',1,'0900000438','100000438','HD110225113','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Phúc','1998-11-13',1,'0900000439','100000439','HD110225113','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Lan Hương','1976-07-08',0,'0900000440','100000440','HD102725114','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Lan Hương','1976-03-19',0,'0900000441','100000441','HD112925115','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Nam Khoa','1979-07-31',1,'0900000442','100000442','HD112925115','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Khánh Khoa','2003-03-07',1,'0900000443','100000443','HD112925115','P04004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Bích Vy','1996-08-18',0,'0900000444','100000444','HD112925115','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Nam Khoa','2003-12-14',1,'0900000445','100000445','HD112925115','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Thị Lan','1979-03-22',0,'0900000446','100000446','HD111225116','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Ngọc Trang','2002-12-07',0,'0900000447','100000447','HD110425117','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Khánh Hùng','1998-04-29',1,'0900000448','100000448','HD100825118','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Vy Hương','1981-01-20',0,'0900000449','100000449','HD100825118','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Trang Mai','1982-02-24',0,'0900000450','100000450','HD100825118','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Sơn Hùng','1988-04-06',1,'0900000451','100000451','HD100825118','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Sơn Khoa','1999-01-09',1,'0900000452','100000452','HD100825118','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Đức Phúc','2004-12-03',1,'0900000453','100000453','HD100825118','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Lan Mai','1996-06-19',0,'0900000454','100000454','HD100825118','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Ngọc Ngọc','1984-02-27',0,'0900000455','100000455','HD100825118','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Duy Quân','1977-06-24',1,'0900000456','100000456','HD100725119','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Bích Mai','1997-05-12',0,'0900000457','100000457','HD100725119','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Hằng Mai','1987-12-13',0,'0900000458','100000458','HD100725119','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Duy Quân','1988-03-09',1,'0900000459','100000459','HD100725119','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Vy Mai','1998-09-20',0,'0900000460','100000460','HD100725119','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Bích Lan','1976-06-14',0,'0900000461','100000461','HD101325120','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Hoa Vy','1977-06-05',0,'0900000462','100000462','HD101325120','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Văn Phúc','2005-08-18',1,'0900000463','100000463','HD101325120','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Vy Lan','1985-07-03',0,'0900000464','100000464','HD101425121','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Khánh Quân','1977-04-22',1,'0900000465','100000465','HD112625122','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Văn Quân','1978-04-17',1,'0900000466','100000466','HD112625122','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Trang Ngọc','1985-11-30',0,'0900000467','100000467','HD112625122','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Ngọc Trang','1998-10-06',0,'0900000468','100000468','HD112625122','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Lan Ngọc','1994-05-09',0,'0900000469','100000469','HD112625122','P07009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Tuấn Phúc','1989-01-09',1,'0900000470','100000470','HD111325123','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Vy Vy','1996-10-04',0,'0900000471','100000471','HD111325123','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Nam Khoa','2004-11-23',1,'0900000472','100000472','HD111325123','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Linh Trang','1988-05-14',0,'0900000473','100000473','HD111325123','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Khánh Hùng','1985-11-27',1,'0900000474','100000474','HD111325123','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Quốc Hùng','2004-09-28',1,'0900000475','100000475','HD111325123','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Huy Khoa','1998-06-13',1,'0900000476','100000476','HD111325123','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Quốc Duy','1991-09-15',1,'0900000477','100000477','HD111325123','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Quốc Duy','1994-07-18',1,'0900000478','100000478','HD111325123','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Sơn Khoa','1992-02-08',1,'0900000479','100000479','HD110225124','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Lan Lan','2002-12-31',0,'0900000480','100000480','HD110225124','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Sơn Hùng','2003-08-06',1,'0900000481','100000481','HD110225124','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Linh Vy','1999-10-16',0,'0900000482','100000482','HD110225124','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Duy Khoa','2001-05-07',1,'0900000483','100000483','HD112625125','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Bích Vy','1989-06-24',0,'0900000484','100000484','HD112625125','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Huy Khoa','1987-02-15',1,'0900000485','100000485','HD112625125','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Nam Duy','1988-12-17',1,'0900000486','100000486','HD112625125','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Hằng Ngọc','1977-09-09',0,'0900000487','100000487','HD112625125','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Ngọc Lan','1985-01-02',0,'0900000488','100000488','HD112625125','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Quốc Duy','2000-02-22',1,'0900000489','100000489','HD112625125','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Khánh Quân','2001-07-08',1,'0900000490','100000490','HD112625125','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Duy Quân','2001-12-09',1,'0900000491','100000491','HD112625125','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Tuấn Phúc','1976-02-24',1,'0900000492','100000492','HD112625125','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Bích Trang','1997-06-30',0,'0900000493','100000493','HD110925126','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Vy Mai','2001-02-13',0,'0900000494','100000494','HD110925126','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Ngọc Ngọc','1985-01-21',0,'0900000495','100000495','HD110925126','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Quốc Quân','2003-04-11',1,'0900000496','100000496','HD110925126','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Ngọc Ngọc','1978-08-12',0,'0900000497','100000497','HD110925126','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Bích Ngọc','1998-02-22',0,'0900000498','100000498','HD110925126','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Ngọc Lan','1977-04-11',0,'0900000499','100000499','HD100625127','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Khánh Khoa','1990-12-21',1,'0900000500','100000500','HD100625127','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Quốc Phúc','1997-12-30',1,'0900000501','100000501','HD100625127','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Huy Khoa','2000-03-24',1,'0900000502','100000502','HD100625127','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Hoa Lan','1996-12-03',0,'0900000503','100000503','HD100625127','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Vy Mai','1976-03-30',0,'0900000504','100000504','HD100625127','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Hùng','1997-10-12',1,'0900000505','100000505','HD110325128','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Đức Hùng','2000-12-03',1,'0900000506','100000506','HD110325128','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Vy Vy','1980-09-04',0,'0900000507','100000507','HD110325128','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Quốc Hùng','2004-09-11',1,'0900000508','100000508','HD111525129','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Vy Hương','1999-08-29',0,'0900000509','100000509','HD111525129','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hoa Mai','1975-12-03',0,'0900000510','100000510','HD111525129','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Lan Mai','1988-09-09',0,'0900000511','100000511','HD111525129','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Thị Ngọc','1998-12-24',0,'0900000512','100000512','HD102925130','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Phương Trang','2000-01-24',0,'0900000513','100000513','HD102925130','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Tuấn Duy','1990-07-06',1,'0900000514','100000514','HD102925130','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Duy Phúc','1982-09-13',1,'0900000515','100000515','HD102925130','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Duy Duy','1993-04-16',1,'0900000516','100000516','HD102925130','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Linh Mai','1987-10-12',0,'0900000517','100000517','HD102925130','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Quốc Hùng','1997-03-17',1,'0900000518','100000518','HD102925130','P03005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Nam Quân','2000-08-25',1,'0900000519','100000519','HD100825131','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Phương Lan','1976-11-18',0,'0900000520','100000520','HD111425132','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Minh Khoa','1988-12-19',1,'0900000521','100000521','HD111425132','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Quốc Duy','2001-07-30',1,'0900000522','100000522','HD112225133','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Lan Lan','1993-12-11',0,'0900000523','100000523','HD112225133','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Thị Hương','1997-05-27',0,'0900000524','100000524','HD112225133','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Khánh Hùng','1983-09-28',1,'0900000525','100000525','HD102525134','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Minh Hùng','1993-06-24',1,'0900000526','100000526','HD102525134','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Quân','1999-07-12',1,'0900000527','100000527','HD102525134','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Văn Duy','2004-10-18',1,'0900000528','100000528','HD101625135','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Quốc Phúc','1991-01-30',1,'0900000529','100000529','HD101625135','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Phúc','1998-11-25',1,'0900000530','100000530','HD101625135','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Tuấn Quân','1979-12-15',1,'0900000531','100000531','HD101625135','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Hoa Lan','1980-09-02',0,'0900000532','100000532','HD101625135','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Quốc Khoa','2001-09-11',1,'0900000533','100000533','HD101625135','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Hằng Ngọc','1976-07-06',0,'0900000534','100000534','HD101625135','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Trang Mai','1994-01-03',0,'0900000535','100000535','HD101625135','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Nam Quân','1984-08-11',1,'0900000536','100000536','HD111425136','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Sơn Phúc','1992-09-10',1,'0900000537','100000537','HD111425136','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Bích Lan','2000-07-14',0,'0900000538','100000538','HD111425136','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Minh Quân','1988-05-09',1,'0900000539','100000539','HD102025137','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Minh Hùng','1994-08-26',1,'0900000540','100000540','HD102025137','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Lan Vy','1979-06-22',0,'0900000541','100000541','HD102025137','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Bích Lan','1981-10-16',0,'0900000542','100000542','HD102025137','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hằng Vy','1992-10-24',0,'0900000543','100000543','HD110625138','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Tuấn Hùng','1995-09-20',1,'0900000544','100000544','HD101925139','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Duy Phúc','1990-05-06',1,'0900000545','100000545','HD101925139','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Phương Lan','1990-01-26',0,'0900000546','100000546','HD101925139','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Hằng Ngọc','1980-04-13',0,'0900000547','100000547','HD101925139','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Văn Quân','1980-03-01',1,'0900000548','100000548','HD101925139','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Minh Khoa','2003-11-26',1,'0900000549','100000549','HD101925139','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Trang Ngọc','1979-01-19',0,'0900000550','100000550','HD101925139','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Trang Mai','1998-03-09',0,'0900000551','100000551','HD111725140','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Huy Khoa','1987-03-29',1,'0900000552','100000552','HD100125141','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Linh Trang','1997-08-10',0,'0900000553','100000553','HD100125141','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Quốc Hùng','1987-03-31',1,'0900000554','100000554','HD100825142','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Nam Khoa','1980-05-06',1,'0900000555','100000555','HD100825142','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Nam Quân','1987-06-22',1,'0900000556','100000556','HD100825142','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Phương Vy','1995-08-26',0,'0900000557','100000557','HD100825142','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Trang Ngọc','1995-10-21',0,'0900000558','100000558','HD100825142','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Bích Hương','1991-07-20',0,'0900000559','100000559','HD100825142','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Hằng Trang','1985-11-30',0,'0900000560','100000560','HD100725143','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Minh Phúc','1983-10-16',1,'0900000561','100000561','HD110625144','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Minh Phúc','1993-02-03',1,'0900000562','100000562','HD110625144','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Hằng Trang','1988-11-20',0,'0900000563','100000563','HD110625144','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Bích Trang','1998-04-15',0,'0900000564','100000564','HD110625144','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Hằng Vy','1992-05-18',0,'0900000565','100000565','HD100125145','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Vy Ngọc','1981-01-24',0,'0900000566','100000566','HD100125145','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Quốc Khoa','1992-12-25',1,'0900000567','100000567','HD100125145','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Khánh Phúc','1994-10-12',1,'0900000568','100000568','HD100125145','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hằng Mai','1986-09-25',0,'0900000569','100000569','HD100125145','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Linh Ngọc','1984-03-27',0,'0900000570','100000570','HD100725146','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Tuấn Duy','1999-07-17',1,'0900000571','100000571','HD100725146','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Nam Khoa','1985-01-25',1,'0900000572','100000572','HD100725146','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Ngọc Ngọc','1977-09-28',0,'0900000573','100000573','HD100725146','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Văn Hùng','2003-08-31',1,'0900000574','100000574','HD100725146','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Nam Hùng','1989-05-14',1,'0900000575','100000575','HD100725146','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Lan Trang','1976-08-17',0,'0900000576','100000576','HD100725146','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Đức Quân','1986-06-25',1,'0900000577','100000577','HD112125147','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Phương Lan','1990-07-16',0,'0900000578','100000578','HD112125147','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Vy Hương','1984-06-11',0,'0900000579','100000579','HD101325148','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Duy Quân','1979-06-23',1,'0900000580','100000580','HD100825149','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Minh Duy','2000-02-26',1,'0900000581','100000581','HD100825149','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Tuấn Duy','2005-01-22',1,'0900000582','100000582','HD100825149','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Duy Quân','1990-01-13',1,'0900000583','100000583','HD100825149','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Văn Duy','1977-09-03',1,'0900000584','100000584','HD100825149','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Sơn Khoa','1981-05-31',1,'0900000585','100000585','HD100825149','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Vy Mai','1997-01-10',0,'0900000586','100000586','HD110725150','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Minh Duy','1993-07-11',1,'0900000587','100000587','HD112825151','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Quốc Duy','2005-05-17',1,'0900000588','100000588','HD112825151','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Lan Vy','2003-08-21',0,'0900000589','100000589','HD112825151','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Linh Mai','1991-11-12',0,'0900000590','100000590','HD112825151','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Đức Khoa','1994-12-05',1,'0900000591','100000591','HD112825151','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hằng Lan','2001-06-16',0,'0900000592','100000592','HD112825151','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Thị Vy','1980-10-05',0,'0900000593','100000593','HD112825151','P02007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Phương Mai','1981-01-06',0,'0900000594','100000594','HD110225152','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Nam Hùng','1982-06-18',1,'0900000595','100000595','HD110225152','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Phương Vy','1994-10-07',0,'0900000596','100000596','HD110225152','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Khánh Khoa','1979-07-11',1,'0900000597','100000597','HD111525153','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Minh Duy','1990-07-28',1,'0900000598','100000598','HD111525153','P06005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Hằng Vy','1975-11-29',0,'0900000599','100000599','HD111525153','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Thị Mai','1985-02-10',0,'0900000600','100000600','HD111525153','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Thị Ngọc','1995-04-03',0,'0900000601','100000601','HD111525153','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Tuấn Phúc','1996-11-09',1,'0900000602','100000602','HD111525153','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Khánh Duy','1992-02-07',1,'0900000603','100000603','HD111525153','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Sơn Hùng','1978-11-27',1,'0900000604','100000604','HD111525153','P10009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Sơn Quân','1997-08-26',1,'0900000605','100000605','HD111625154','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Tuấn Duy','2001-08-25',1,'0900000606','100000606','HD111625154','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Duy Khoa','1988-08-23',1,'0900000607','100000607','HD111625154','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Tuấn Duy','2003-11-16',1,'0900000608','100000608','HD111625154','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Thị Ngọc','1977-12-12',0,'0900000609','100000609','HD101725155','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Phương Mai','1994-01-01',0,'0900000610','100000610','HD101725155','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Khánh Quân','1994-12-02',1,'0900000611','100000611','HD101725155','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Minh Khoa','1988-10-25',1,'0900000612','100000612','HD101725155','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Sơn Khoa','1991-04-24',1,'0900000613','100000613','HD101725155','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Thị Ngọc','1994-08-25',0,'0900000614','100000614','HD101725155','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Trang Vy','2003-05-13',0,'0900000615','100000615','HD101725155','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Quốc Khoa','2005-05-24',1,'0900000616','100000616','HD101725155','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Đức Hùng','1993-01-31',1,'0900000617','100000617','HD101725155','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Linh Vy','1990-09-06',0,'0900000618','100000618','HD101725155','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Vy Trang','2005-01-23',0,'0900000619','100000619','HD101725155','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Huy Hùng','1983-10-10',1,'0900000620','100000620','HD110125156','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Bích Trang','1990-07-16',0,'0900000621','100000621','HD110125156','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Phương Mai','1980-07-28',0,'0900000622','100000622','HD110125156','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Lan Lan','1981-04-17',0,'0900000623','100000623','HD102825157','P01005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Phương Hương','1989-05-17',0,'0900000624','100000624','HD101625158','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Minh Hùng','1989-03-23',1,'0900000625','100000625','HD101625158','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Nam Quân','1989-09-04',1,'0900000626','100000626','HD101625158','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Sơn Hùng','1977-10-25',1,'0900000627','100000627','HD111725159','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Tuấn Duy','1997-07-27',1,'0900000628','100000628','HD111725159','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Duy Khoa','1991-08-20',1,'0900000629','100000629','HD111725159','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Duy Phúc','1993-11-02',1,'0900000630','100000630','HD111725159','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Nam Quân','1996-11-26',1,'0900000631','100000631','HD111725159','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Lan Hương','1986-01-29',0,'0900000632','100000632','HD100325160','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Phương Lan','1987-09-29',0,'0900000633','100000633','HD110925161','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Sơn Duy','1987-10-10',1,'0900000634','100000634','HD110925161','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Tuấn Quân','1998-05-11',1,'0900000635','100000635','HD110925161','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Đức Hùng','1985-09-17',1,'0900000636','100000636','HD110925161','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Lan Mai','2005-01-24',0,'0900000637','100000637','HD110925161','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Khánh Phúc','1983-01-28',1,'0900000638','100000638','HD110925161','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Phương Hương','1983-10-31',0,'0900000639','100000639','HD110925161','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Hằng Mai','2005-03-02',0,'0900000640','100000640','HD110925161','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Phương Vy','1996-11-29',0,'0900000641','100000641','HD100725162','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Phương Trang','1984-04-25',0,'0900000642','100000642','HD100725162','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Khánh Hùng','1999-10-22',1,'0900000643','100000643','HD100725162','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Phương Ngọc','1976-05-16',0,'0900000644','100000644','HD100725162','P09005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Tuấn Duy','1979-01-06',1,'0900000645','100000645','HD100725162','P05005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Trang Lan','1982-03-29',0,'0900000646','100000646','HD100125163','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Nam Khoa','1991-12-31',1,'0900000647','100000647','HD100125163','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Sơn Hùng','1998-09-21',1,'0900000648','100000648','HD101325164','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Văn Phúc','1980-03-01',1,'0900000649','100000649','HD101325164','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Nam Phúc','1990-11-13',1,'0900000650','100000650','HD101325164','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Sơn Quân','2000-07-06',1,'0900000651','100000651','HD101325165','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Minh Hùng','1994-08-24',1,'0900000652','100000652','HD101325165','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Lan Ngọc','1989-06-28',0,'0900000653','100000653','HD101325165','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Hoa Vy','1979-04-15',0,'0900000654','100000654','HD101325165','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Vy Lan','1996-05-22',0,'0900000655','100000655','HD101325165','P01010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hoa Lan','1987-05-25',0,'0900000656','100000656','HD102025166','P08006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Duy Khoa','2001-03-29',1,'0900000657','100000657','HD102025166','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Trang Lan','1996-09-29',0,'0900000658','100000658','HD111525167','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Huy Hùng','2001-04-20',1,'0900000659','100000659','HD111525167','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Duy Phúc','1983-01-07',1,'0900000660','100000660','HD111525167','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Ngọc Mai','1986-06-23',0,'0900000661','100000661','HD111525167','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Phương Hương','2001-07-11',0,'0900000662','100000662','HD100725168','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Hằng Lan','2004-02-02',0,'0900000663','100000663','HD100725168','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Linh Vy','1981-02-10',0,'0900000664','100000664','HD100725168','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Ngọc Mai','1998-01-11',0,'0900000665','100000665','HD100725168','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Khánh Duy','1996-10-22',1,'0900000666','100000666','HD100725168','P06007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Nam Phúc','1988-05-05',1,'0900000667','100000667','HD102925169','P10002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Phương Mai','1980-06-25',0,'0900000668','100000668','HD102925169','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Tuấn Duy','1996-05-14',1,'0900000669','100000669','HD102925169','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Thị Ngọc','2004-09-23',0,'0900000670','100000670','HD102925169','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Thị Hương','1987-08-10',0,'0900000671','100000671','HD102925169','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Duy Khoa','1980-12-06',1,'0900000672','100000672','HD102925169','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Văn Phúc','1976-07-17',1,'0900000673','100000673','HD102425170','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Vy Trang','2001-06-16',0,'0900000674','100000674','HD102425170','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Hằng Lan','1984-03-12',0,'0900000675','100000675','HD110725171','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Vy Vy','1983-12-22',0,'0900000676','100000676','HD110725171','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Lan Ngọc','1976-04-15',0,'0900000677','100000677','HD110725171','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Linh Ngọc','1994-05-14',0,'0900000678','100000678','HD110725171','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Trang Vy','1984-05-04',0,'0900000679','100000679','HD110525172','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Nam Phúc','1977-02-26',1,'0900000680','100000680','HD110525172','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Bích Lan','1982-12-06',0,'0900000681','100000681','HD110525172','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Tuấn Duy','1991-05-29',1,'0900000682','100000682','HD110525172','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Bích Lan','2001-04-22',0,'0900000683','100000683','HD110525172','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Tuấn Hùng','1989-07-06',1,'0900000684','100000684','HD100125173','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Sơn Duy','1986-02-16',1,'0900000685','100000685','HD100125173','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Ngọc Vy','1993-11-26',0,'0900000686','100000686','HD100125173','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Nam Duy','1996-12-10',1,'0900000687','100000687','HD100125173','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Nam Khoa','1993-11-20',1,'0900000688','100000688','HD110625174','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Sơn Hùng','2005-03-24',1,'0900000689','100000689','HD110625174','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Bích Ngọc','1994-10-17',0,'0900000690','100000690','HD111025175','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Lan Vy','1997-03-07',0,'0900000691','100000691','HD111025175','P01006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Tuấn Hùng','2004-12-13',1,'0900000692','100000692','HD110125176','P03006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Minh Phúc','2004-09-10',1,'0900000693','100000693','HD101025177','P09009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Khánh Quân','1996-03-02',1,'0900000694','100000694','HD101025177','P02005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Huy Hùng','2003-03-15',1,'0900000695','100000695','HD100425178','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Tuấn Khoa','1978-11-27',1,'0900000696','100000696','HD100425178','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Thị Ngọc','1989-12-19',0,'0900000697','100000697','HD100425178','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Quốc Khoa','1982-03-25',1,'0900000698','100000698','HD100425178','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Phương Vy','1979-11-27',0,'0900000699','100000699','HD100425178','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hằng Hương','1980-03-11',0,'0900000700','100000700','HD100425178','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Quốc Khoa','1977-01-04',1,'0900000701','100000701','HD110525179','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Minh Khoa','1998-12-23',1,'0900000702','100000702','HD110525179','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Trang Lan','1981-09-07',0,'0900000703','100000703','HD110525179','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Văn Hùng','2003-01-12',1,'0900000704','100000704','HD110525179','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Minh Hùng','1987-01-01',1,'0900000705','100000705','HD110525179','P05008');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Quốc Duy','1997-08-01',1,'0900000706','100000706','HD110525179','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Duy Hùng','1997-05-29',1,'0900000707','100000707','HD111525180','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Vy Ngọc','1999-09-29',0,'0900000708','100000708','HD111525180','P07009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Quốc Khoa','1997-03-18',1,'0900000709','100000709','HD100325181','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Khánh Phúc','2005-09-20',1,'0900000710','100000710','HD100325181','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Ngọc Mai','1987-01-25',0,'0900000711','100000711','HD100325181','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Duy Hùng','1998-11-26',1,'0900000712','100000712','HD100325181','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Hằng Trang','2003-12-25',0,'0900000713','100000713','HD100325181','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hằng Lan','1993-04-05',0,'0900000714','100000714','HD101725182','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Ngọc Lan','1988-02-08',0,'0900000715','100000715','HD101725182','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Văn Quân','1978-04-17',1,'0900000716','100000716','HD101725182','P06001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Hoa Hương','1975-12-30',0,'0900000717','100000717','HD110325183','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Huy Hùng','1979-10-08',1,'0900000718','100000718','HD110325183','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Hoa Trang','1985-03-07',0,'0900000719','100000719','HD110325183','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Bích Trang','2001-06-02',0,'0900000720','100000720','HD110325183','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hằng Ngọc','1980-11-01',0,'0900000721','100000721','HD110325183','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đặng Khánh Quân','1998-12-10',1,'0900000722','100000722','HD110325183','P01007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Phương Vy','1990-08-08',0,'0900000723','100000723','HD111625184','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Huy Duy','1987-01-11',1,'0900000724','100000724','HD111625184','P09007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Văn Duy','2002-10-11',1,'0900000725','100000725','HD111425185','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Khánh Hùng','1989-06-01',1,'0900000726','100000726','HD111425185','P04003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Khánh Quân','1984-04-03',1,'0900000727','100000727','HD102425186','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Tuấn Hùng','1996-06-24',1,'0900000728','100000728','HD102425186','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Vy Mai','1976-06-11',0,'0900000729','100000729','HD102425186','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Thị Vy','1979-08-26',0,'0900000730','100000730','HD102425186','P02006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Quốc Khoa','1977-01-26',1,'0900000731','100000731','HD102425186','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Tuấn Duy','2003-09-22',1,'0900000732','100000732','HD102425186','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hằng Ngọc','1976-08-14',0,'0900000733','100000733','HD102425186','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Trang Ngọc','1979-02-01',0,'0900000734','100000734','HD102425186','P06006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Văn Khoa','2005-01-05',1,'0900000735','100000735','HD100225187','P03003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hằng Vy','1976-05-04',0,'0900000736','100000736','HD111325188','P04002');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Minh Khoa','1976-04-20',1,'0900000737','100000737','HD111325188','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hằng Ngọc','1994-01-06',0,'0900000738','100000738','HD111325188','P09006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Hoa Trang','1991-08-01',0,'0900000739','100000739','HD112025189','P10005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Ngọc Hương','1993-01-25',0,'0900000740','100000740','HD113025190','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Đức Phúc','1982-02-04',1,'0900000741','100000741','HD113025190','P04009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Trang Vy','2004-06-21',0,'0900000742','100000742','HD113025190','P05003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Thị Hương','2004-11-20',0,'0900000743','100000743','HD113025190','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Ngọc Trang','1976-09-13',0,'0900000744','100000744','HD113025190','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Bích Ngọc','2003-04-12',0,'0900000745','100000745','HD113025190','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Hằng Mai','1993-09-13',0,'0900000746','100000746','HD113025190','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Vy Hương','1989-04-02',0,'0900000747','100000747','HD113025190','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Hoàng Duy Khoa','2003-01-20',1,'0900000748','100000748','HD113025190','P10006');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Hoa Lan','1996-09-09',0,'0900000749','100000749','HD100625191','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Phương Lan','1981-01-17',0,'0900000750','100000750','HD100625191','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Hoa Lan','1985-02-22',0,'0900000751','100000751','HD100125192','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Vy Hương','1986-01-03',0,'0900000752','100000752','HD100125192','P06004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Vũ Minh Phúc','1988-05-30',1,'0900000753','100000753','HD101025193','P07009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Đức Phúc','1997-05-15',1,'0900000754','100000754','HD101625194','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Trần Trang Lan','1997-08-24',0,'0900000755','100000755','HD101625194','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Nguyễn Hoa Ngọc','1976-09-05',0,'0900000756','100000756','HD101625194','P07010');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Lan Lan','1989-10-26',0,'0900000757','100000757','HD101625194','P05007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Bùi Quốc Duy','1999-09-04',1,'0900000758','100000758','HD102325195','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Nam Hùng','1977-08-13',1,'0900000759','100000759','HD102325195','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Minh Khoa','1999-05-14',1,'0900000760','100000760','HD102325195','P09004');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Bích Mai','1978-04-08',0,'0900000761','100000761','HD102325195','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Linh Hương','1995-03-21',0,'0900000762','100000762','HD100325196','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phạm Hằng Trang','1979-01-09',0,'0900000763','100000763','HD100325196','P02009');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Phan Văn Phúc','1998-06-22',1,'0900000764','100000764','HD102025197','P07005');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Võ Thị Hương','1984-12-25',0,'0900000765','100000765','HD100225198','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Văn Quân','1982-04-02',1,'0900000766','100000766','HD100225198','P02001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lê Khánh Hùng','1980-06-02',1,'0900000767','100000767','HD100225198','P07007');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Lan Ngọc','1997-04-17',0,'0900000768','100000768','HD101125199','P08003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Nam Phúc','1976-07-09',1,'0900000769','100000769','HD101125199','P01001');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Đỗ Khánh Phúc','1986-10-28',1,'0900000770','100000770','HD101925200','P07003');
+INSERT INTO NguoiO (tenNguoiO,ngaySinh,gioiTinh,sdt,soCCCD,maHD,maPhong) VALUES(N'Lý Hoa Ngọc','1984-01-25',0,'0900000771','100000771','HD101925200','P02009');
+-- INSERT HoaDonHuyPhong (10)
+INSERT INTO HoaDonHuyPhong VALUES('PH112625001','2025-11-26 10:00:00', N'Khách hủy', 'KH25007', 'HD112925038');
+INSERT INTO HoaDonHuyPhong VALUES('PH102925002','2025-10-29 10:00:00', N'Trùng lịch', 'KH24047', 'HD103025039');
+INSERT INTO HoaDonHuyPhong VALUES('PH100525003','2025-10-05 10:00:00', N'Sức khỏe', 'KH24022', 'HD100225198');
+INSERT INTO HoaDonHuyPhong VALUES('PH111425004','2025-11-14 10:00:00', N'Sức khỏe', 'KH24016', 'HD100825149');
+INSERT INTO HoaDonHuyPhong VALUES('PH111525005','2025-11-15 10:00:00', N'Lỗi hệ thống', 'KH23027', 'HD101525112');
+INSERT INTO HoaDonHuyPhong VALUES('PH100825006','2025-10-08 10:00:00', N'Sức khỏe', 'KH24014', 'HD101725182');
+INSERT INTO HoaDonHuyPhong VALUES('PH112725007','2025-11-27 10:00:00', N'Lỗi hệ thống', 'KH24003', 'HD100725168');
+INSERT INTO HoaDonHuyPhong VALUES('PH102425008','2025-10-24 10:00:00', N'Trùng lịch', 'KH23013', 'HD101025101');
+INSERT INTO HoaDonHuyPhong VALUES('PH102325009','2025-10-23 10:00:00', N'Khách hủy', 'KH24003', 'HD112525013');
+INSERT INTO HoaDonHuyPhong VALUES('PH112325010','2025-11-23 10:00:00', N'Sức khỏe', 'KH24012', 'HD111925100');
+=======
     CONSTRAINT PK_NguoiO PRIMARY KEY (maHD, maPhong),
     CONSTRAINT FK_NguoiO_HoaDon FOREIGN KEY (maHD) REFERENCES HoaDon(maHD),
     CONSTRAINT FK_NguoiO_Phong FOREIGN KEY (maPhong) REFERENCES Phong(maPhong)
@@ -823,10 +2599,140 @@ INSERT INTO NguoiO (tenNguoiO, ngaySinh, gioiTinh, sdt, soCCCD, maHD, maPhong) V
 INSERT INTO NguoiO (tenNguoiO, ngaySinh, gioiTinh, sdt, soCCCD, maHD, maPhong) VALUES (N'Khach O 118', '2022-12-31', 1, '000000118', '00000000118', 'HD000118', 'P02008');
 INSERT INTO NguoiO (tenNguoiO, ngaySinh, gioiTinh, sdt, soCCCD, maHD, maPhong) VALUES (N'Khach O 119', '2023-10-27', 0, '000000119', '00000000119', 'HD000119', 'P02009');
 INSERT INTO NguoiO (tenNguoiO, ngaySinh, gioiTinh, sdt, soCCCD, maHD, maPhong) VALUES (N'Khach O 120', '2000-01-01', 1, '000000120', '00000000120', 'HD000120', 'P02010');
+>>>>>>> theanh
 GO
 
 
 
+<<<<<<< HEAD
+/*
+PATCH ADDED BY ASSISTANT: Fixes & recalculations for ChiTietHoaDon and NguoiO
+- Rules applied:
+  * If ChiTietHoaDon.maPhong does not exist in Phong -> replaced by first existing maPhong (ORDER BY maPhong).
+  * tienGiam = KhuyenMai.tyLeGiam * Phong.giaPhong (if maKM is not NULL); else 0.
+  * thanhTien:
+      - If HoaDon.trangThai = 'HoaDonHoanThanh' THEN (soNgayO * Phong.giaPhong) - tienGiam - ISNULL(Phong.tienCoc,0)
+      - If HoaDon.trangThai IN ('PhieuDatPhong','PhieuThuePhong') THEN ISNULL(Phong.tienCoc,0) * soNgayO
+  * HoaDon.tongTien = SUM(ChiTietHoaDon.thanhTien) per maHD
+  * HoaDon.tienThue = tongTien * 0.1
+  * HoaDon.tongTienThanhToan = tongTien + tienThue + ISNULL(phiDoiPhong,0)
+  * HoaDon.tienNhan:
+      - If phuongThucTT = 'ChuyenKhoan' => tienNhan = tongTienThanhToan
+      - If phuongThucTT = 'TienMat' => tienNhan = CEILING(tongTienThanhToan / 50000.0) * 50000
+  * NguoiO.maPhong: if invalid -> replace by representative maPhong from ChiTietHoaDon for same maHD
+Notes:
+- This patch uses T-SQL (SQL Server).
+- It does not alter original INSERTs; it runs fixes after inserts, keeping a single-run script.
+*/
+
+PRINT '--- PATCH START: Replacing invalid maPhong in ChiTietHoaDon and NguoiO ---';
+
+-- 1) determine a default existing maPhong
+DECLARE @default_maPhong CHAR(6);
+SELECT TOP 1 @default_maPhong = maPhong FROM Phong ORDER BY maPhong;
+
+PRINT 'Default maPhong chosen: ' + ISNULL(@default_maPhong,'<NULL>');
+
+-- 2) Replace invalid maPhong in ChiTietHoaDon with default
+UPDATE c
+SET c.maPhong = @default_maPhong
+FROM ChiTietHoaDon c
+LEFT JOIN Phong p ON c.maPhong = p.maPhong
+WHERE p.maPhong IS NULL;
+
+-- 3) Ensure tienGiam is 0 when maKM is NULL
+UPDATE ChiTietHoaDon
+SET tienGiam = 0
+WHERE maKM IS NULL OR LTRIM(RTRIM(ISNULL(maKM,''))) = '';
+
+-- 4) Calculate tienGiam based on KhuyenMai.tyLeGiam * Phong.giaPhong for rows with maKM
+UPDATE c
+SET c.tienGiam = ROUND(k.tyLeGiam * p.giaPhong, 0)
+FROM ChiTietHoaDon c
+JOIN KhuyenMai k ON c.maKM = k.maKM
+JOIN Phong p ON c.maPhong = p.maPhong
+WHERE c.maKM IS NOT NULL;
+
+-- 5) Recalculate thanhTien per rules
+UPDATE c
+SET c.thanhTien =
+  CASE
+    WHEN h.trangThaiHD = N'HoaDonHoanThanh' THEN
+      ROUND((c.soNgayO * p.giaPhong) - ISNULL(c.tienGiam,0) - ISNULL(p.tienCoc,0), 0)
+    WHEN h.trangThaiHD IN (N'PhieuDatPhong', N'PhieuThuePhong') THEN
+      ROUND(ISNULL(p.tienCoc,0) * c.soNgayO, 0)
+    ELSE c.thanhTien
+  END
+FROM ChiTietHoaDon c
+JOIN HoaDon h ON c.maHD = h.maHD
+JOIN Phong p ON c.maPhong = p.maPhong;
+
+-- 6) Recompute HoaDon.tongTien as sum of ChiTietHoaDon.thanhTien
+UPDATE h
+SET h.tongTien = t.sumThanh
+FROM HoaDon h
+JOIN (
+  SELECT maHD, SUM(ISNULL(thanhTien,0)) AS sumThanh
+  FROM ChiTietHoaDon
+  GROUP BY maHD
+) t ON h.maHD = t.maHD;
+
+-- 7) Recompute tienThue (10%)
+UPDATE HoaDon
+SET tienThue = ROUND(ISNULL(tongTien,0) * 0.1, 0);
+
+-- 8) Recompute tongTienThanhToan = tongTien + tienThue + phiDoiPhong
+UPDATE HoaDon
+SET tongTienThanhToan = ROUND(ISNULL(tongTien,0) + ISNULL(tienThue,0) + ISNULL(phiDoiPhong,0), 0);
+
+-- 9) Recompute tienNhan based on phuongThucTT
+UPDATE HoaDon
+SET tienNhan =
+  CASE
+    WHEN phuongThucTT = N'ChuyenKhoan' THEN ISNULL(tongTienThanhToan,0)
+    WHEN phuongThucTT = N'TienMat' THEN CEILING(ISNULL(tongTienThanhToan,0) / 50000.0) * 50000
+    ELSE ISNULL(tienNhan, ISNULL(tongTienThanhToan,0))
+  END;
+
+-- 10) Fix NguoiO.maPhong if it doesn't exist: replace by representative maPhong from ChiTietHoaDon (min maPhong) for same maHD
+;WITH rep AS (
+  SELECT maHD, MIN(maPhong) AS repPhong
+  FROM ChiTietHoaDon
+  GROUP BY maHD
+)
+UPDATE n
+SET n.maPhong = r.repPhong
+FROM NguoiO n
+JOIN HoaDon h ON n.maHD = h.maHD
+LEFT JOIN Phong p ON n.maPhong = p.maPhong
+JOIN rep r ON r.maHD = n.maHD
+WHERE p.maPhong IS NULL
+  AND h.trangThaiHD IN (N'PhieuThuePhong', N'HoaDonHoanThanh');
+
+-- 11) Final checks: select problem rows for review (these are only SELECTs - no modification)
+PRINT '--- PATCH COMPLETE. Running verification SELECTs ---';
+
+-- ChiTietHoaDon with negative thanhTien (should be none)
+SELECT * FROM ChiTietHoaDon WHERE ISNULL(thanhTien,0) < 0;
+
+-- HoaDon that still have NULL or mismatched totals
+SELECT h.maHD, h.tongTien, t.sumThanh
+FROM HoaDon h
+LEFT JOIN (
+  SELECT maHD, SUM(ISNULL(thanhTien,0)) AS sumThanh FROM ChiTietHoaDon GROUP BY maHD
+) t ON h.maHD = t.maHD
+WHERE ISNULL(h.tongTien,0) <> ISNULL(t.sumThanh,0);
+
+-- NguoiO entries with maPhong not existing in Phong (should be none)
+SELECT n.* FROM NguoiO n LEFT JOIN Phong p ON n.maPhong = p.maPhong WHERE p.maPhong IS NULL;
+
+PRINT '--- END OF PATCH ---';
+
+UPDATE KhachHang
+SET diemTichLuy = h.diemToiThieu
+FROM KhachHang k
+INNER JOIN HangKhachHang h ON k.maHang = h.maHang;
+=======
 /* CHAY LAI CODE DUOI DAY THEM LAN NUA */
 
 
@@ -849,3 +2755,4 @@ ALTER TABLE [dbo].[HoaDonHuyPhong]
 ADD 
 	tienHoanTra float null;
 GO
+>>>>>>> theanh

@@ -7,18 +7,18 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import database.dao.LoaiPhongDao;
 import entitys.LoaiPhong;
-import services.LoaiPhongService;
 import view.dialogs.LoaiPhongDialog;
 import view.panels.LoaiPhongPanel;
 
 public class LoaiPhongController implements MouseListener{
 	private LoaiPhongPanel loaiPhongPanel;
-    private LoaiPhongService loaiPhongService;
+    private LoaiPhongDao loaiPhongDao;
 
 	public LoaiPhongController(LoaiPhongPanel loaiPhongPanel) {
 		this.loaiPhongPanel = loaiPhongPanel;
-        loaiPhongService= new LoaiPhongService();
+        loaiPhongDao= new LoaiPhongDao();
 		loaiPhongPanel.btn_LamMoi.addActionListener(e->{
 			lamMoi();
 		});
@@ -29,7 +29,7 @@ public class LoaiPhongController implements MouseListener{
 	}
 
     public void hienThiDanhSachLoaiPhong(){
-        ArrayList<LoaiPhong> dslp= loaiPhongService.getDanhSachLoaiPhong();
+        ArrayList<LoaiPhong> dslp= loaiPhongDao.getDanhSachLoaiPhong();
         DefaultTableModel model = loaiPhongPanel.model;
         model.setRowCount(0);
         for (LoaiPhong lp : dslp){
@@ -55,7 +55,7 @@ public class LoaiPhongController implements MouseListener{
         double tyLC= Double.parseDouble(loaiPhongPanel.txt_TyLeCoc.getText().trim());
         int soNguoi= Integer.parseInt(loaiPhongPanel.txt_SucChuaToiThieu.getText().trim());
         LoaiPhong loaiPhong = new LoaiPhong(ma,tenLP,giaNY,tyLC/100,soNguoi);
-        if(loaiPhongService.themLoaiPhong(loaiPhong)){
+        if(loaiPhongDao.themLoaiPhong(loaiPhong)){
             loaiPhongPanel.model.addRow(new Object[] {ma,tenLP,giaNY,tyLC+"%",soNguoi});
             baoLoi("Thêm loại phòng thành công!");
             lamMoi();

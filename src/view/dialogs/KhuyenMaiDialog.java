@@ -100,6 +100,7 @@ public class KhuyenMaiDialog extends JDialog {
         ngayBatDau.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayBatDau.setDateFormatString("dd/MM/yyyy");
         ngayBatDau.setBounds(230, 159, 150, 30);
+        ngayBatDau.setMinSelectableDate(new java.util.Date());
         pnl_ThongTinKhuyenMai.add(ngayBatDau);
 
         JLabel lbl_NgayKetThuc = new JLabel("Ngày kết thúc:");
@@ -111,6 +112,11 @@ public class KhuyenMaiDialog extends JDialog {
         ngayKetThuc.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayKetThuc.setDateFormatString("dd/MM/yyyy");
         ngayKetThuc.setBounds(450, 159, 150, 30);
+        ngayBatDau.addPropertyChangeListener("date", evt -> {
+            if (ngayBatDau.getDate() != null) {
+                ngayKetThuc.setMinSelectableDate(ngayBatDau.getDate());
+            }
+        });
         pnl_ThongTinKhuyenMai.add(ngayKetThuc);
 
         // Sự kiện click để mở calendar

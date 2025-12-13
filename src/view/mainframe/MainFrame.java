@@ -30,6 +30,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         khoiTaoGiaoDien();
         mainController = new MainController(this);
+
     }
 
     private void khoiTaoGiaoDien() {
@@ -250,14 +251,27 @@ public class MainFrame extends JFrame {
         });
     }
 
+    public void chonNutMacDinh() {
+        // Tìm nút "Màn hình chính" và chọn nó
+        for (Component comp : pnlMenu.getComponents()) {
+            if (comp instanceof NutBoGoc) {
+                NutBoGoc nut = (NutBoGoc) comp;
+                if (nut.getText().equals("Màn hình chính")) {
+                    datNutDuocChon(nut);
+                    break;
+                }
+            }
+        }
+    }
+
     private void xuLyChonMenu(String action) {
         switch (action) {
 //            case "TrangChu":
 //                mainController.showMangHinhChinh();
 //                break;
-//            case "ThueDatPhong":
-//                mainController.showThue_Dat_Phong_Panel();
-//                break;
+            case "ThueDatPhong":
+                mainController.showThue_Dat_Phong_Panel();
+                break;
             case "Phong":
                 mainController.showPhong_Panel();
                 break;

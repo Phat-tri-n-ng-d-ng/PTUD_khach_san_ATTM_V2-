@@ -10,6 +10,7 @@
     <orderEntry type="library" exported="" name="ikonli-core-12.3.1" level="project" />
     <orderEntry type="library" exported="" name="jcalendar-1.4" level="project" />
     <orderEntry type="library" exported="" name="ikonli-fontawesome5-pack-12.3.1" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" name="mssql-jdbc-12.10.0.jre11" level="project" />
   </component>
 </module>

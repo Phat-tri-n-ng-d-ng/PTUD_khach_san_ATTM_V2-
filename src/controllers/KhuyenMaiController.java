@@ -1,6 +1,8 @@
 
 package controllers;
 
+import com.toedter.calendar.JDateChooser;
+import database.dao.KhuyenMaiDao;
 import entitys.KhuyenMai;
 import enums.TrangThaiKhuyenMai;
 import view.dialogs.KhuyenMaiDialog;
@@ -8,10 +10,7 @@ import view.panels.KhuyenMaiPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,10 +20,12 @@ import java.util.Date;
 public class KhuyenMaiController implements MouseListener, ActionListener {
     private KhuyenMaiPanel khuyenMaiPanel;
     private ArrayList<KhuyenMai> danhSachKhuyenMai;
+    public KhuyenMaiDao khuyenMaiDao;
 
     public KhuyenMaiController(KhuyenMaiPanel khuyenMaiPanel) {
         this.khuyenMaiPanel = khuyenMaiPanel;
         this.danhSachKhuyenMai = new ArrayList<>();
+        khuyenMaiDao = new KhuyenMaiDao();
 
         // Đăng ký sự kiện
         khuyenMaiPanel.btn_Them.addActionListener(this);
@@ -32,43 +33,149 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
         khuyenMaiPanel.btn_TimMa.addActionListener(this);
         khuyenMaiPanel.table.addMouseListener(this);
 
-        getTatCaKhuyenMai();
+        suKienTuDongTimKiem();
+//        taiTatCaKhuyenMai();
+//        tuDongCapNhatTrangThai();
         suKienTextField();
+
+        // Khởi tạo giao diện
+        lamMoi();
     }
 
-    private void themKhuyenMai() {
-        if (kiemTraDuLieu()) {
-            int namHienTai = LocalDate.now().getYear();
-            String maKM = "KM" + (namHienTai % 100) + String.format("%03d", danhSachKhuyenMai.size() + 1);
-            String tenKM = khuyenMaiPanel.txt_TenKhachHang.getText().strip();
-            double tyLeGiam = Double.parseDouble(khuyenMaiPanel.txt_TyLeGiam.getText().strip());
-
-            Date dateBD = khuyenMaiPanel.ngayBD.getDate();
-            Date dateKT = khuyenMaiPanel.ngayKT.getDate();
-            LocalDateTime ngayBatDau = dateBD.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            LocalDateTime ngayKetThuc = dateKT.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-            String dieuKien = layDieuKienApDung();
-            TrangThaiKhuyenMai trangThai = getTrangThai(khuyenMaiPanel.comboBox_TrangThai.getSelectedItem().toString());
-
-            KhuyenMai khuyenMai = new KhuyenMai(maKM, tenKM, dieuKien, tyLeGiam, ngayBatDau, ngayKetThuc, trangThai);
-            danhSachKhuyenMai.add(khuyenMai);
-
-            JOptionPane.showMessageDialog(khuyenMaiPanel, "Thêm khuyến mãi thành công!");
-
-            // Thêm vào table
-            khuyenMaiPanel.model.addRow(new Object[]{
-                    khuyenMai.getMaKM(),
-                    khuyenMai.getTenKM(),
-                    khuyenMai.getTyLeGiam() + "%",
-                    khuyenMai.getDieuKienApDung(),
-                    khuyenMai.getNgayBatDau().toLocalDate(),
-                    khuyenMai.getNgayketThuc().toLocalDate(),
-                    getTrangThaiHienThi(khuyenMai.getTrangThai())
-            });
-
-            lamMoi();
+    private void tuDongCapNhatTrangThai() {
+        try {
+            khuyenMaiDao.tuDongCapNhatTrangThaiKhuyenMai();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(khuyenMaiPanel, "Lỗi khi cập nhật trạng thái khuyến mãi");
         }
+    }
+
+    private void suKienTuDongTimKiem() {
+        // Sự kiện cho DateChooser trong bộ lọc
+        khuyenMaiPanel.ngayBD_1.addPropertyChangeListener(e -> {
+            if ("date".equals(e.getPropertyName())) {
+                thucHienTimKiemTuDong();
+            }
+        });
+
+        khuyenMaiPanel.ngayKT_1.addPropertyChangeListener(e -> {
+            if ("date".equals(e.getPropertyName())) {
+                thucHienTimKiemTuDong();
+            }
+        });
+
+        // Sự kiện cho checkbox "Tất cả" trong bộ lọc
+        khuyenMaiPanel.chckbx_TatCa_1.addActionListener(e -> {
+            if(khuyenMaiPanel.chckbx_TatCa_1.isSelected()){
+                khuyenMaiPanel.chckbx_Standard_1.setSelected(false);
+                khuyenMaiPanel.chckbx_Superior_1.setSelected(false);
+                khuyenMaiPanel.chckbx_Family_1.setSelected(false);
+                khuyenMaiPanel.chckbx_Deluxe_1.setSelected(false);
+                khuyenMaiPanel.chckbx_Suite_1.setSelected(false);
+            }
+            thucHienTimKiemTuDong();
+        });
+
+        // Sự kiện cho checkbox trong bộ lọc
+        ActionListener suKienCheckbox = e -> {
+            // Khi chọn các checkbox khác, bỏ chọn "Tất cả"
+            if(khuyenMaiPanel.chckbx_TatCa_1.isSelected()){
+                khuyenMaiPanel.chckbx_TatCa_1.setSelected(false);
+            }
+            thucHienTimKiemTuDong();
+        };
+
+        khuyenMaiPanel.chckbx_Standard_1.addActionListener(suKienCheckbox);
+        khuyenMaiPanel.chckbx_Superior_1.addActionListener(suKienCheckbox);
+        khuyenMaiPanel.chckbx_Family_1.addActionListener(suKienCheckbox);
+        khuyenMaiPanel.chckbx_Deluxe_1.addActionListener(suKienCheckbox);
+        khuyenMaiPanel.chckbx_Suite_1.addActionListener(suKienCheckbox);
+//        khuyenMaiPanel.chckbx_TatCa_1.addActionListener(suKienCheckbox);
+
+        // Sự kiện cho ô tìm mã
+        khuyenMaiPanel.txt_TimMaKhuyenMai.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (khuyenMaiPanel.txt_TimMaKhuyenMai.getText().trim().isEmpty()) {
+                    thucHienTimKiemTuDong();
+                }
+            }
+        });
+    }
+
+    private void thucHienTimKiemTuDong() {
+        if (khuyenMaiPanel.txt_TimMaKhuyenMai.getText().trim().isEmpty()) {
+            timKiemKhuyenMaiTuDong();
+        }
+    }
+
+    private void timKiemKhuyenMaiTuDong() {
+        try {
+            String dieuKien = layDieuKienApDungTuCheckboxLoc();
+            LocalDateTime tuNgay = layNgayTuDateChooser(khuyenMaiPanel.ngayBD_1);
+            LocalDateTime denNgay = layNgayTuDateChooser(khuyenMaiPanel.ngayKT_1);
+
+            ArrayList<KhuyenMai> ketQua;
+
+            if (!dieuKien.isEmpty() || (tuNgay != null && denNgay != null)) {
+                ketQua = khuyenMaiDao.getTatCaKhuyenMai();
+
+                if (!dieuKien.isEmpty()) {
+                    ArrayList<KhuyenMai> ketQuaDieuKien = khuyenMaiDao.locKhuyenMaiTheoDieuKien(dieuKien);
+                    ketQua.retainAll(ketQuaDieuKien);
+                }
+
+                if (tuNgay != null && denNgay != null) {
+                    ArrayList<KhuyenMai> ketQuaThoiGian = khuyenMaiDao.locKhuyenMaiTheoKhoangThoiGian(tuNgay, denNgay);
+                    ketQua.retainAll(ketQuaThoiGian);
+                }
+            } else {
+                ketQua = khuyenMaiDao.getTatCaKhuyenMai();
+            }
+
+            hienThiDuLieuLenBang(ketQua);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String layDieuKienApDungTuCheckboxLoc() {
+        StringBuilder dieuKien = new StringBuilder();
+
+        if (khuyenMaiPanel.chckbx_Standard_1.isSelected()) {
+            dieuKien.append("Standard, ");
+        }
+        if (khuyenMaiPanel.chckbx_Superior_1.isSelected()) {
+            dieuKien.append("Superior, ");
+        }
+        if (khuyenMaiPanel.chckbx_Family_1.isSelected()) {
+            dieuKien.append("Family Room, ");
+        }
+        if (khuyenMaiPanel.chckbx_Deluxe_1.isSelected()) {
+            dieuKien.append("Deluxe, ");
+        }
+        if (khuyenMaiPanel.chckbx_Suite_1.isSelected()) {
+            dieuKien.append("Suite, ");
+        }
+        if (khuyenMaiPanel.chckbx_TatCa_1.isSelected()) {
+            return "Tất cả";
+        }
+
+        if (dieuKien.length() > 0) {
+            dieuKien.setLength(dieuKien.length() - 2);
+        }
+
+        return dieuKien.toString();
+    }
+
+    private LocalDateTime layNgayTuDateChooser(JDateChooser dateChooser) {
+        if (dateChooser != null && dateChooser.getDate() != null) {
+            Date ngay = dateChooser.getDate();
+            return ngay.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        return null;
     }
 
     private String layDieuKienApDung() {
@@ -84,7 +191,8 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
         if (khuyenMaiPanel.chckbx_Suite.isSelected()) dieuKien.append("Suite, ");
 
         if (dieuKien.length() > 0) {
-            dieuKien.setLength(dieuKien.length() - 2); // Remove last comma
+            // Loại bỏ dấu phẩy và khoảng trắng cuối cùng
+            dieuKien.setLength(dieuKien.length() - 2);
         }
 
         return dieuKien.toString();
@@ -164,27 +272,32 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
     }
 
     private void lamMoi() {
-        String maTim = khuyenMaiPanel.txt_TimMaKhuyenMai.getText().strip().toLowerCase();
-        DefaultTableModel model = khuyenMaiPanel.model;
-        model.setRowCount(0);
+            // 1. Tự động cập nhật trạng thái khuyến mãi (trừ những cái đang "Tạm ngừng")
+            tuDongCapNhatTrangThai();
 
-        for (KhuyenMai km : danhSachKhuyenMai) {
-            if (km.getMaKM().toLowerCase().contains(maTim)) {
-                model.addRow(new Object[]{
-                        km.getMaKM(),
-                        km.getTenKM(),
-                        km.getTyLeGiam() + "%",
-                        km.getDieuKienApDung(),
-                        km.getNgayBatDau().toLocalDate(),
-                        km.getNgayketThuc().toLocalDate(),
-                        getTrangThaiHienThi(km.getTrangThai())
-                });
-            }
-        }
+            // 2. Tải lại toàn bộ dữ liệu từ database
+            taiTatCaKhuyenMai();
 
-        if (model.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(khuyenMaiPanel, "Không tìm thấy khuyến mãi với mã: " + maTim);
-        }
+            // 3. Reset các bộ lọc
+            resetBoLoc();
+
+            // 4. Reset form nhập liệu
+            lamMoiForm();
+    }
+
+    private void resetBoLoc() {
+        // Reset các trường tìm kiếm và bộ lọc
+        khuyenMaiPanel.txt_TimMaKhuyenMai.setText("");
+        khuyenMaiPanel.ngayBD_1.setDate(null);
+        khuyenMaiPanel.ngayKT_1.setDate(null);
+
+        // Reset các checkbox bộ lọc
+        khuyenMaiPanel.chckbx_Standard_1.setSelected(false);
+        khuyenMaiPanel.chckbx_Superior_1.setSelected(false);
+        khuyenMaiPanel.chckbx_Family_1.setSelected(false);
+        khuyenMaiPanel.chckbx_Deluxe_1.setSelected(false);
+        khuyenMaiPanel.chckbx_Suite_1.setSelected(false);
+        khuyenMaiPanel.chckbx_TatCa_1.setSelected(false);
     }
 
     private void timKhuyenMai() {
@@ -197,7 +310,7 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
                 model.addRow(new Object[]{
                         km.getMaKM(),
                         km.getTenKM(),
-                        km.getTyLeGiam() + "%",
+                        (int) (km.getTyLeGiam() * 100) + "%",
                         km.getDieuKienApDung(),
                         km.getNgayBatDau().toLocalDate(),
                         km.getNgayketThuc().toLocalDate(),
@@ -211,31 +324,141 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
         }
     }
 
-    private void getTatCaKhuyenMai() {
-        // Dữ liệu mẫu
-        danhSachKhuyenMai.clear();
-        KhuyenMai km1 = new KhuyenMai("KM001", "Khuyến mãi mùa hè", "Standard, Superior", 15.0,
-                LocalDateTime.now(), LocalDateTime.now().plusDays(30), TrangThaiKhuyenMai.DangHoatDong);
-        KhuyenMai km2 = new KhuyenMai("KM002", "Khuyến mãi cuối năm", "Deluxe, Suite", 20.0,
-                LocalDateTime.now().minusDays(10), LocalDateTime.now().plusDays(20), TrangThaiKhuyenMai.SapDienRa);
+    private void taiTatCaKhuyenMai() {
+        try {
+            danhSachKhuyenMai = khuyenMaiDao.getTatCaKhuyenMai();
+            hienThiDuLieuLenBang(danhSachKhuyenMai);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(khuyenMaiPanel, "Lỗi khi tải danh sách khuyến mãi");
+        }
+    }
 
-        danhSachKhuyenMai.add(km1);
-        danhSachKhuyenMai.add(km2);
-
+    private void hienThiDuLieuLenBang(ArrayList<KhuyenMai> danhSach) {
         DefaultTableModel model = khuyenMaiPanel.model;
         model.setRowCount(0);
 
-        for (KhuyenMai km : danhSachKhuyenMai) {
+        for (KhuyenMai km : danhSach) {
             model.addRow(new Object[]{
                     km.getMaKM(),
                     km.getTenKM(),
-                    km.getTyLeGiam() + "%",
+                    (int) (km.getTyLeGiam() * 100) + "%",
                     km.getDieuKienApDung(),
-                    km.getNgayBatDau().toLocalDate(),
-                    km.getNgayketThuc().toLocalDate(),
+                    km.getNgayBatDau().toLocalDate().toString(),
+                    km.getNgayketThuc().toLocalDate().toString(),
                     getTrangThaiHienThi(km.getTrangThai())
             });
         }
+    }
+
+    private void hienThiDuLieuLenBang(KhuyenMai khuyenMai) {
+        DefaultTableModel model = khuyenMaiPanel.model;
+        model.setRowCount(0);
+
+        if (khuyenMai != null) {
+            model.addRow(new Object[]{
+                    khuyenMai.getMaKM(),
+                    khuyenMai.getTenKM(),
+                    (int) (khuyenMai.getTyLeGiam() * 100) + "%",
+                    khuyenMai.getDieuKienApDung(),
+                    khuyenMai.getNgayBatDau().toLocalDate().toString(),
+                    khuyenMai.getNgayketThuc().toLocalDate().toString(),
+                    getTrangThaiHienThi(khuyenMai.getTrangThai())
+            });
+        }
+    }
+
+    private void themKhuyenMai() {
+        if (kiemTraDuLieu()) {
+            try {
+                String tenKM = khuyenMaiPanel.txt_TenKhachHang.getText().strip();
+                double tyLeGiam = Double.parseDouble(khuyenMaiPanel.txt_TyLeGiam.getText().strip()) / 100.0;
+
+                Date dateBD = khuyenMaiPanel.ngayBD.getDate();
+                Date dateKT = khuyenMaiPanel.ngayKT.getDate();
+                LocalDateTime ngayBatDau = dateBD.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                LocalDateTime ngayKetThuc = dateKT.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+                String dieuKien = layDieuKienApDung();
+                TrangThaiKhuyenMai trangThai = xacDinhTrangThaiTuDong(ngayBatDau, ngayKetThuc);
+
+                // Tạo mã khuyến mãi tự động
+                String maKM = taoMaKhuyenMaiTuDong(ngayBatDau);
+
+                KhuyenMai khuyenMai = new KhuyenMai(maKM, tenKM, dieuKien, tyLeGiam, ngayBatDau, ngayKetThuc, trangThai);
+
+                if (khuyenMaiDao.themKhuyenMai(khuyenMai)) {
+                    JOptionPane.showMessageDialog(khuyenMaiPanel, "Thêm khuyến mãi thành công!");
+                    lamMoiForm();
+                    taiTatCaKhuyenMai();
+                } else {
+                    JOptionPane.showMessageDialog(khuyenMaiPanel, "Thêm khuyến mãi thất bại!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(khuyenMaiPanel, "Lỗi khi thêm khuyến mãi");
+            }
+        }
+    }
+
+    private TrangThaiKhuyenMai xacDinhTrangThaiTuDong(LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
+        LocalDateTime ngayHienTai = LocalDateTime.now();
+
+        if (ngayHienTai.isBefore(ngayBatDau)) {
+            return TrangThaiKhuyenMai.SapDienRa;
+        } else if (ngayHienTai.isBefore(ngayKetThuc) || ngayHienTai.isEqual(ngayKetThuc)) {
+            return TrangThaiKhuyenMai.DangHoatDong;
+        } else {
+            return TrangThaiKhuyenMai.HetHan;
+        }
+    }
+
+    private String taoMaKhuyenMaiTuDong(LocalDateTime ngayBatDau) {
+        try {
+            int namApDung = ngayBatDau.getYear();
+            String namStr = String.valueOf(namApDung).substring(2);
+
+            int soThuTuLonNhat = khuyenMaiDao.getSoLuongKhuyenMaiTheoNam(namApDung);
+            int soThuTuMoi = soThuTuLonNhat + 1;
+
+            if (soThuTuMoi > 999) {
+                throw new RuntimeException("Đã vượt quá số lượng khuyến mãi cho phép trong năm " + namApDung);
+            }
+
+            String maKMMoi = "KM" + namStr + String.format("%03d", soThuTuMoi);
+
+            int dem = 0;
+            while (khuyenMaiDao.kiemTraMaKMTonTai(maKMMoi) && dem < 100) {
+                soThuTuMoi++;
+                maKMMoi = "KM" + namStr + String.format("%03d", soThuTuMoi);
+                dem++;
+            }
+
+            if (dem >= 100) {
+                throw new RuntimeException("Không thể tạo mã khuyến mãi mới cho năm " + namApDung);
+            }
+
+            return maKMMoi;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi tạo mã khuyến mãi tự động: " + e.getMessage());
+        }
+    }
+
+    private void lamMoiForm() {
+        khuyenMaiPanel.txt_TenKhachHang.setText("");
+        khuyenMaiPanel.txt_TyLeGiam.setText("");
+        khuyenMaiPanel.ngayBD.setDate(null);
+        khuyenMaiPanel.ngayKT.setDate(null);
+        khuyenMaiPanel.chckbx_Standard.setSelected(false);
+        khuyenMaiPanel.chckbx_Superior.setSelected(false);
+        khuyenMaiPanel.chckbx_Family.setSelected(false);
+        khuyenMaiPanel.chckbx_Deluxe.setSelected(false);
+        khuyenMaiPanel.chckbx_Suite.setSelected(false);
+        khuyenMaiPanel.chckbx_TatCa.setSelected(false);
+        khuyenMaiPanel.comboBox_TrangThai.setSelectedIndex(0);
+        khuyenMaiPanel.txt_TenKhachHang.requestFocus();
     }
 
     private String getTrangThaiHienThi(TrangThaiKhuyenMai trangThai) {
@@ -260,6 +483,26 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
         });
     }
 
+    private void timKhuyenMaiTheoMa() {
+        String maTim = khuyenMaiPanel.txt_TimMaKhuyenMai.getText().strip();
+        if (maTim.isEmpty()) {
+            taiTatCaKhuyenMai();
+            return;
+        }
+
+        try {
+            KhuyenMai ketQua = khuyenMaiDao.getKhuyenMaiTheoMa(maTim);
+            hienThiDuLieuLenBang(ketQua);
+
+            if (ketQua.getMaKM() == null) {
+                JOptionPane.showMessageDialog(khuyenMaiPanel, "Không tìm thấy khuyến mãi với mã: " + maTim);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(khuyenMaiPanel, "Lỗi khi tìm kiếm khuyến mãi");
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -268,16 +511,18 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
         } else if (source == khuyenMaiPanel.btn_LamMoi) {
             lamMoi();
         } else if (source == khuyenMaiPanel.btn_TimMa) {
-            timKhuyenMai();
+            timKhuyenMaiTheoMa();
         }
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         int row = khuyenMaiPanel.table.getSelectedRow();
         if (row != -1) {
             String maKM = khuyenMaiPanel.table.getValueAt(row, 0).toString();
-            KhuyenMai khuyenMai = timKhuyenMaiTheoMa(maKM);
+            KhuyenMai khuyenMai = khuyenMaiDao.getKhuyenMaiTheoMa(maKM);
 
+            // Mở dialog chi tiết khuyến mãi
             if (khuyenMai != null) {
                 KhuyenMaiDialog dialog = new KhuyenMaiDialog(
                         (JFrame) SwingUtilities.getWindowAncestor(khuyenMaiPanel),
@@ -286,18 +531,9 @@ public class KhuyenMaiController implements MouseListener, ActionListener {
                 dialog.setVisible(true);
 
                 // Refresh table sau khi đóng dialog
-                getTatCaKhuyenMai();
+                taiTatCaKhuyenMai();
             }
         }
-    }
-
-    private KhuyenMai timKhuyenMaiTheoMa(String maKM) {
-        for (KhuyenMai km : danhSachKhuyenMai) {
-            if (km.getMaKM().equals(maKM)) {
-                return km;
-            }
-        }
-        return null;
     }
 
     @Override

@@ -23,6 +23,7 @@ public class MainController {
         this.mainFrame = mainFrame;
         khoi_Tao_Cac_Panel();
         //showMangHinhChinh();
+        mainFrame.chonNutMacDinh();
     }
 
     private void khoi_Tao_Cac_Panel() {
@@ -33,7 +34,7 @@ public class MainController {
         loaiPhongPanel = new LoaiPhongPanel();
         phongPanel = new PhongPanel();
         khuyenMaiPanel = new KhuyenMaiPanel();
-//        thueDatPhongPanel = new ThueDatPhongPanel();
+        thueDatPhongPanel = new ThueDatPhongPanel();
 //        mangHinhChinhPanel = new MangHinhChinhPanel();
     }
 
@@ -66,10 +67,10 @@ public class MainController {
         khuyenMaiPanel = new KhuyenMaiPanel();
         doi_Panel(khuyenMaiPanel);
     }
-//    public void showThue_Dat_Phong_Panel() {
-//        thueDatPhongPanel = new ThueDatPhongPanel();
-//        doi_Panel(thueDatPhongPanel);
-//    }
+    public void showThue_Dat_Phong_Panel() {
+        thueDatPhongPanel = new ThueDatPhongPanel();
+        doi_Panel(thueDatPhongPanel);
+    }
 
     private void doi_Panel(JPanel panel_Moi) {
         if (pnl_Theo_Doi_Panel_Dang_Hien_Thi != null) {

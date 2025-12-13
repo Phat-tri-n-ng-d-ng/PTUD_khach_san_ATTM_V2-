@@ -1,12 +1,9 @@
 package controllers;
 
+import database.dao.KhachHangDao;
 import entitys.HangKhachHang;
 import entitys.KhachHang;
-import entitys.NhanVien;
-import enums.ChucVuNhanVien;
-import services.KhachHangService;
 import view.dialogs.KhachHangDialog;
-import view.dialogs.NhanVienDialog;
 import view.panels.KhachHangPanel;
 
 import javax.swing.*;
@@ -19,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class KhachHangController implements MouseListener {
-    private KhachHangService khachHangService;
+    private KhachHangDao khachHangDao;
     private KhachHangPanel khachHangPanel;
 
 
     public KhachHangController(KhachHangPanel khachHangPanel){
-        khachHangService = new KhachHangService();
+        khachHangDao = new KhachHangDao();
         this.khachHangPanel = khachHangPanel;
 
         khachHangPanel.btn_ThemKhachHang.addActionListener(e -> ThemKhachHang());
@@ -39,7 +36,7 @@ public class KhachHangController implements MouseListener {
 
     public void getTatCaKhachHang(){
         try {
-            ArrayList<KhachHang> dsKhachHang = khachHangService.getTatCaKhachHang();
+            ArrayList<KhachHang> dsKhachHang = khachHangDao.getTatCaKhachHang();
             DefaultTableModel model = khachHangPanel.model;
             model.setRowCount(0); // Xóa dữ liệu cũ trong bảng trước khi load mới
             for (KhachHang kh : dsKhachHang) {
@@ -65,7 +62,7 @@ public class KhachHangController implements MouseListener {
         int row = khachHangPanel.table.getSelectedRow();
         if(row == -1){
             int namHienTai = LocalDate.now().getYear();
-            String maKH = "KH" + (namHienTai % 100) + String.format("%03d", khachHangService.getSoLuongKhachHang() + 1);
+            String maKH = "KH" + (namHienTai % 100) + String.format("%03d", khachHangDao.getSoLuongKhachHang() + 1);
             String tenKH = khachHangPanel.txt_TenKhachHang.getText().strip();
             String sdt = khachHangPanel.txt_SoDienThoai.getText().strip();
             boolean gioiTinh = khachHangPanel.rdbtn_Nam.isSelected() ? true : false;
@@ -81,7 +78,7 @@ public class KhachHangController implements MouseListener {
 
             KhachHang khachHang = new KhachHang(maKH, tenKH, gioiTinh, ngaySinh, email, sdt,
                     soCCCD);
-            if(khachHangService.themKhachHang(khachHang)){
+            if(khachHangDao.themKhachHang(khachHang)){
                 JOptionPane.showMessageDialog(khachHangPanel, "Thêm thành công");
                 LamMoi();
                 getTatCaKhachHang();
@@ -95,9 +92,9 @@ public class KhachHangController implements MouseListener {
         String hangKhachHangChon = khachHangPanel.cbb_LocHangKhachHang.getSelectedItem().toString();
         ArrayList<KhachHang> dsKhachHang;
         if (hangKhachHangChon.equals("Tất cả")) {
-            dsKhachHang = khachHangService.getTatCaKhachHang(); // gọi lấy toàn bộ
+            dsKhachHang = khachHangDao.getTatCaKhachHang(); // gọi lấy toàn bộ
         } else {
-            dsKhachHang = khachHangService.getKhachHangTheoHang(hangKhachHangChon);
+            dsKhachHang = khachHangDao.getKhachHangTheoHang(hangKhachHangChon);
         }
         DefaultTableModel model = khachHangPanel.model;
         model.setRowCount(0);
@@ -122,10 +119,10 @@ public class KhachHangController implements MouseListener {
             KhachHang kh;
             if(khachHangPanel.rdbtn_TimSoCanCuocCongDan.isSelected()){
                 String soCCCD = khachHangPanel.txt_TimSoCanCuocCongDan.getText().strip();
-                kh = khachHangService.TimKhachHang(soCCCD,"CCCD");
+                kh = khachHangDao.TimKhachHang(soCCCD,"CCCD");
             }else{
                 String soDT = khachHangPanel.txt_TimSoDienThoai.getText().strip();
-                kh = khachHangService.TimKhachHang(soDT,"SDT");
+                kh = khachHangDao.TimKhachHang(soDT,"SDT");
             }
             if(kh != null){
                 DefaultTableModel model = khachHangPanel.model;
@@ -162,7 +159,7 @@ public class KhachHangController implements MouseListener {
             String email = khachHangPanel.table.getValueAt(row, 5).toString();
             String soCCCD = khachHangPanel.table.getValueAt(row, 6).toString();
             String tenHang = khachHangPanel.table.getValueAt(row, 7).toString();
-            String maHang = khachHangService.getMaHang(tenHang);
+            String maHang = khachHangDao.getMaHang(tenHang);
             double diemTichLuy = Double.parseDouble(khachHangPanel.table.getValueAt(row, 8).toString());
 
             HangKhachHang hangKhachHang = new entitys.HangKhachHang(maHang,tenHang);
@@ -173,6 +170,7 @@ public class KhachHangController implements MouseListener {
                     khachHang
             );
             dialog.setVisible(true);
+            LamMoi();
         }
     }
 

@@ -46,6 +46,14 @@ public class Phong {
 
     }
 
+    public Phong(String maPhong, LoaiPhong loaiPhong, int soLuongToiDa, double giaPhong, double tienCoc) {
+        this.maPhong = maPhong;
+        this.loaiPhong = loaiPhong;
+        this.sucChuaToiDa = soLuongToiDa;
+        this.giaPhong = giaPhong;
+        this.tienCoc = tienCoc;
+    }
+
     public String getMaPhong() {
 		return maPhong;
 	}

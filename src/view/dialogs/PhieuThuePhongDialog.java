@@ -191,24 +191,23 @@ public class PhieuThuePhongDialog extends JDialog {
         txt_DiemTichLuy.setFocusable(false);
         txt_DiemTichLuy.setBounds(393, 250, 112, 25);
         pnl_ThongTinKhachHang.add(txt_DiemTichLuy);
-        
-                rdbtn_NamNguoiO = new JRadioButton("Nam");
-                rdbtn_NamNguoiO.setBounds(365, 159, 55, 20);
-                pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
-                rdbtn_NamNguoiO.setBackground(new Color(255, 255, 255));
-                rdbtn_NamNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+
+        gioiTinhGroup = new ButtonGroup();
+        rdbtn_NamNguoiO = new JRadioButton("Nam");
+        rdbtn_NamNguoiO.setBounds(365, 159, 55, 20);
+        pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
+        rdbtn_NamNguoiO.setBackground(new Color(255, 255, 255));
+        rdbtn_NamNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        gioiTinhGroup.add(rdbtn_NamNguoiO);
                 
-                gioiTinhGroup.add(rdbtn_NamNguoiO);
-                
-                        // Nếu muốn một radio mặc định được chọn
-                        rdbtn_NamNguoiO.setSelected(true);
-                        
-                                rdbtn_NuNguoiO = new JRadioButton("Nữ");
-                                rdbtn_NuNguoiO.setBounds(450, 159, 55, 20);
-                                pnl_ThongTinKhachHang.add(rdbtn_NuNguoiO);
-                                rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-                                rdbtn_NuNguoiO.setBackground(Color.WHITE);
-                                gioiTinhGroup.add(rdbtn_NuNguoiO);
+        // Nếu muốn một radio mặc định được chọn
+        rdbtn_NamNguoiO.setSelected(true);
+        rdbtn_NuNguoiO = new JRadioButton("Nữ");
+        rdbtn_NuNguoiO.setBounds(450, 159, 55, 20);
+        pnl_ThongTinKhachHang.add(rdbtn_NuNguoiO);
+        rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        rdbtn_NuNguoiO.setBackground(Color.WHITE);
+        gioiTinhGroup.add(rdbtn_NuNguoiO);
 
         JLabel lbl_PhuongThucThangToan = new JLabel("Phương thức thanh toán: ");
         lbl_PhuongThucThangToan.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -327,9 +326,6 @@ public class PhieuThuePhongDialog extends JDialog {
         lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setBounds(386, 94, 120, 18);
         pnl_TongTien.add(lbl_TienCuaTienTraLaiKhachTrongPnlTongTien);
-
-        // Tạo nhóm và thêm radio button vào nhóm
-        ButtonGroup gioiTinhGroup = new ButtonGroup();
 
         JLabel lblNewLabel = new JLabel("Danh sách người ở");
         lblNewLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));

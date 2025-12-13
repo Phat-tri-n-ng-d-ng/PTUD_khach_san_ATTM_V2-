@@ -1,11 +1,11 @@
 package controllers.dialogs;
 
+import database.dao.NhanVienDao;
 import entitys.NhanVien;
 import entitys.TaiKhoan;
 import enums.ChucVuNhanVien;
 import enums.TrangThaiTaiKhoan;
 import enums.VaiTro;
-import services.NhanVienService;
 import view.dialogs.NhanVienDialog;
 import view.panels.NhanVienPanel;
 
@@ -19,12 +19,12 @@ import java.util.regex.Pattern;
 public class NhanVienDialogController {
     private NhanVien nhanVien;
     private NhanVienDialog nhanVienDialog;
-    private NhanVienService nhanVienService;
+    private NhanVienDao nhanVienDao;
 
     public NhanVienDialogController(NhanVienDialog nhanVienDialog , NhanVien nhanVien){
         this.nhanVienDialog = nhanVienDialog;
         this.nhanVien = nhanVien;
-        nhanVienService = new NhanVienService();
+        nhanVienDao = new NhanVienDao();
         nhanVienDialog.btn_CapNhat.addActionListener(e -> CapNhatNhanVien());
         nhanVienDialog.btn_Dong.addActionListener(e -> Dong());
         nhanVienDialog.btn_CapTaiKhoan.addActionListener(e -> CapTaiKhoanNhanVien());
@@ -44,7 +44,7 @@ public class NhanVienDialogController {
             }
             TaiKhoan taiKhoan = new TaiKhoan(sdt,"12345678",vaiTro);
             NhanVien nhanVien1 = new NhanVien(maNV, taiKhoan);
-            if(nhanVienService.TaoTaiKhoanNhanVien(nhanVien1)){
+            if(nhanVienDao.TaoTaiKhoanNhanVien(nhanVien1)){
                 JOptionPane.showMessageDialog(nhanVienDialog, "Cấp tài khoản thành công");
                 Dong();
             }else{
@@ -76,16 +76,21 @@ public class NhanVienDialogController {
             String chucVuDaChon = nhanVienDialog.cbb_ChucVu.getSelectedItem().toString();
             ChucVuNhanVien chucVu = getChucVu(chucVuDaChon);
             String email = nhanVienDialog.txt_Email.getText().strip();
-            String String_TrangThaiTaiKoan = nhanVienDialog.cbb_TrangThaiTaiKhoan.getSelectedItem().toString();
-            TrangThaiTaiKhoan trangThaiTaiKhoan = getTrangThaiTaiKhoan(String_TrangThaiTaiKoan);
             TaiKhoan tk = null;
-            if (trangThaiTaiKhoan != null && !trangThaiTaiKhoan.toString().trim().isEmpty()) {
-                tk = new TaiKhoan(sdt,trangThaiTaiKhoan);
+            NhanVien nhanVienNew = null;
+            if(nhanVien.getChucVu().equals(ChucVuNhanVien.QuanLy) || nhanVien.getChucVu().equals(ChucVuNhanVien.LeTan)){
+                String String_TrangThaiTaiKoan = nhanVienDialog.cbb_TrangThaiTaiKhoan.getSelectedItem().toString();
+                TrangThaiTaiKhoan trangThaiTaiKhoan = getTrangThaiTaiKhoan(String_TrangThaiTaiKoan);
+                if (trangThaiTaiKhoan != null && !trangThaiTaiKhoan.toString().trim().isEmpty()) {
+                    tk = new TaiKhoan(sdt,trangThaiTaiKhoan);
+                }
+                nhanVienNew = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu,tk);
+            }else{
+                nhanVienNew = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu,tk);
             }
-            NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVu,tk);
             int confirm = JOptionPane.showConfirmDialog(nhanVienDialog, "Bạn có chắc chắn muốn cập nhật thông tin nhân viên" + maNV,"Chú ý",JOptionPane.YES_NO_OPTION);
             if(confirm == JOptionPane.YES_OPTION){
-                if(nhanVienService.CapNhatNhanVien(nhanVien)){
+                if(nhanVienDao.CapNhatNhanVien(nhanVienNew)){
                     JOptionPane.showMessageDialog(nhanVienDialog, "Cập nhật thành công");
                     Dong();
                 }else{

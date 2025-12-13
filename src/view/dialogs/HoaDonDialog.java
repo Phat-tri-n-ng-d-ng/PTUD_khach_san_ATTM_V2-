@@ -7,17 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -53,8 +43,10 @@ public class HoaDonDialog extends JDialog {
     public DefaultTableModel model;
     public JButton btn_inHoaDon;
 	public JButton btn_huyHoaDon;
+    public JRadioButton rdbtn_NamNguoiO;
+    public JRadioButton rdbtn_NuNguoiO;
 
-	public HoaDonDialog() {
+    public HoaDonDialog() {
 
         getContentPane().setBackground(new Color(236, 247, 255));
         setBounds(100, 100, 1100, 565);
@@ -166,15 +158,15 @@ public class HoaDonDialog extends JDialog {
         txt_DiemTichLuy.setColumns(10);
         txt_DiemTichLuy.setBounds(393, 269, 112, 25);
         pnl_ThongTinKhachHang.add(txt_DiemTichLuy);
-        
-        JRadioButton rdbtn_NamNguoiO = new JRadioButton("Nam");
+
+        rdbtn_NamNguoiO = new JRadioButton("Nam");
         rdbtn_NamNguoiO.setSelected(true);
         rdbtn_NamNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NamNguoiO.setBackground(Color.WHITE);
         rdbtn_NamNguoiO.setBounds(365, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
         
-        JRadioButton rdbtn_NuNguoiO = new JRadioButton("Nữ");
+        rdbtn_NuNguoiO = new JRadioButton("Nữ");
         rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NuNguoiO.setBackground(Color.WHITE);
         rdbtn_NuNguoiO.setBounds(450, 170, 55, 20);
