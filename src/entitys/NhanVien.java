@@ -82,8 +82,14 @@ public class NhanVien {
         this.chucVu = chucVu;
         this.taiKhoan = taiKhoan;
     }
+    
 
-    public NhanVien(String maNV, TaiKhoan taiKhoan) {
+    public NhanVien(String maNV, String tenNV) {
+		super();
+		this.maNV = maNV;
+		this.tenNV = tenNV;
+	}
+	public NhanVien(String maNV, TaiKhoan taiKhoan) {
         this.maNV = maNV;
         this.taiKhoan = taiKhoan;
     }

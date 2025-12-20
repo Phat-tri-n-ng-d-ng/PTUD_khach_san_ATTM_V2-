@@ -136,6 +136,43 @@ public class PhongDao {
         return p;
 
     }
+    public ArrayList<Phong> getPhongBangMa(String maHD) {
+        Connection con = ConnectDB.getConnection();
+        ArrayList<Phong> dsP = new ArrayList<>();
+
+        String sql = 
+            "SELECT p.maPhong, p.tang, p.soPhong, lp.tenLoaiPhong, p.giaPhong " +
+            "FROM ChiTietHoaDon cthd " +
+            "JOIN Phong p ON cthd.maPhong = p.maPhong " +
+            "JOIN LoaiPhong lp ON lp.maLoaiPhong = p.maLoaiPhong " +
+            "WHERE cthd.maHD = ?";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+
+            st.setString(1, maHD);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                LoaiPhong loaiPhong = new LoaiPhong(rs.getString("tenLoaiPhong"));
+                Phong p = new Phong(
+                        rs.getString("maPhong"),
+                        loaiPhong,
+                        rs.getInt("tang"),
+                        rs.getInt("soPhong"),
+                        rs.getDouble("giaPhong")
+                );
+                dsP.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDB.closeConnection(con);
+        }
+
+        return dsP;
+    }
+
 
     public ArrayList<Phong> locPhongTheoLoai(String chuoiLoaiPhongDaChon) {
         Connection con = ConnectDB.getConnection();
@@ -189,4 +226,5 @@ public class PhongDao {
 
         return dsp;
     }
+     
 }

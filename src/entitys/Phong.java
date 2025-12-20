@@ -28,7 +28,14 @@ public class Phong {
 
     
 
-    public Phong(String maPhong, LoaiPhong loaiPhong, int tang, int soPhong, int soLuongToiDa, double giaPhong,
+    public Phong(String maPhong) {
+		super();
+		this.maPhong = maPhong;
+	}
+
+
+
+	public Phong(String maPhong, LoaiPhong loaiPhong, int tang, int soPhong, int soLuongToiDa, double giaPhong,
 			double tienCoc, TrangThaiPhong trangThai) {
 		this.maPhong = maPhong;
 		this.loaiPhong = loaiPhong;
@@ -138,6 +145,17 @@ public class Phong {
 
 
 	}
+
+	public Phong(String maPhong, LoaiPhong loaiPhong, int tang, int soPhong, double giaPhong) {
+		super();
+		this.maPhong = maPhong;
+		this.loaiPhong = loaiPhong;
+		this.tang = tang;
+		this.soPhong = soPhong;
+		this.giaPhong = giaPhong;
+	}
+
+
 
 	@Override
 	public int hashCode() {

@@ -38,6 +38,9 @@ public class NguoiO {
 		this.phong = phong;
 	}
 
+	public NguoiO() {
+	}
+
 	public boolean isGioiTinh() {
 		return gioiTinh;
 	}
