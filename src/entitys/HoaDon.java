@@ -210,6 +210,13 @@ public class HoaDon {
         this.khachHang = khachHang;
         this.dsCTHD = dsCTHD;
         this.nhanVien = nhanVien;
+     // Chỉ gọi setTongTien() nếu dsCTHD không rỗng
+        if (this.dsCTHD != null && !this.dsCTHD.isEmpty()) {
+            setTongTien();
+            setTienThue();
+            setPhiDoiPhong();
+            setTongTienThanhToan();
+        }
     }
     public HoaDon(String maHD, LocalDateTime ngayLap, PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai,
 			double tongTienThanhToan, double tongTien, double tienNhan, double tienThue,

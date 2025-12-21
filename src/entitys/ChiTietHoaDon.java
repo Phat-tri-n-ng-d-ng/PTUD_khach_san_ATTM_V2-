@@ -126,7 +126,27 @@ public class ChiTietHoaDon {
 		this.khuyenMai = khuyenMai;
 		this.ngayNhanPhong = ngayNhanPhong;
 		this.ngayTraPhong = ngayTraPhong;
+		 if (phong != null) {
+		        this.thanhTien = phong.getGiaPhong() * soNgayO;
+		        System.out.println("DEBUG - Tính thanhTien: " + phong.getGiaPhong() + " * " + 
+		                          soNgayO + " = " + this.thanhTien);
+		    } else {
+		        this.thanhTien = 0;
+		        System.out.println("DEBUG - Phòng null, thanhTien = 0");
+		    }
 	}
+	public ChiTietHoaDon(Phong phong, int soNgayO, double thanhTien, KhuyenMai khuyenMai, 
+            LocalDateTime ngayNhanPhong, LocalDateTime ngayTraPhong) {
+		this.phong = phong;
+		this.soNgayO = soNgayO;
+		this.thanhTien = thanhTien; // Lấy từ database
+		this.khuyenMai = khuyenMai;
+		this.ngayNhanPhong = ngayNhanPhong;
+		this.ngayTraPhong = ngayTraPhong;
+		
+		System.out.println("DEBUG CTDH - Constructor mới - thanhTien: " + this.thanhTien);
+	}
+
 
 
 	

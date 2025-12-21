@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -16,7 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class HoaDonDialog extends JDialog {
-    public  JLabel lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1;
+    public JLabel lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1;
     public JRadioButton rdbtn_ChuyenKhoan;
     public JRadioButton rdbtn_TienMat;
     public JRadioButton rdbtn_TachHoaDon;
@@ -42,9 +44,35 @@ public class HoaDonDialog extends JDialog {
     public JTable table;
     public DefaultTableModel model;
     public JButton btn_inHoaDon;
-	public JButton btn_huyHoaDon;
+    public JButton btn_huyHoaDon;
     public JRadioButton rdbtn_NamNguoiO;
     public JRadioButton rdbtn_NuNguoiO;
+    public ButtonGroup gioiTinhGroup;
+    
+    // Inner class RoundedButton
+    class RoundedButton extends JButton {
+        private int radius;
+
+        public RoundedButton(String label, Color bg, Color fg, int radius) {
+            super(label);
+            this.radius = radius;
+            setBackground(bg);
+            setForeground(fg);
+            setContentAreaFilled(false);
+            setFocusPainted(false);
+            setBorder(null);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
+            super.paintComponent(g2);
+            g2.dispose();
+        }
+    }
 
     public HoaDonDialog() {
 
@@ -73,10 +101,8 @@ public class HoaDonDialog extends JDialog {
         getContentPane().add(lblFromThongTinKhachHang);
 
         JPanel pnl_ThongTinKhachHang = new JPanel();
-        // Tạo viền mờ màu xám nhạt với bo góc 15px
         pnl_ThongTinKhachHang.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), HIDE_ON_CLOSE)// Viền ngoài
-                , null
+                BorderFactory.createLineBorder(new Color(200, 200, 200), HIDE_ON_CLOSE), null
         ));
         pnl_ThongTinKhachHang.setBackground(new Color(255, 255, 255));
         pnl_ThongTinKhachHang.setBounds(10, 65, 525, 310);
@@ -101,17 +127,26 @@ public class HoaDonDialog extends JDialog {
 
         txt_SDT = new JTextField();
         txt_SDT.setBounds(132, 19, 373, 25);
+        txt_SDT.setEditable(false);
+        txt_SDT.setBackground(Color.WHITE);
+        txt_SDT.setFocusable(false);
         pnl_ThongTinKhachHang.add(txt_SDT);
         txt_SDT.setColumns(10);
 
         txt_HoTen = new JTextField();
         txt_HoTen.setColumns(10);
         txt_HoTen.setBounds(132, 69, 373, 25);
+        txt_HoTen.setEditable(false);
+        txt_HoTen.setBackground(Color.WHITE);
+        txt_HoTen.setFocusable(false);
         pnl_ThongTinKhachHang.add(txt_HoTen);
 
         txt_CCCD = new JTextField();
         txt_CCCD.setColumns(10);
         txt_CCCD.setBounds(132, 119, 373, 25);
+        txt_CCCD.setEditable(false);
+        txt_CCCD.setBackground(Color.WHITE);
+        txt_CCCD.setFocusable(false);
         pnl_ThongTinKhachHang.add(txt_CCCD);
 
         JLabel lbl_NgaySinh = new JLabel("Ngày sinh:");
@@ -122,6 +157,9 @@ public class HoaDonDialog extends JDialog {
         txt_NgaySinh = new JTextField();
         txt_NgaySinh.setColumns(10);
         txt_NgaySinh.setBounds(132, 169, 110, 25);
+        txt_NgaySinh.setEditable(false);
+        txt_NgaySinh.setBackground(Color.WHITE);
+        txt_NgaySinh.setFocusable(false);
         pnl_ThongTinKhachHang.add(txt_NgaySinh);
 
         JLabel lbl_GioiTinh = new JLabel("Giới tính:");
@@ -136,6 +174,9 @@ public class HoaDonDialog extends JDialog {
 
         txt_Email = new JTextField();
         txt_Email.setBounds(132, 219, 373, 25);
+        txt_Email.setEditable(false);
+        txt_Email.setBackground(Color.WHITE);
+        txt_Email.setFocusable(false);
         pnl_ThongTinKhachHang.add(txt_Email);
         txt_Email.setColumns(10);
 
@@ -146,6 +187,9 @@ public class HoaDonDialog extends JDialog {
 
         txt_HangKhachHang = new JTextField();
         txt_HangKhachHang.setColumns(10);
+        txt_HangKhachHang.setEditable(false);
+        txt_HangKhachHang.setBackground(Color.WHITE);
+        txt_HangKhachHang.setFocusable(false);
         txt_HangKhachHang.setBounds(132, 269, 110, 25);
         pnl_ThongTinKhachHang.add(txt_HangKhachHang);
 
@@ -156,21 +200,27 @@ public class HoaDonDialog extends JDialog {
 
         txt_DiemTichLuy = new JTextField();
         txt_DiemTichLuy.setColumns(10);
+        txt_DiemTichLuy.setEditable(false);
+        txt_DiemTichLuy.setBackground(Color.WHITE);
+        txt_DiemTichLuy.setFocusable(false);
         txt_DiemTichLuy.setBounds(393, 269, 112, 25);
         pnl_ThongTinKhachHang.add(txt_DiemTichLuy);
 
+        gioiTinhGroup = new ButtonGroup();
         rdbtn_NamNguoiO = new JRadioButton("Nam");
         rdbtn_NamNguoiO.setSelected(true);
         rdbtn_NamNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NamNguoiO.setBackground(Color.WHITE);
         rdbtn_NamNguoiO.setBounds(365, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
+        gioiTinhGroup.add(rdbtn_NamNguoiO);
         
         rdbtn_NuNguoiO = new JRadioButton("Nữ");
         rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NuNguoiO.setBackground(Color.WHITE);
         rdbtn_NuNguoiO.setBounds(450, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NuNguoiO);
+        gioiTinhGroup.add(rdbtn_NuNguoiO);
 
         JLabel lbl_PhuongThucThangToan = new JLabel("Phương thức thanh toán: ");
         lbl_PhuongThucThangToan.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -189,14 +239,10 @@ public class HoaDonDialog extends JDialog {
         rdbtn_ChuyenKhoan.setBounds(407, 381, 113, 20);
         getContentPane().add(rdbtn_ChuyenKhoan);
 
-        // Tạo nhóm và thêm radio button vào nhóm
         ButtonGroup paymentGroup = new ButtonGroup();
         paymentGroup.add(rdbtn_TienMat);
         paymentGroup.add(rdbtn_ChuyenKhoan);
-
-        // Nếu muốn một radio mặc định được chọn
         rdbtn_TienMat.setSelected(true);
-
 
         JLabel lbl_TienKhachDua = new JLabel("Tiền khách đưa:");
         lbl_TienKhachDua.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -219,7 +265,6 @@ public class HoaDonDialog extends JDialog {
         pnl_DanhSachPhong.setBounds(550, 65, 525, 107);
         pnl_DanhSachPhong.setLayout(null);
         getContentPane().add(pnl_DanhSachPhong);
-
 
         model = new DefaultTableModel(new String[] {"Mã phòng","Loại phòng","SLTĐ","Số ngày ở","Giá","Tiền cọc","Thành tiền"}, 0);
         table = new JTable(model);
@@ -325,31 +370,7 @@ public class HoaDonDialog extends JDialog {
         lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1.setBounds(374, 49, 141, 18);
         panel.add(lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1);
 
-        class RoundedButton extends JButton {
-            private int radius;
-
-            public RoundedButton(String label, Color bg, Color fg, int radius) {
-                super(label);
-                this.radius = radius;
-                setBackground(bg);
-                setForeground(fg);
-                setContentAreaFilled(false);
-                setFocusPainted(false);
-                setBorder(null);
-            }
-
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
-                super.paintComponent(g2);
-                g2.dispose();
-            }
-        }
-
-         btn_XacNhan = new RoundedButton("Xác nhận", new Color(76, 175, 80), Color.WHITE, 30);
+        btn_XacNhan = new RoundedButton("Xác nhận", new Color(76, 175, 80), Color.WHITE, 30);
         btn_XacNhan.setFont(new Font("Times New Roman", Font.BOLD, 14));
         btn_XacNhan.setBounds(430, 570, 120, 30);
         getContentPane().add(btn_XacNhan);
@@ -377,22 +398,179 @@ public class HoaDonDialog extends JDialog {
         rdbtn_TachHoaDon.setBounds(267, 417, 113, 20);
         getContentPane().add(rdbtn_TachHoaDon);
 
-        // Tạo nhóm và thêm radio button vào nhóm
         ButtonGroup phuongThucXuatHoaDon = new ButtonGroup();
         phuongThucXuatHoaDon.add(rdbtn_TachHoaDon);
         phuongThucXuatHoaDon.add(rdbtn_GopHoaDon);
+        
         btn_inHoaDon = new JButton("In hóa đơn");
         btn_inHoaDon.setBounds(956, 488, 120, 30);
         getContentPane().add(btn_inHoaDon);
         
         btn_huyHoaDon = new JButton("Hủy hóa đơn");
-        btn_huyHoaDon.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
         btn_huyHoaDon.setBounds(826, 488, 120, 30);
         getContentPane().add(btn_huyHoaDon);
-        
+    }
     
-	}
+    // THÊM PHƯƠNG THỨC MỚI: Thiết lập DocumentListener
+    public void setupAutoUpdateTienNhan() {
+        txt_TienKhachDua.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                capNhatTienNhanTuKhach();
+            }
+            
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                capNhatTienNhanTuKhach();
+            }
+            
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                capNhatTienNhanTuKhach();
+            }
+        });
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Cập nhật tiền nhận từ khách
+    private void capNhatTienNhanTuKhach() {
+        String text = txt_TienKhachDua.getText();
+        
+        try {
+            if (!text.isEmpty()) {
+                // Loại bỏ các ký tự không phải số
+                String cleanedText = text.replaceAll("[^\\d]", "");
+                if (!cleanedText.isEmpty()) {
+                    double tien = Double.parseDouble(cleanedText);
+                    String formatted = String.format("%,.0f VND", tien);
+                    lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(formatted);
+                    
+                    // Tự động tính tiền thừa (tiền khách đưa - tổng tiền thanh toán)
+                    tinhTienThuaTuDong();
+                } else {
+                    lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+                    lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+                }
+            } else {
+                lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+                lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+            }
+        } catch (NumberFormatException e) {
+            lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(text);
+        }
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Tính tiền thừa tự động
+    private void tinhTienThuaTuDong() {
+        try {
+            // Lấy tổng tiền thanh toán từ label
+            String tongTienThanhToanText = lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1.getText();
+            if (tongTienThanhToanText != null && !tongTienThanhToanText.isEmpty()) {
+                // Loại bỏ "VND" và dấu phẩy
+                String cleanedTongTien = tongTienThanhToanText.replace("VND", "").replace(",", "").trim();
+                if (!cleanedTongTien.isEmpty()) {
+                    double tongTienThanhToan = Double.parseDouble(cleanedTongTien);
+                    
+                    // Lấy tiền khách đưa
+                    String tienKhachDuaText = txt_TienKhachDua.getText();
+                    if (!tienKhachDuaText.isEmpty()) {
+                        String cleanedTienKhachDua = tienKhachDuaText.replaceAll("[^\\d]", "");
+                        if (!cleanedTienKhachDua.isEmpty()) {
+                            double tienKhachDua = Double.parseDouble(cleanedTienKhachDua);
+                            
+                            // Tính tiền thừa
+                            double tienThua = tienKhachDua - tongTienThanhToan;
+                            if (tienThua >= 0) {
+                                lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText(String.format("%,.0f VND", tienThua));
+                            } else {
+                                lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Không làm gì nếu có lỗi parse
+        }
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Set tổng tiền thanh toán
+    public void setTongTienThanhToan(double tongTienThanhToan) {
+        lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1.setText(String.format("%,.0f VND", tongTienThanhToan));
+        // Tự động tính lại tiền thừa nếu cần
+        tinhTienThuaTuDong();
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Set phương thức thanh toán
+    public void setPhuongThucThanhToan(String phuongThuc) {
+        lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien.setText(phuongThuc);
+        if ("Tiền mặt".equals(phuongThuc)) {
+            rdbtn_TienMat.setSelected(true);
+        } else if ("Chuyển khoản".equals(phuongThuc)) {
+            rdbtn_ChuyenKhoan.setSelected(true);
+        }
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Set tiền khách đưa ban đầu
+    public void setTienKhachDua(double tienKhachDua) {
+        txt_TienKhachDua.setText(String.valueOf((int)tienKhachDua));
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Tính tổng tiền thanh toán từ danh sách phòng
+    public void tinhTongTienThanhToanTuDanhSachPhong() {
+        double tongThanhTien = 0;
+        for (int i = 0; i < model.getRowCount(); i++) {
+            try {
+                Object thanhTienObj = model.getValueAt(i, 6); // Cột thành tiền là cột 6
+                if (thanhTienObj != null) {
+                    // Chuyển đổi từ string đã format về số
+                    String thanhTienStr = thanhTienObj.toString().replace(",", "").replace(" VND", "").trim();
+                    if (!thanhTienStr.isEmpty()) {
+                        double thanhTien = Double.parseDouble(thanhTienStr);
+                        tongThanhTien += thanhTien;
+                    }
+                }
+            } catch (Exception e) {
+                // Bỏ qua nếu có lỗi
+            }
+        }
+        setTongTienThanhToan(tongThanhTien);
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Format tiền trong bảng
+    public void formatTienTrongBang() {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            // Format cột Giá (cột 4)
+            Object giaObj = model.getValueAt(i, 4);
+            if (giaObj != null && !giaObj.toString().isEmpty()) {
+                try {
+                    double gia = Double.parseDouble(giaObj.toString());
+                    model.setValueAt(String.format("%,.0f VND", gia), i, 4);
+                } catch (NumberFormatException e) {
+                    // Giữ nguyên nếu không phải số
+                }
+            }
+            
+            // Format cột Tiền cọc (cột 5)
+            Object tienCocObj = model.getValueAt(i, 5);
+            if (tienCocObj != null && !tienCocObj.toString().isEmpty()) {
+                try {
+                    double tienCoc = Double.parseDouble(tienCocObj.toString());
+                    model.setValueAt(String.format("%,.0f VND", tienCoc), i, 5);
+                } catch (NumberFormatException e) {
+                    // Giữ nguyên nếu không phải số
+                }
+            }
+            
+            // Format cột Thành tiền (cột 6)
+            Object thanhTienObj = model.getValueAt(i, 6);
+            if (thanhTienObj != null && !thanhTienObj.toString().isEmpty()) {
+                try {
+                    double thanhTien = Double.parseDouble(thanhTienObj.toString());
+                    model.setValueAt(String.format("%,.0f VND", thanhTien), i, 6);
+                } catch (NumberFormatException e) {
+                    // Giữ nguyên nếu không phải số
+                }
+            }
+        }
+    }
 }

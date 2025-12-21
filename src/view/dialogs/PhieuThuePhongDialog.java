@@ -19,6 +19,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -56,6 +58,10 @@ public class PhieuThuePhongDialog extends JDialog {
 		public ButtonGroup gioiTinhGroup;
 		public JButton btn_inHoaDon;
 		public JButton btn_huyHoaDon;
+		
+		// Biến thêm vào
+		public JDateChooser ngayBatDau;
+		public JDateChooser ngayKetThuc;
 
 	public PhieuThuePhongDialog() {
 
@@ -377,7 +383,7 @@ public class PhieuThuePhongDialog extends JDialog {
         lbl_NgayBatDau.setBounds(68, 11, 100, 20);
         pnl_ThoiGianThue.add(lbl_NgayBatDau);
         
-        JDateChooser ngayBatDau = new JDateChooser();
+        ngayBatDau = new JDateChooser();
         ngayBatDau.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayBatDau.setDateFormatString("dd/MM/yyyy");
         ngayBatDau.setBounds(198, 10, 250, 25);
@@ -388,12 +394,115 @@ public class PhieuThuePhongDialog extends JDialog {
         lbl_TienKhachDuaTrongPnlTongTien.setBounds(68, 51, 100, 20);
         pnl_ThoiGianThue.add(lbl_TienKhachDuaTrongPnlTongTien);
         
-        JDateChooser ngayKetThuc = new JDateChooser();
+        ngayKetThuc = new JDateChooser();
         ngayKetThuc.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         ngayKetThuc.setDateFormatString("dd/MM/yyyy");
         ngayKetThuc.setBounds(198, 50, 250, 25);
         pnl_ThoiGianThue.add(ngayKetThuc);
-    
 		
+	}
+	
+	// THÊM PHƯƠNG THỨC MỚI: Thiết lập DocumentListener
+	public void setupAutoUpdateTienNhan() {
+	    txt_TienKhachDua.getDocument().addDocumentListener(new DocumentListener() {
+	        @Override
+	        public void insertUpdate(DocumentEvent e) {
+	            capNhatTienNhanTuKhach();
+	        }
+	        
+	        @Override
+	        public void removeUpdate(DocumentEvent e) {
+	            capNhatTienNhanTuKhach();
+	        }
+	        
+	        @Override
+	        public void changedUpdate(DocumentEvent e) {
+	            capNhatTienNhanTuKhach();
+	        }
+	    });
+	}
+	
+	// THÊM PHƯƠNG THỨC MỚI: Cập nhật tiền nhận từ khách
+	private void capNhatTienNhanTuKhach() {
+	    String text = txt_TienKhachDua.getText();
+	    
+	    try {
+	        if (!text.isEmpty()) {
+	            // Loại bỏ các ký tự không phải số
+	            String cleanedText = text.replaceAll("[^\\d]", "");
+	            if (!cleanedText.isEmpty()) {
+	                double tien = Double.parseDouble(cleanedText);
+	                String formatted = String.format("%,.0f VND", tien);
+	                lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(formatted);
+	                
+	                // Tự động tính tiền thừa nếu có tổng tiền
+	                tinhTienThuaTuDong();
+	            } else {
+	                lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+	                lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+	            }
+	        } else {
+	            lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+	            lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+	        }
+	    } catch (NumberFormatException e) {
+	        lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(text);
+	    }
+	}
+	
+	// THÊM PHƯƠNG THỨC MỚI: Tính tiền thừa tự động
+	private void tinhTienThuaTuDong() {
+	    try {
+	        // Lấy tổng tiền từ label (cần parse lại từ string)
+	        String tongTienText = lbl_TienCuaTongTienTrongPnlTongTien.getText();
+	        if (tongTienText != null && !tongTienText.isEmpty()) {
+	            // Loại bỏ "VND" và dấu phẩy
+	            String cleanedTongTien = tongTienText.replace("VND", "").replace(",", "").trim();
+	            if (!cleanedTongTien.isEmpty()) {
+	                double tongTien = Double.parseDouble(cleanedTongTien);
+	                
+	                // Lấy tiền khách đưa
+	                String tienKhachDuaText = txt_TienKhachDua.getText();
+	                if (!tienKhachDuaText.isEmpty()) {
+	                    String cleanedTienKhachDua = tienKhachDuaText.replaceAll("[^\\d]", "");
+	                    if (!cleanedTienKhachDua.isEmpty()) {
+	                        double tienKhachDua = Double.parseDouble(cleanedTienKhachDua);
+	                        
+	                        // Tính tiền thừa
+	                        double tienThua = tienKhachDua - tongTien;
+	                        if (tienThua > 0) {
+	                            lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText(String.format("%,.0f VND", tienThua));
+	                        } else {
+	                            lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    } catch (NumberFormatException e) {
+	        // Không làm gì nếu có lỗi parse
+	    }
+	}
+	
+	// THÊM PHƯƠNG THỨC MỚI: Set tổng tiền (gọi từ controller)
+	public void setTongTien(double tongTien) {
+	    lbl_TienCuaTongTienTrongPnlTongTien.setText(String.format("%,.0f VND", tongTien));
+	    // Tự động tính lại tiền thừa nếu cần
+	    tinhTienThuaTuDong();
+	}
+	
+	// THÊM PHƯƠNG THỨC MỚI: Set phương thức thanh toán
+	public void setPhuongThucThanhToan(String phuongThuc) {
+	    lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien.setText(phuongThuc);
+	    if ("Tiền mặt".equals(phuongThuc)) {
+	        rdbtn_TienMat.setSelected(true);
+	    } else if ("Chuyển khoản".equals(phuongThuc)) {
+	        rdbtn_ChuyenKhoan.setSelected(true);
+	    }
+	}
+	
+	// THÊM PHƯƠNG THỨC MỚI: Set tiền khách đưa ban đầu
+	public void setTienKhachDua(double tienKhachDua) {
+	    txt_TienKhachDua.setText(String.valueOf((int)tienKhachDua));
 	}
 }

@@ -28,11 +28,12 @@ public class HoaDonDao {
                 double giaPhong = rs.getDouble("giaPhong");
                 p = new Phong(maPhong, giaPhong);
                 int soNgayO = rs.getInt("soNgayO");
+                double thanhTienFromDB = rs.getDouble("thanhTien");
                 KhuyenMai km=null;
                 if(rs.getString("maKM")!=null) km=new KhuyenMai(rs.getString("maKM"));
                 LocalDateTime ngayNhanPhong=rs.getTimestamp("ngayNhanPhong").toLocalDateTime();
                 LocalDateTime ngayTraPhong=rs.getTimestamp("ngayTraPhong").toLocalDateTime();
-                ChiTietHoaDon cthd =  new ChiTietHoaDon(p, soNgayO,km,ngayNhanPhong,ngayTraPhong);
+                ChiTietHoaDon cthd = new ChiTietHoaDon(p, soNgayO, thanhTienFromDB, km, ngayNhanPhong, ngayTraPhong);                
 
                 dsChiTietHoaDon.add(cthd);
             }
@@ -98,11 +99,15 @@ public class HoaDonDao {
                 NhanVien nv = new NhanVien();
                 nv.setTenNV(tenNV);
                 PhuongThucThanhToan pttt = PhuongThucThanhToan.valueOf(rs.getString("phuongThucTT"));
-                
                 //Lay du lieu tu chi tiet hoa don
                 ArrayList<ChiTietHoaDon> dsCTDH = this.getChiTietHoaDon(maHD);
                 hd = new HoaDon(maHD, ngayLap, pttt,trangThaiHD , kh, dsCTDH , nv);
+                // DEBUG: Kiểm tra tổng tiền sau khi tạo
+                System.out.println("Tổng tiền sau constructor: " + hd.getTongTien());
                 hd.setTongTien();
+             // DEBUG: Kiểm tra tổng tiền sau khi set
+                System.out.println("Tổng tiền sau setTongTien(): " + hd.getTongTien());
+                System.out.println("===========================\n");
                 dsHoaDon.add(hd);
 
             }
@@ -116,41 +121,41 @@ public class HoaDonDao {
     }
 	 
 
-    public KhachHang getKhachHangTheoHD(String ma){
-	        KhachHang kh = null;
-	        try {
-	            Connection connection = ConnectDB.getConnection();
-	            String sql = "select kh.maKH, tenKH, gioiTinh, ngaySinh, email, sdt, soCCCD," +
-                        "diemTichLuy, hang.maHang, hang.tenHang, cthd.ngayNhanPhong, cthd.ngayTraPhong" +
-                        "from KhachHang kh" +
-                        "join HoaDon hd on kh.maKH = hd.maKH" +
-                        "join HangKhachHang hang on hang.maHang = kh.maHang" +
-                        "join ChiTietHoaDon cthd on cthd.maHD = hd.maHD" +
-                        "where hd.maHD = ?";
-                PreparedStatement st = connection.prepareStatement(sql);
-	            st.setString(1, ma);
-	            ResultSet rs = st.executeQuery();
-                while (rs.next()){
-                    String maKH = rs.getString("maKH");
-                    String tenKH = rs.getString("tenKH");
-                    LocalDate ngaySinh = rs.getDate("ngaySinh").toLocalDate();
-                    Boolean gioiTinh = rs.getBoolean("gioiTinh");
-                    String sdt = rs.getString("sdt");
-                    String email = rs.getString("email");
-                    String soCCCD = rs.getString("soCCCD");
-                    int diemTichLuy = rs.getInt("diemTichLuy");
-                    String maHang = rs.getString("maHang");
-                    String tenHang = rs.getString("tenHang");
-                    entitys.HangKhachHang hangKhachHang = new HangKhachHang(maHang,tenHang);
-                    kh = new KhachHang(maKH, tenKH, gioiTinh, ngaySinh, email, sdt,
-                            soCCCD, diemTichLuy,hangKhachHang);
-                }
-	        } catch (Exception e) {
-	            // TODO: handle exception
-	            e.printStackTrace();
+	public KhachHang getKhachHangTheoHD(String ma){
+	    KhachHang kh = null;
+	    try {
+	        Connection connection = ConnectDB.getConnection();
+	        String sql = "SELECT kh.maKH, tenKH, gioiTinh, ngaySinh, email, sdt, soCCCD, " +
+	                     "diemTichLuy, hang.maHang, hang.tenHang " +
+	                     "FROM KhachHang kh " +
+	                     "JOIN HoaDon hd ON kh.maKH = hd.maKH " +
+	                     "JOIN HangKhachHang hang ON hang.maHang = kh.maHang " +
+	                     "WHERE hd.maHD = ?";
+	        
+	        PreparedStatement st = connection.prepareStatement(sql);
+	        st.setString(1, ma);
+	        ResultSet rs = st.executeQuery();
+	        
+	        if (rs.next()){
+	            String maKH = rs.getString("maKH");
+	            String tenKH = rs.getString("tenKH");
+	            LocalDate ngaySinh = rs.getDate("ngaySinh").toLocalDate();
+	            Boolean gioiTinh = rs.getBoolean("gioiTinh");
+	            String sdt = rs.getString("sdt");
+	            String email = rs.getString("email");
+	            String soCCCD = rs.getString("soCCCD");
+	            int diemTichLuy = rs.getInt("diemTichLuy");
+	            String maHang = rs.getString("maHang");
+	            String tenHang = rs.getString("tenHang");
+	            entitys.HangKhachHang hangKhachHang = new HangKhachHang(maHang,tenHang);
+	            kh = new KhachHang(maKH, tenKH, gioiTinh, ngaySinh, email, sdt,
+	                    soCCCD, diemTichLuy,hangKhachHang);
 	        }
-	        return kh;
+	    } catch (Exception e) {
+	        e.printStackTrace();
 	    }
+	    return kh;
+	}
 	 public HoaDon timHoaDonTheoMa(String ma) {
 	        Connection connection = ConnectDB.getConnection();
 	        HoaDon hd = null;
@@ -220,14 +225,15 @@ public class HoaDonDao {
 	        }
 	        return dsctHD;
 	    };
-	    public ArrayList<NguoiO> getNguoiOTheoPhong(String ma) {
+	    public ArrayList<NguoiO> getNguoiOTheoPhong(String ma, String maHD) {
 	        Connection connection = ConnectDB.getConnection();
 	        NguoiO nO = null;
 	        ArrayList<NguoiO> dsNguoiO = new ArrayList<>();
-	        String sql = "select * from NguoiO where maPhong = ?";
+	        String sql = "select * from NguoiO where maPhong = ? and maHD = ?";
 	        try {
 	            PreparedStatement st = connection.prepareStatement(sql);
 	            st.setString(1, ma);
+	            st.setString(2, maHD);
 	            ResultSet rs= st.executeQuery();
 	            while(rs.next()) {
 	                String tenNO = rs.getString("tenNguoiO");

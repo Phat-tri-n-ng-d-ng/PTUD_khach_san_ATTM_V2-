@@ -292,6 +292,13 @@ public class HoaDonController implements ActionListener,MouseListener {
 				}
 				phieuDatPhong.lbl_TienCuaTongTienTrongPnlTongTien.setText(hd.getTongTien()+"");
 //				phieuDatPhong.lbl_TienCuaTienCocTrongPnlTongTien.setText(h)
+				 phieuDatPhong.setTienKhachDua(hd.getTienNhan());
+				    
+				// Tính và set tổng tiền cọc
+				 phieuDatPhong.tinhTongTienCocTuDanhSachPhong();
+				    
+				 // Thiết lập DocumentListener
+				phieuDatPhong.setupAutoUpdateTienNhan();
 				phieuDatPhong.setModal(true);
 				phieuDatPhong.setVisible(true);
 				break;
@@ -326,7 +333,7 @@ public class HoaDonController implements ActionListener,MouseListener {
 				if (!dsCTHD.isEmpty()) {
 			        String maP = dsCTHD.get(0).getPhong().getMaPhong();
 
-			        ArrayList<NguoiO> dsNguoiO = hoaDonDao.getNguoiOTheoPhong(maP);
+			        ArrayList<NguoiO> dsNguoiO = hoaDonDao.getNguoiOTheoPhong(maP, hd.getMaHD());
 			        phieuThuePhong.model_DanhSachNguoiO.setRowCount(0);
 			        for (NguoiO ngO : dsNguoiO) {
 			            phieuThuePhong.model_DanhSachNguoiO.addRow(new Object[]{
@@ -345,6 +352,12 @@ public class HoaDonController implements ActionListener,MouseListener {
                 		phieuThuePhong.lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien.setText("Chuyển khoản");
                 	}
 				}
+		        phieuThuePhong.setTienKhachDua(hd.getTienNhan());
+		        phieuThuePhong.setTongTien(hd.getTongTien());
+
+			    phieuThuePhong.setupAutoUpdateTienNhan();
+
+				phieuThuePhong.lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(phieuThuePhong.txt_TienKhachDua.getText());
 				
 				
 				phieuThuePhong.setModal(true);
@@ -393,6 +406,15 @@ public class HoaDonController implements ActionListener,MouseListener {
                 		hoaDonHT.lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien.setText("Chuyển khoản");
                 	}
 				}
+				 //Set tổng tiền thanh toán (dùng getTongTienThanhToan() thay vì getTongTien())
+			        hoaDonHT.setTongTienThanhToan(hd.getTongTienThanhToan());
+			        
+			        // Set tiền khách đưa ban đầu
+			        hoaDonHT.setTienKhachDua(hd.getTienNhan());
+			        // Tính tổng tiền thanh toán từ danh sách phòng
+			        hoaDonHT.tinhTongTienThanhToanTuDanhSachPhong();
+			        hoaDonHT.setupAutoUpdateTienNhan();
+
 				hoaDonHT.setModal(true);
 				hoaDonHT.setVisible(true);
 				break;

@@ -5,45 +5,45 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import com.toedter.calendar.JDateChooser;
 
-
-
-
 public class PhieuDatPhongDialog extends JDialog {
-	 public JTextField txt_SDT;
-     public JTextField txt_HoTen;
-     public JTextField txt_CCCD;
-     public JTextField txt_NgaySinh;
-     public JTextField txt_Email;
-     public JTextField txt_HangKhachHang;
-     public JTextField txt_DiemTichLuy;
-     public JTextField txt_TienKhachDua;
-     public JDateChooser ngayBatDau;
-     public JDateChooser ngayKetThuc;
-     public JLabel lbl_PhuongThucThanhToanTrongPnlTongTien;
-     public JLabel lbl_TongTienTrongPnlTongTien;
-     public JLabel lbl_TienCocTrongPnlTongTien;
-     public JLabel lbl_TienNhanTuKhachTrongPnlTongTien;
-     public JLabel lbl_TienTraLaiKhachTrongPnlTongTien;
-     public JLabel lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien;
-     public JLabel lbl_TienCuaTongTienTrongPnlTongTien;
-     public JLabel lbl_TienCuaTienCocTrongPnlTongTien;
-     public JLabel lbl_TienCuaTienNhanTuKhachTrongPnlTongTien;
-     public JLabel lbl_TienCuaTienTraLaiKhachTrongPnlTongTien;
-     public JButton btn_XacNhan;
-     public JButton btn_Huy;
-     public JRadioButton rdbtn_TienMat;
-     public JRadioButton rdbtn_ChuyenKhoan;
-     public JTable table;
-     public DefaultTableModel model;
-     public JRadioButton rdbtn_NamNguoiO;
-     public JRadioButton rdbtn_NuNguoiO;
-
-
+    public JTextField txt_SDT;
+    public JTextField txt_HoTen;
+    public JTextField txt_CCCD;
+    public JTextField txt_NgaySinh;
+    public JTextField txt_Email;
+    public JTextField txt_HangKhachHang;
+    public JTextField txt_DiemTichLuy;
+    public JTextField txt_TienKhachDua;
+    public JDateChooser ngayBatDau;
+    public JDateChooser ngayKetThuc;
+    public JLabel lbl_PhuongThucThanhToanTrongPnlTongTien;
+    public JLabel lbl_TongTienTrongPnlTongTien;
+    public JLabel lbl_TienCocTrongPnlTongTien;
+    public JLabel lbl_TienNhanTuKhachTrongPnlTongTien;
+    public JLabel lbl_TienTraLaiKhachTrongPnlTongTien;
+    public JLabel lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien;
+    public JLabel lbl_TienCuaTongTienTrongPnlTongTien;
+    public JLabel lbl_TienCuaTienCocTrongPnlTongTien;
+    public JLabel lbl_TienCuaTienNhanTuKhachTrongPnlTongTien;
+    public JLabel lbl_TienCuaTienTraLaiKhachTrongPnlTongTien;
+    public JButton btn_XacNhan;
+    public JButton btn_Huy;
+    public JRadioButton rdbtn_TienMat;
+    public JRadioButton rdbtn_ChuyenKhoan;
+    public JTable table;
+    public DefaultTableModel model;
+    public JRadioButton rdbtn_NamNguoiO;
+    public JRadioButton rdbtn_NuNguoiO;
+    public ButtonGroup gioiTinhGroup;
+    public JButton btn_inHoaDon;
+    public JButton btn_huyHoaDon;
 
     public PhieuDatPhongDialog() {
 
@@ -73,10 +73,8 @@ public class PhieuDatPhongDialog extends JDialog {
         getContentPane().add(lblFromThongTinKhachHang);
 
         JPanel pnl_ThongTinKhachHang = new JPanel();
-        // Tạo viền mờ màu xám nhạt với bo góc 15px
         pnl_ThongTinKhachHang.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), HIDE_ON_CLOSE)// Viền ngoài
-                , null
+                BorderFactory.createLineBorder(new Color(200, 200, 200), HIDE_ON_CLOSE), null
         ));
         pnl_ThongTinKhachHang.setBackground(new Color(255, 255, 255));
         pnl_ThongTinKhachHang.setBounds(10, 65, 525, 310);
@@ -103,7 +101,7 @@ public class PhieuDatPhongDialog extends JDialog {
         txt_SDT.setBounds(132, 19, 373, 25);
         txt_SDT.setEditable(false);
         txt_SDT.setBackground(Color.WHITE);
-        txt_SDT.setFocusable(false); // <-- THÊM DÒNG NÀY
+        txt_SDT.setFocusable(false);
         pnl_ThongTinKhachHang.add(txt_SDT);
         txt_SDT.setColumns(10);
 
@@ -180,18 +178,21 @@ public class PhieuDatPhongDialog extends JDialog {
         txt_DiemTichLuy.setBounds(393, 269, 112, 25);
         pnl_ThongTinKhachHang.add(txt_DiemTichLuy);
         
+        gioiTinhGroup = new ButtonGroup();
         rdbtn_NamNguoiO = new JRadioButton("Nam");
         rdbtn_NamNguoiO.setSelected(true);
         rdbtn_NamNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NamNguoiO.setBackground(Color.WHITE);
         rdbtn_NamNguoiO.setBounds(365, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
+        gioiTinhGroup.add(rdbtn_NamNguoiO);
         
         rdbtn_NuNguoiO = new JRadioButton("Nữ");
         rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NuNguoiO.setBackground(Color.WHITE);
         rdbtn_NuNguoiO.setBounds(450, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NuNguoiO);
+        gioiTinhGroup.add(rdbtn_NuNguoiO);
 
         JLabel lbl_PhuongThucThangToan = new JLabel("Phương thức thanh toán: ");
         lbl_PhuongThucThangToan.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -210,14 +211,10 @@ public class PhieuDatPhongDialog extends JDialog {
         rdbtn_ChuyenKhoan.setBounds(360, 405, 128, 25);
         getContentPane().add(rdbtn_ChuyenKhoan);
 
-        // Tạo nhóm và thêm radio button vào nhóm
         ButtonGroup paymentGroup = new ButtonGroup();
         paymentGroup.add(rdbtn_TienMat);
         paymentGroup.add(rdbtn_ChuyenKhoan);
-
-        // Nếu muốn một radio mặc định được chọn
         rdbtn_TienMat.setSelected(true);
-
 
         JLabel lbl_TienKhachDua = new JLabel("Tiền khách đưa:");
         lbl_TienKhachDua.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -275,7 +272,7 @@ public class PhieuDatPhongDialog extends JDialog {
         ngayBatDau = new JDateChooser();
         ngayBatDau.setDateFormatString("dd/MM/yyyy");
         ngayBatDau.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        ngayBatDau.setBounds(198, 10, 250, 25);  // <-- SỬA 125 thành 10
+        ngayBatDau.setBounds(198, 10, 250, 25);
         pnl_ThoiGianThue.add(ngayBatDau);
 
         JLabel lbl_TienKhachDuaTrongPnlTongTien = new JLabel("Ngày kết thúc: ");
@@ -356,23 +353,142 @@ public class PhieuDatPhongDialog extends JDialog {
         lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setBounds(395, 122, 120, 18);
         panel.add(lbl_TienCuaTienTraLaiKhachTrongPnlTongTien);
         
-        JButton btn_inHoaDon = new JButton("In hóa đơn");
+        btn_inHoaDon = new JButton("In hóa đơn");
         btn_inHoaDon.setBounds(956, 487, 120, 30);
         getContentPane().add(btn_inHoaDon);
         
-        JButton btn_huyHoaDon = new JButton("Hủy hóa đơn");
+        btn_huyHoaDon = new JButton("Hủy hóa đơn");
         btn_huyHoaDon.setBounds(807, 487, 120, 30);
         getContentPane().add(btn_huyHoaDon);
-
-        
-//        btn_XacNhan.setFont(new Font("Times New Roman", Font.BOLD, 14));
-//        btn_XacNhan.setBounds(430, 570, 120, 30);
-//        getContentPane().add(btn_XacNhan);
-//
-//        btn_Huy = new RoundedButton("Hủy", new Color(244, 67, 54), Color.WHITE, 30);
-//        btn_Huy.setFont(new Font("Times New Roman", Font.BOLD, 14));
-//        btn_Huy.setBounds(612, 570, 120, 30);
-//        getContentPane().add(btn_Huy);
+    }
     
-	}
+    // THÊM PHƯƠNG THỨC MỚI: Thiết lập DocumentListener
+    public void setupAutoUpdateTienNhan() {
+        txt_TienKhachDua.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                capNhatTienNhanTuKhach();
+            }
+            
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                capNhatTienNhanTuKhach();
+            }
+            
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                capNhatTienNhanTuKhach();
+            }
+        });
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Cập nhật tiền nhận từ khách
+    private void capNhatTienNhanTuKhach() {
+        String text = txt_TienKhachDua.getText();
+        
+        try {
+            if (!text.isEmpty()) {
+                // Loại bỏ các ký tự không phải số
+                String cleanedText = text.replaceAll("[^\\d]", "");
+                if (!cleanedText.isEmpty()) {
+                    double tien = Double.parseDouble(cleanedText);
+                    String formatted = String.format("%,.0f VND", tien);
+                    lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(formatted);
+                    
+                    // Tự động tính tiền thừa (tổng tiền - tiền cọc)
+                    tinhTienThuaTuDong();
+                } else {
+                    lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+                    lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+                }
+            } else {
+                lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+                lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+            }
+        } catch (NumberFormatException e) {
+            lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(text);
+        }
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Tính tiền thừa tự động (với tiền cọc)
+    private void tinhTienThuaTuDong() {
+        try {
+            // Lấy tổng tiền cọc từ label
+            String tienCocText = lbl_TienCuaTienCocTrongPnlTongTien.getText();
+            if (tienCocText != null && !tienCocText.isEmpty()) {
+                // Loại bỏ "VND" và dấu phẩy
+                String cleanedTienCoc = tienCocText.replace("VND", "").replace(",", "").trim();
+                if (!cleanedTienCoc.isEmpty()) {
+                    double tienCoc = Double.parseDouble(cleanedTienCoc);
+                    
+                    // Lấy tiền khách đưa
+                    String tienKhachDuaText = txt_TienKhachDua.getText();
+                    if (!tienKhachDuaText.isEmpty()) {
+                        String cleanedTienKhachDua = tienKhachDuaText.replaceAll("[^\\d]", "");
+                        if (!cleanedTienKhachDua.isEmpty()) {
+                            double tienKhachDua = Double.parseDouble(cleanedTienKhachDua);
+                            
+                            // Tính tiền thừa (tiền khách đưa - tiền cọc)
+                            double tienThua = tienKhachDua - tienCoc;
+                            if (tienThua > 0) {
+                                lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText(String.format("%,.0f VND", tienThua));
+                            } else {
+                                lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Không làm gì nếu có lỗi parse
+        }
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Set tổng tiền
+    public void setTongTien(double tongTien) {
+        lbl_TienCuaTongTienTrongPnlTongTien.setText(String.format("%,.0f VND", tongTien));
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Set tiền cọc
+    public void setTienCoc(double tienCoc) {
+        lbl_TienCuaTienCocTrongPnlTongTien.setText(String.format("%,.0f VND", tienCoc));
+        // Tự động tính lại tiền thừa nếu cần
+        tinhTienThuaTuDong();
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Set phương thức thanh toán
+    public void setPhuongThucThanhToan(String phuongThuc) {
+        lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien.setText(phuongThuc);
+        if ("Tiền mặt".equals(phuongThuc)) {
+            rdbtn_TienMat.setSelected(true);
+        } else if ("Chuyển khoản".equals(phuongThuc)) {
+            rdbtn_ChuyenKhoan.setSelected(true);
+        }
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Set tiền khách đưa ban đầu
+    public void setTienKhachDua(double tienKhachDua) {
+        txt_TienKhachDua.setText(String.valueOf((int)tienKhachDua));
+    }
+    
+    // THÊM PHƯƠNG THỨC MỚI: Tính tổng tiền cọc từ danh sách phòng
+    public void tinhTongTienCocTuDanhSachPhong() {
+        double tongTienCoc = 0;
+        for (int i = 0; i < model.getRowCount(); i++) {
+            try {
+                Object giaPhongObj = model.getValueAt(i, 4); // Cột tiền cọc là cột 4
+                if (giaPhongObj != null) {
+                    // Chuyển đổi từ string đã format về số
+                    String giaPhongStr = giaPhongObj.toString().replace(",", "").replace(" VND", "").trim();
+                    if (!giaPhongStr.isEmpty()) {
+                        double tienCoc = Double.parseDouble(giaPhongStr);
+                        tongTienCoc += tienCoc;
+                    }
+                }
+            } catch (Exception e) {
+                // Bỏ qua nếu có lỗi
+            }
+        }
+        setTienCoc(tongTienCoc);
+    }
 }
