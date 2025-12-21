@@ -1,13 +1,32 @@
 package entitys;
 
+import java.time.LocalDateTime;
+
 public class ChiTietHoaDon {
 	private double thanhTien;
     private Phong phong;
     private HoaDon HoaDon;
     private int soNgayO;
-
+    private KhuyenMai khuyenMai;
+    private double tienGiam;
+    private LocalDateTime ngayNhanPhong;
+    private LocalDateTime ngayTraPhong;
     public ChiTietHoaDon() {
 
+    }
+
+    public ChiTietHoaDon(Phong p, int soNgayO, KhuyenMai km, LocalDateTime ngayNhanPhong, LocalDateTime ngayTraPhong) {
+        this.phong = p;
+        this.soNgayO = soNgayO;
+        this.khuyenMai = km;
+        this.ngayNhanPhong = ngayNhanPhong;
+        this.ngayTraPhong = ngayTraPhong;
+    }
+
+    public ChiTietHoaDon(Phong phong, double thanhTienPhong, double tienGiamVoucher) {
+        this.phong = phong;
+        this.ngayNhanPhong = ngayNhanPhong;
+        this.ngayTraPhong = ngayTraPhong;
     }
 
     public int getSoNgayO() {
@@ -33,8 +52,43 @@ public class ChiTietHoaDon {
     public void setPhong(Phong phong) {
         this.phong = phong;
     }
+    public KhuyenMai getKhuyenMai() {
+        return khuyenMai;
+    }
+    public void setKhuyenMai(KhuyenMai khuyenMai) {
+        this.khuyenMai = khuyenMai;
+    }
+    
 
-    //	public HoaDon getHoaDon() {
+    public double getTienGiam() {
+		return tienGiam;
+	}
+
+	public void setTienGiam(double tienGiam) {
+		try {
+            if (this.khuyenMai != null && HoaDon.getTongTien() > 0) {
+                this.tienGiam = HoaDon.getTongTien() * this.khuyenMai.getTyLeGiam();
+            } else {
+                this.tienGiam = 0;
+            }
+        } catch (Exception e) {
+            this.tienGiam = 0; // Nếu có lỗi, set tiền giảm = 0
+        }
+	}
+	public LocalDateTime getNgayNhanPhong() {
+        return ngayNhanPhong;
+    }
+    public void setNgayNhanPhong(LocalDateTime ngayNhanPhong) {
+        this.ngayNhanPhong = ngayNhanPhong;
+    }
+    public LocalDateTime getNgayTraPhong() {
+        return ngayTraPhong;
+    }
+    public void setNgayTraPhong(LocalDateTime ngayTraPhong) {
+        this.ngayTraPhong = ngayTraPhong;
+    }
+
+	//	public HoaDon getHoaDon() {
 //		return HoaDon;
 //	}
 //	public void setHoaDon(HoaDon hoaDon) {
@@ -62,17 +116,32 @@ public class ChiTietHoaDon {
         this.soNgayO = soNgayO;
         this.thanhTien = tinhThanhTien();
     }
+    public ChiTietHoaDon(Phong phong,  int soNgayO,KhuyenMai km) {
+        this.phong = phong;
+        this.soNgayO = soNgayO;
+        this.thanhTien = tinhThanhTien();
+        this.khuyenMai=km;
+    }
     public ChiTietHoaDon(Phong phong, entitys.HoaDon hoaDon) {
             super();
             this.phong = phong;
             HoaDon = hoaDon;
         }
 
-	public ChiTietHoaDon(double thanhTien, Phong phong, entitys.HoaDon hoaDon, int soNgayO) {
-            super();
-            this.thanhTien = thanhTien;
-            this.phong = phong;
-            HoaDon = hoaDon;
-            this.soNgayO = soNgayO;
-        }
+	public ChiTietHoaDon(double thanhTien, Phong phong, entitys.HoaDon hoaDon, int soNgayO, KhuyenMai khuyenMai,
+			double tienGiam, LocalDateTime ngayNhanPhong, LocalDateTime ngayTraPhong) {
+		this.thanhTien = thanhTien;
+		this.phong = phong;
+		HoaDon = hoaDon;
+		this.soNgayO = soNgayO;
+		this.khuyenMai = khuyenMai;
+		this.tienGiam = tienGiam;
+		this.ngayNhanPhong = ngayNhanPhong;
+		this.ngayTraPhong = ngayTraPhong;
+	}
+
+
+    public void setThanhTien(double thanhTien) {
+        this.thanhTien = thanhTien;
+    }
 }

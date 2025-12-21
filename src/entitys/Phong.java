@@ -132,11 +132,8 @@ public class Phong {
         tienCoc=loaiPhong.getTyLeCoc()*giaPhong;
 	}
 	public Phong(String maPhong, double giaPhong) {
-		// TODO Auto-generated constructor stub
 		this.maPhong = maPhong;
 		this.giaPhong = giaPhong;
-
-
 	}
 
 	@Override

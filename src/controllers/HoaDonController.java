@@ -121,31 +121,30 @@ public class HoaDonController implements ActionListener,MouseListener {
 	    }
 	}
 	//Hd theo sdt
-	public void timHoaDonTheoSDT(String SDT) {
-	    try {
-	        HoaDon hd = hoaDonDao.timHoaDonTheoSDT(SDT);
-	   
-	        hoaDonPanel.model_DSHD.setRowCount(0);
+    public void timHoaDonTheoSDT(String SDT) {
+        try {
+            ArrayList<HoaDon> dsHoaDon = hoaDonDao.timHoaDonTheoSDT(SDT);
+            hoaDonPanel.model_DSHD.setRowCount(0);
+            if (dsHoaDon == null || dsHoaDon.isEmpty()) {
+                JOptionPane.showMessageDialog(hoaDonPanel, "Khong tim thay hoa don co so dien thoai: " + SDT);
+                return;
+            }
+            for (HoaDon hd : dsHoaDon) {
+                hoaDonPanel.model_DSHD.addRow(new Object[]{
+                        hd.getMaHD(),
+                        hd.getNgayLap(),
+                        hd.getKhachHang().getTenKH(),
+                        hd.getKhachHang().getSdt(),
+                        doiDonVi(hd.getTongTien())
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(hoaDonPanel, "Loi khi tim hoa don theo so dien thoai: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	        if (hd == null) {
-	            JOptionPane.showMessageDialog(hoaDonPanel, "Khong tim thay hoa don co so dien thoai: " + SDT);
-	            return;
-	        }
-
-	        hoaDonPanel.model_DSHD.addRow(new Object[]{
-	            hd.getMaHD(),
-	            hd.getNgayLap(),
-	            hd.getKhachHang().getTenKH(),
-	            hd.getKhachHang().getSdt(),
-	            doiDonVi(hd.getTongTien())
-	        });
-
-	    } catch (Exception e) {
-	        JOptionPane.showMessageDialog(hoaDonPanel, "Loi khi tim hoa don theo so dien thoai: " + e.getMessage());
-	        e.printStackTrace();
-	    }
-	}
-	//HD theo ngay
+    //HD theo ngay
 	public void timHoaDonTheoNgay(LocalDateTime ngay) {
 	    try {
 	        ArrayList<HoaDon> dsHoaDon = hoaDonDao.timHoaDonTheoNgay(ngay);
@@ -249,7 +248,8 @@ public class HoaDonController implements ActionListener,MouseListener {
 		int row = hoaDonPanel.table_DanhSachHoaDon.getSelectedRow();
 		if(row != -1) {
 			String maHD = hoaDonPanel.table_DanhSachHoaDon.getValueAt(row, 0).toString();
-			ArrayList<KhachHang> dsKhachHang = hoaDonDao.getKhachHangTheoHD(maHD);
+//			ArrayList<KhachHang> dsKhachHang = hoaDonDao.getKhachHangTheoHD(maHD);
+            KhachHang kh = hoaDonDao.getKhachHangTheoHD(maHD);
 			ArrayList<ChiTietHoaDon> dsCTHD = hoaDonDao.timPhongTheoMaHD(maHD);
 			String trangThai = hoaDonPanel.table_DanhSachHoaDon.getValueAt(row, 5).toString();
 			HoaDon hd = hoaDonDao.timHoaDonTheoMa(maHD);
@@ -257,7 +257,7 @@ public class HoaDonController implements ActionListener,MouseListener {
 			switch (trangThai) {
 			case "Phiếu đặt phòng": {
 				PhieuDatPhongDialog phieuDatPhong = new PhieuDatPhongDialog();
-				for(KhachHang kh : dsKhachHang) {
+//				for(KhachHang kh : dsKhachHang) {
 					phieuDatPhong.txt_SDT.setText(kh.getSdt());
 					phieuDatPhong.txt_HoTen.setText(kh.getTenKH());
 					phieuDatPhong.txt_Email.setText(kh.getEmail());
@@ -273,8 +273,8 @@ public class HoaDonController implements ActionListener,MouseListener {
 						phieuDatPhong.rdbtn_NuNguoiO.setSelected(true);
 						phieuDatPhong.rdbtn_NamNguoiO.setSelected(false);
 					};
-					
-				};
+//
+//				};
 				if(hd!= null) {
                 	if(PhuongThucThanhToan.TienMat.equals(hd.getpTTT())) {
                 		phieuDatPhong.lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien.setText("Tiền mặt");
@@ -302,7 +302,7 @@ public class HoaDonController implements ActionListener,MouseListener {
 			}case "Phiếu thuê phòng":{
 				PhieuThuePhongDialog phieuThuePhong = new PhieuThuePhongDialog();
 				
-				for(KhachHang kh : dsKhachHang) {
+//				for(KhachHang kh : dsKhachHang) {
 					phieuThuePhong.txt_SDT.setText(kh.getSdt());
 					phieuThuePhong.txt_HoTen.setText(kh.getTenKH());
 					phieuThuePhong.txt_Email.setText(kh.getEmail());
@@ -319,7 +319,7 @@ public class HoaDonController implements ActionListener,MouseListener {
 						phieuThuePhong.rdbtn_NamNguoiO.setSelected(false);
 					};
 					
-				};
+//				};
 				phieuThuePhong.model_DanhSachPhong.setRowCount(0);
 				for(ChiTietHoaDon p : dsCTHD) {
 					String giaPhong =  String.format("%,.0f", p.getPhong().getGiaPhong());
@@ -366,7 +366,7 @@ public class HoaDonController implements ActionListener,MouseListener {
 				
 			}case "Hóa đơn hoàn thành" :{
 				HoaDonDialog hoaDonHT = new HoaDonDialog();
-				for(KhachHang kh : dsKhachHang) {
+//				for(KhachHang kh : dsKhachHang) {
 					hoaDonHT.txt_SDT.setText(kh.getSdt());
 					hoaDonHT.txt_HoTen.setText(kh.getTenKH());
 					hoaDonHT.txt_Email.setText(kh.getEmail());
@@ -383,7 +383,7 @@ public class HoaDonController implements ActionListener,MouseListener {
 						hoaDonHT.rdbtn_NamNguoiO.setSelected(false);
 					};
 					
-				};
+//				};
 				hoaDonHT.model.setRowCount(0);
 				for(ChiTietHoaDon ctDon : dsCTHD) {
 					String giaPhong =  String.format("%,.0f", ctDon.getPhong().getGiaPhong());

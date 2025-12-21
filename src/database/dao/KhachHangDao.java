@@ -222,4 +222,37 @@ public class KhachHangDao {
         }
         return khachHang;
     }
+    public double timPhanTramGiamCuaHangKH(String maKH) {
+        String sql = "select hkh.tyLeGiam " +
+                "from KhachHang kh join HangKhachHang hkh on kh.maHang = hkh.maHang " +
+                "where kh.maKH = ?";
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, maKH);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("tyLeGiam");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public boolean capNhatDiemTichLuy(String maKH, double diemTL){
+        Connection con=ConnectDB.getConnection();
+        String sql="update KhachHang set diemTichLuy=? where maKH=?";
+        try{
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setDouble(1, diemTL);
+            st.setString(2, maKH);
+            return st.executeUpdate() > 0;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }finally{
+            ConnectDB.closeConnection(con);
+        }
+    }
+
 }

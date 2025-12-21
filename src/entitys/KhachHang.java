@@ -16,6 +16,8 @@ public class KhachHang {
     private String soCCCD;
     private HangKhachHang hangKH;
     private double diemTichLuy;
+
+
     public String getMaKH() {
         return maKH;
     }

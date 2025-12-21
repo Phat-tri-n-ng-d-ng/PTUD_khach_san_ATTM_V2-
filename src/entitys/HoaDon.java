@@ -16,28 +16,49 @@ import entitys.NhanVien;
 public class HoaDon {
     private String maHD;
     private LocalDateTime ngayLap;
-    private LocalDateTime ngayNhanPhong;
-    private LocalDateTime ngayTraPhong;
     private PhuongThucThanhToan pTTT;
     private TrangThaiHoaDon trangThai;
     private double tongTienThanhToan;
     private double tongTien;
-    private double tienGiam;
     private double tienNhan;
-    private double tienTra;
     private double tienThue;
     private double phiDoiPhong;
-    private KhuyenMai khuyenMai;
     private KhachHang khachHang;
     private ArrayList<ChiTietHoaDon> dsCTHD;
     private NhanVien nhanVien;
+    private double tienGiamTheoHangKH;
+    private double tongTienSauGiam;
 
-    public HoaDon(String maHD, LocalDateTime ngayLap, TrangThaiHoaDon trangThai, KhachHang kh, ArrayList<ChiTietHoaDon> dsCTHD) {
+   
+
+	public HoaDon(String maHD, LocalDateTime ngayLap, TrangThaiHoaDon trangThai, KhachHang kh, ArrayList<ChiTietHoaDon> dsCTHD) {
         this.maHD = maHD;
         this.ngayLap = ngayLap;
         this.khachHang = kh;
         this.dsCTHD =  dsCTHD;
     }
+
+    public HoaDon(String maHD, LocalDateTime ngayLap, PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai, double tongTienThanhToan, double tongTien, double tienThue, double phiDoiPhong, KhachHang kh, ArrayList<ChiTietHoaDon> dsCTHD, NhanVien nv) {
+        this.maHD = maHD;
+        this.ngayLap = ngayLap;
+        this.pTTT = pTTT;
+        this.trangThai = trangThai;
+        this.tongTienThanhToan = tongTienThanhToan;
+        this.tongTien = tongTien;
+        this.tienThue = tienThue;
+        this.phiDoiPhong = phiDoiPhong;
+        this.khachHang = kh;
+        this.dsCTHD = dsCTHD;
+        this.nhanVien = nv;
+    }
+
+    public double getTienGiamTheoHangKH() {
+			return tienGiamTheoHangKH;
+		}
+
+		public void setTienGiamTheoHangKH(double tienGiamTheoHangKH) {
+			this.tienGiamTheoHangKH = tienGiamTheoHangKH;
+		}
 
     public String getMaHD() {
         return maHD;
@@ -51,18 +72,7 @@ public class HoaDon {
     public void setNgayLap(LocalDateTime ngayLap) {
         this.ngayLap = ngayLap;
     }
-    public LocalDateTime getNgayNhanPhong() {
-        return ngayNhanPhong;
-    }
-    public void setNgayNhanPhong(LocalDateTime ngayNhanPhong) {
-        this.ngayNhanPhong = ngayNhanPhong;
-    }
-    public LocalDateTime getNgayTraPhong() {
-        return ngayTraPhong;
-    }
-    public void setNgayTraPhong(LocalDateTime ngayTraPhong) {
-        this.ngayTraPhong = ngayTraPhong;
-    }
+    
     public PhuongThucThanhToan getpTTT() {
         return pTTT;
     }
@@ -81,12 +91,7 @@ public class HoaDon {
     public void setTrangThai(TrangThaiHoaDon trangThai) {
         this.trangThai = trangThai;
     }
-    public KhuyenMai getKhuyenMai() {
-        return khuyenMai;
-    }
-    public void setKhuyenMai(KhuyenMai khuyenMai) {
-        this.khuyenMai = khuyenMai;
-    }
+    
     public KhachHang getKhachHang() {
         return khachHang;
     }
@@ -110,7 +115,7 @@ public class HoaDon {
         return tongTienThanhToan;
     }
     public void setTongTienThanhToan() {
-        this.tongTienThanhToan = tongTien + tienThue -tienGiam+ phiDoiPhong;
+        this.tongTienThanhToan = tongTien + tienThue  + phiDoiPhong;
     }
     public double getTongTien() {
         return tongTien;
@@ -135,27 +140,8 @@ public class HoaDon {
 
     }
 
-    public double getTienGiam() {
-        return tienGiam;
-    }
-    public void setTienGiam() {
-        try {
-            if (this.khuyenMai != null && this.tongTien > 0) {
-                this.tienGiam = this.tongTien * this.khuyenMai.getTyLeGiam();
-            } else {
-                this.tienGiam = 0;
-            }
-        } catch (Exception e) {
-            this.tienGiam = 0; // Nếu có lỗi, set tiền giảm = 0
-        }
-    }
-    public double getTienTra() {
-        return tienTra;
-    }
-    public void setTienTra() {
-        this.tienTra = tienNhan - tongTienThanhToan;
-
-    }
+    
+    
     public double getTienThue() {
         return tienThue;
     }
@@ -169,20 +155,23 @@ public class HoaDon {
     public void setPhiDoiPhong() {
         this.phiDoiPhong = 0;
     }
+    
 
-    public HoaDon(String maHD, LocalDateTime ngayLap, LocalDateTime ngayNhanPhong, LocalDateTime ngayTraPhong, PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai, double tongTienThanhToan, double tongTien, double tienGiam, double tienThue, double phiDoiPhong, KhuyenMai khuyenMai, KhachHang khachHang, ArrayList<ChiTietHoaDon> dsCTHD, NhanVien nhanVien) {
+    public double getTongTienSauGiam() {
+		return tongTienSauGiam;
+	}
+	public void setTongTienSauGiam(double tongTienSauGiam) {
+		this.tongTienSauGiam = tongTienSauGiam;
+	}
+	public HoaDon(String maHD, LocalDateTime ngayLap,  PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai, double tongTienThanhToan, double tongTien, double tienGiam, double tienThue, double phiDoiPhong, KhachHang khachHang, ArrayList<ChiTietHoaDon> dsCTHD, NhanVien nhanVien) {
         this.maHD = maHD;
         this.ngayLap = ngayLap;
-        this.ngayNhanPhong = ngayNhanPhong;
-        this.ngayTraPhong = ngayTraPhong;
         this.pTTT = pTTT;
         this.trangThai = trangThai;
         this.tongTienThanhToan = tongTienThanhToan;
         this.tongTien = tongTien;
-        this.tienGiam = tienGiam;
         this.tienThue = tienThue;
         this.phiDoiPhong = phiDoiPhong;
-        this.khuyenMai = khuyenMai;
         this.khachHang = khachHang;
         this.dsCTHD = dsCTHD;
         this.nhanVien = nhanVien;
@@ -201,20 +190,18 @@ public class HoaDon {
 
     }
 
-    public HoaDon(String maHD, LocalDateTime ngayLap, LocalDateTime ngayNhanPhong, LocalDateTime ngayTraPhong,
-                  PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai, double tienNhan,  KhuyenMai khuyenMai,
+    public HoaDon(String maHD, LocalDateTime ngayLap, 
+                  PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai, double tienNhan, 
                   KhachHang khachHang, ArrayList<ChiTietHoaDon> dsCTHD, NhanVien nhanVien) {
 
         this.maHD = maHD;
         this.ngayLap = ngayLap;
-        this.ngayNhanPhong = ngayNhanPhong;
-        this.ngayTraPhong = ngayTraPhong;
+
         this.pTTT = pTTT;
         this.trangThai = trangThai;
         // QUAN TRỌNG: Khởi tạo dsCTHD nếu null
         this.dsCTHD = (dsCTHD != null) ? dsCTHD : new ArrayList<>();
         this.tienNhan = tienNhan;
-        this.khuyenMai = khuyenMai;
         this.khachHang = khachHang;
         this.nhanVien = nhanVien;
 
@@ -222,10 +209,8 @@ public class HoaDon {
         if (this.dsCTHD != null && !this.dsCTHD.isEmpty()) {
             setTongTien();
             setTienThue();
-            setTienGiam();
             setPhiDoiPhong();
             setTongTienThanhToan();
-            setTienTra();
         }
     }
 
@@ -241,21 +226,25 @@ public class HoaDon {
         this.nhanVien = nhanVien;
     }
     public HoaDon(String maHD, LocalDateTime ngayLap, PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai,
-                  KhachHang khachHang, ArrayList<ChiTietHoaDon> dsCTHD, NhanVien nhanVien , KhuyenMai khuyenMai, double tienNhan, double tienTra ) {
-        this.maHD = maHD;
-        this.ngayLap = ngayLap;
-        this.pTTT = pTTT;
-        this.trangThai = trangThai;
-        this.khachHang = khachHang;
-        this.dsCTHD = dsCTHD;
-        this.nhanVien = nhanVien;
-        this.khuyenMai = khuyenMai;
-        this.tienNhan = tienNhan;
-        this.tienTra = tienTra;
-    }
-
-
-    @Override
+			double tongTienThanhToan, double tongTien, double tienNhan, double tienThue,
+			double phiDoiPhong, KhachHang khachHang, ArrayList<ChiTietHoaDon> dsCTHD, NhanVien nhanVien,
+			double tienGiamTheoHangKH, double tongTienSauGiam) {
+		this.maHD = maHD;
+		this.ngayLap = ngayLap;
+		this.pTTT = pTTT;
+		this.trangThai = trangThai;
+		this.tongTienThanhToan = tongTienThanhToan;
+		this.tongTien = tongTien;
+		this.tienNhan = tienNhan;
+		this.tienThue = tienThue;
+		this.phiDoiPhong = phiDoiPhong;
+		this.khachHang = khachHang;
+		this.dsCTHD = dsCTHD;
+		this.nhanVien = nhanVien;
+		this.tienGiamTheoHangKH = tienGiamTheoHangKH;
+		this.tongTienSauGiam = tongTienSauGiam;
+	}
+	@Override
     public int hashCode() {
         return Objects.hash(dsCTHD);
     }

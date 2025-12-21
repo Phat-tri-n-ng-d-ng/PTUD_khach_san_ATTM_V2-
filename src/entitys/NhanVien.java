@@ -91,6 +91,11 @@ public class NhanVien {
     public NhanVien() {
 
     }
+    public NhanVien(String maNV,String tenNV) {
+        this.maNV = maNV;
+        this.tenNV = tenNV;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(maNV);

@@ -37,6 +37,13 @@ public class KhachHangService {
     }
     public KhachHang TimKhachHang(String keyword, String type){
         return khachHangDao.TimKhachHang(keyword,type);
+
+    }
+    public double timPhanTramGiamCuaHangKH(String maKh){
+        return khachHangDao.timPhanTramGiamCuaHangKH(maKh);
+    }
+    public boolean capNhatDiemTichLuy(String maKH, double diemTL){
+        return khachHangDao.capNhatDiemTichLuy(maKH,diemTL);
     }
 //    public KhachHang TimKhachHangTheoMaPhongvaTrangThaiHoaDon(String maPhong,String trangThaiHD){
 //        return khachHangDao.timKhachHangTheoMaPhongvaTrangThaiHoaDon(maPhong,trangThaiHD);
