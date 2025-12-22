@@ -23,10 +23,12 @@ public class ChiTietHoaDon {
         this.ngayTraPhong = ngayTraPhong;
     }
 
-    public ChiTietHoaDon(Phong phong, double thanhTienPhong, double tienGiamVoucher) {
+    public ChiTietHoaDon(Phong phong, double thanhTienPhong, double tienGiamVoucher,int soNgayO) {
         this.phong = phong;
-        this.ngayNhanPhong = ngayNhanPhong;
-        this.ngayTraPhong = ngayTraPhong;
+        this.thanhTien = thanhTienPhong;
+        this.tienGiam = tienGiamVoucher;
+        this.soNgayO=soNgayO;
+
     }
 
     public int getSoNgayO() {

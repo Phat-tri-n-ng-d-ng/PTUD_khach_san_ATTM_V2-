@@ -9,10 +9,13 @@ import enums.TrangThaiPhong;
 import services.KhachHangService;
 import services.PhongService;
 import view.dialogs.PhieuTraPhongDialog;
+import xuatHoaDon.HoaDonPDFUtil;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,9 +34,12 @@ public class PhieuTraPhongController {
     private boolean load=false;
     private double tongTienPhong;
     private double tongTienGiamVoucher;
+    ThueDatPhongController thueDatPhongController;
 
 
-    public PhieuTraPhongController(PhieuTraPhongDialog dialog, Phong p) {
+    public PhieuTraPhongController(PhieuTraPhongDialog dialog,
+                                   Phong p, ThueDatPhongController thueDatPhongController) {
+        this.thueDatPhongController=thueDatPhongController;
         this.phieuTraPhongDialog=dialog;
         this.phong= p;
         hoaDonDao=new HoaDonDao();
@@ -229,13 +235,45 @@ public class PhieuTraPhongController {
                 phieuTraPhongDialog.lbl_TienCuaTongTienThanhToanTrongPnlTongTienThanhToan.setText(df.format(tongThanhToanMoi));
             });
 
-            phieuTraPhongDialog.rdbtn_ChuyenKhoan.addActionListener(e->{
+            phieuTraPhongDialog.rdbtn_ChuyenKhoan.addActionListener(e -> {
+                // Ẩn tiền mặt
+                phieuTraPhongDialog.lbl_TienKhachDua.setVisible(false);
+                phieuTraPhongDialog.txt_TienKhachDua.setVisible(false);
+                phieuTraPhongDialog.lbl_TienTraLaiKhach.setVisible(false);
+                phieuTraPhongDialog.txt_TienTraLai.setVisible(false);
 
+
+                // Hiện QR
+                phieuTraPhongDialog.lbl_QR.setVisible(true);
+
+                // Cập nhật text phương thức
+                phieuTraPhongDialog.lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien
+                        .setText("Chuyển khoản");
+                phieuTraPhongDialog.lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(df.format(tongThanhToan));
+                phieuTraPhongDialog.lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+                phieuTraPhongDialog.revalidate();  // Tính toán lại layout
+                phieuTraPhongDialog.repaint();     // Vẽ lại UI
             });
 
-            phieuTraPhongDialog.rdbtn_TienMat.addActionListener(e->{
 
+            phieuTraPhongDialog.rdbtn_TienMat.addActionListener(e -> {
+                // Hiện tiền mặt
+                phieuTraPhongDialog.lbl_TienKhachDua.setVisible(true);
+                phieuTraPhongDialog.txt_TienKhachDua.setVisible(true);
+                phieuTraPhongDialog.lbl_TienTraLaiKhach.setVisible(true);
+                phieuTraPhongDialog.txt_TienTraLai.setVisible(true);
+
+                // Ẩn QR
+                phieuTraPhongDialog.lbl_QR.setVisible(false);
+
+                // Cập nhật text phương thức
+                phieuTraPhongDialog.lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien
+                        .setText("Tiền mặt");
+                phieuTraPhongDialog.lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+                phieuTraPhongDialog.revalidate();  // Tính toán lại layout
+                phieuTraPhongDialog.repaint();     // Vẽ lại UI
             });
+
 
 
             // Nhấn nút xác nhận
@@ -244,10 +282,19 @@ public class PhieuTraPhongController {
                     baoLoi("Vui lòng chọn phương thức thanh toán");
                     return;
                 }
-                if (phieuTraPhongDialog.txt_TienKhachDua.getText().isEmpty()) {
+                if (phieuTraPhongDialog.rdbtn_TienMat.isSelected() && phieuTraPhongDialog.txt_TienKhachDua.getText().isEmpty()) {
                     baoLoi("Vui lòng nhập tiền khách đưa");
                     return;
                 }
+                String txt = phieuTraPhongDialog.txt_TienKhachDua.getText();
+
+                double tienNhan = phieuTraPhongDialog.rdbtn_ChuyenKhoan.isSelected()
+                        ? tongThanhToan
+                        : Double.parseDouble(
+                        txt.replace("VND", "")
+                                .replace(",", "")
+                                .trim()
+                );
                 // Cập nhật cthd xuống dbs
 
                 for(int r=0;r< phieuTraPhongDialog.table.getRowCount();r++){
@@ -276,7 +323,6 @@ public class PhieuTraPhongController {
                     }
                 }
 
-
                 // Cập nhật phòng xuống dbs
                 for (int r = 0; r < phieuTraPhongDialog.table.getRowCount(); r++) {
                     String maPhong = phieuTraPhongDialog.table.getValueAt(r, 0) + "";
@@ -286,17 +332,64 @@ public class PhieuTraPhongController {
                 // Cập nhật hóa đơn xuống dbs
                 String pttt = phieuTraPhongDialog.rdbtn_ChuyenKhoan.isSelected() ? "Chuyển khoản" : "Tiền mặt";
                 double tongTienSauGiam=tongTienPhong-kmTheoHang-tongTienGiamVoucher;
-                double tienNhan = Double.parseDouble(phieuTraPhongDialog.txt_TienKhachDua.getText());
+
+
                 hoaDonDao.capNhatHoaDon(pttt, tongTienPhong, thue,phiDoiPhong,tongThanhToan,kmTheoHang,tongTienSauGiam,tienNhan, hoaDon.getMaHD(), TrangThaiHoaDon.HoaDonHoanThanh);
 
+                /// //////////////////
+                double thanhTienPhong=0;
+                double tienGiamVoucher=0;
+                for (ChiTietHoaDon ct:dsCTHD) {
+                    if(ct.getPhong().getMaPhong().equalsIgnoreCase(phong.getMaPhong())){
+                        thanhTienPhong=ct.getPhong().getGiaPhong()*ct.getSoNgayO();
+                        if(ct.getKhuyenMai()!=null){
+                            String maKM=ct.getKhuyenMai().getMaKM();
+                            if(maKM!=null&&!maKM.isEmpty()){
+                                KhuyenMai km =khuyenMaiDao.getKhuyenMaiTheoMa(maKM);
+                                if(km!=null){
+                                    tienGiamVoucher=thanhTienPhong*km.getTyLeGiam(); break;
+                                }
+                            }
+                        }
+                    }
+                }
+                ArrayList<ChiTietHoaDon> dsCTHDMoi= new ArrayList<>();
+                int i=0;
+                for (ChiTietHoaDon cthd:dsCTHD) {
+                    int soNgayO= Integer.parseInt(phieuTraPhongDialog.table.getValueAt(i,3)+"");
+                    Phong p=phongService.timPhongBangMa(cthd.getPhong().getMaPhong());
+                    ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(p, thanhTienPhong, tienGiamVoucher, soNgayO);
+                    dsCTHDMoi.add(chiTietHoaDon);
+                    i++;
+                }
+
+
+                String sdtKH=hoaDon.getKhachHang().getSdt();
+                KhachHang khachHang=khachHangServies.TimKhachHang(sdtKH,"SDT");
+
+
+                String tienNhanCoDuoiVND = phieuTraPhongDialog.lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.getText();
+                double tienNhanLuu = Double.parseDouble(tienNhanCoDuoiVND.replace("VND","").trim());
+
+
+                String tienGiamVCCoDuoiVND = phieuTraPhongDialog.lbl_TienCuaKhuyenMaiPnlTongTien.getText();
+                double tienGiamVC = Double.parseDouble(tienGiamVCCoDuoiVND.replace("VND","").trim());
+
+
+                String tienGiamTheoHangKHCoDuoiVND = phieuTraPhongDialog.lbl_TienCuaKhuyenMaiTheoHangKH.getText();
+                double tienGiamTheoHangKH = Double.parseDouble(tienGiamTheoHangKHCoDuoiVND.replace("VND","").trim());
+
+                double tienGiamHangKH=tienGiamVC+tienGiamTheoHangKH;
+
+                HoaDon hoaDonPDF= new HoaDon(hoaDon.getMaHD(), hoaDon.getNgayLap(),hoaDon.getpTTT(),TrangThaiHoaDon.HoaDonHoanThanh,tongThanhToan,tongTienPhong,tienNhanLuu,thue,phiDoiPhong,khachHang,dsCTHDMoi,new NhanVien("NV24033","Đỗ Quốc Khoa"),tienGiamHangKH);
+
+                HoaDonPDFUtil.xuatHoaDonPDF(hoaDonPDF);
                 // Cập nhật điểm tích lũy
                 double diemCongThem=tongThanhToan/1000000;
                 double diemTL= hoaDon.getKhachHang().getDiemTichLuy()+diemCongThem;
                 String maKH= hoaDon.getKhachHang().getMaKH();
 
-                khachHangServies.capNhatDiemTichLuy(maKH,diemTL);
-
-                JOptionPane.showMessageDialog(null, "Trả phòng thành công");
+                thueDatPhongController.refreshDanhSachPhong();
                 phieuTraPhongDialog.dispose();
             });
             // nhấn nút hủy
@@ -493,16 +586,64 @@ public class PhieuTraPhongController {
                 phieuTraPhongDialog.lbl_TienCuaTongTienThanhToanTrongPnlTongTienThanhToan.setText(df.format(tongThanhToanMoi));
             });
 
+            phieuTraPhongDialog.rdbtn_ChuyenKhoan.addActionListener(e -> {
+                // Ẩn tiền mặt
+                phieuTraPhongDialog.lbl_TienKhachDua.setVisible(false);
+                phieuTraPhongDialog.txt_TienKhachDua.setVisible(false);
+                phieuTraPhongDialog.lbl_TienTraLaiKhach.setVisible(false);
+                phieuTraPhongDialog.txt_TienTraLai.setVisible(false);
+
+
+                // Hiện QR
+                phieuTraPhongDialog.lbl_QR.setVisible(true);
+
+                // Cập nhật text phương thức
+                phieuTraPhongDialog.lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien
+                        .setText("Chuyển khoản");
+                phieuTraPhongDialog.lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText(df.format(tongThanhToan));
+                phieuTraPhongDialog.lbl_TienCuaTienTraLaiKhachTrongPnlTongTien.setText("0 VND");
+                phieuTraPhongDialog.revalidate();  // Tính toán lại layout
+                phieuTraPhongDialog.repaint();     // Vẽ lại UI
+            });
+
+
+            phieuTraPhongDialog.rdbtn_TienMat.addActionListener(e -> {
+                // Hiện tiền mặt
+                phieuTraPhongDialog.lbl_TienKhachDua.setVisible(true);
+                phieuTraPhongDialog.txt_TienKhachDua.setVisible(true);
+                phieuTraPhongDialog.lbl_TienTraLaiKhach.setVisible(true);
+                phieuTraPhongDialog.txt_TienTraLai.setVisible(true);
+
+                // Ẩn QR
+                phieuTraPhongDialog.lbl_QR.setVisible(false);
+
+                // Cập nhật text phương thức
+                phieuTraPhongDialog.lbl_PhuongThucThanhToanDuocChonTrongPnlTongTien
+                        .setText("Tiền mặt");
+                phieuTraPhongDialog.lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.setText("0 VND");
+                phieuTraPhongDialog.revalidate();  // Tính toán lại layout
+                phieuTraPhongDialog.repaint();     // Vẽ lại UI
+            });
+
             // Nhấn nút xác nhận
             phieuTraPhongDialog.btnXacNhan.addActionListener(e -> {
                 if (!phieuTraPhongDialog.rdbtn_ChuyenKhoan.isSelected() && !phieuTraPhongDialog.rdbtn_TienMat.isSelected()) {
                     baoLoi("Vui lòng chọn phương thức thanh toán");
                     return;
                 }
-                if (phieuTraPhongDialog.txt_TienKhachDua.getText().isEmpty()) {
+                if (phieuTraPhongDialog.rdbtn_TienMat.isSelected() && phieuTraPhongDialog.txt_TienKhachDua.getText().isEmpty()) {
                     baoLoi("Vui lòng nhập tiền khách đưa");
                     return;
                 }
+                String txt = phieuTraPhongDialog.txt_TienKhachDua.getText();
+
+                double tienNhan = phieuTraPhongDialog.rdbtn_ChuyenKhoan.isSelected()
+                        ? tongThanhToan
+                        : Double.parseDouble(
+                        txt.replace("VND", "")
+                                .replace(",", "")
+                                .trim()
+                );
 
                 // thêm hóa đơn, cthd
                 double thanhTienPhong=0;
@@ -521,18 +662,39 @@ public class PhieuTraPhongController {
                         }
                     }
                 }
-                ChiTietHoaDon cthd= new ChiTietHoaDon(phong,thanhTienPhong,tienGiamVoucher);
-
-
+                ArrayList<ChiTietHoaDon> dsCTHDMoi= new ArrayList<>();
+                for (int i=0;i<phieuTraPhongDialog.model.getRowCount();i++) {
+                    int soNgayO= Integer.parseInt(phieuTraPhongDialog.table.getValueAt(i,3)+"");
+                    ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(phong, thanhTienPhong, tienGiamVoucher, soNgayO);
+                    dsCTHDMoi.add(chiTietHoaDon);
+                }
+                int soNgayO1= Integer.parseInt(phieuTraPhongDialog.table.getValueAt(0,3)+"");
+                ChiTietHoaDon cthd=new ChiTietHoaDon(phong, thanhTienPhong, tienGiamVoucher, soNgayO1);
                 String maHD= hoaDonDao.taoMaHDMoi();
                 PhuongThucThanhToan pttt= phieuTraPhongDialog.rdbtn_ChuyenKhoan.isSelected() ? PhuongThucThanhToan.ChuyenKhoan:PhuongThucThanhToan.TienMat;
-                KhachHang khachHang=hoaDon.getKhachHang();
-                ArrayList<ChiTietHoaDon> dsCTHDMoi=new ArrayList<ChiTietHoaDon>();
-                dsCTHDMoi.add(cthd);
+                String sdtKH=hoaDon.getKhachHang().getSdt();
+                KhachHang khachHang=khachHangServies.TimKhachHang(sdtKH,"SDT");
+
                 LocalDateTime ngayHomnay = LocalDateTime.now();
-                HoaDon hoaDonMoi= new HoaDon(maHD,ngayHomnay,pttt,TrangThaiHoaDon.HoaDonHoanThanh,tongThanhToan,tongTienPhong,thue,phiDoiPhong,khachHang,dsCTHDMoi,new NhanVien("NV24033","Đỗ Quốc Khoa"));
+
+                String tienNhanCoDuoiVND = phieuTraPhongDialog.lbl_TienCuaTienNhanTuKhachTrongPnlTongTien.getText();
+                double tienNhanLuu = Double.parseDouble(tienNhanCoDuoiVND.replace("VND","").trim());
+                HoaDon hoaDonMoi= new HoaDon(maHD,ngayHomnay,pttt,TrangThaiHoaDon.HoaDonHoanThanh,tongThanhToan,tongTienPhong,tienNhanLuu,thue,phiDoiPhong,khachHang,dsCTHDMoi,new NhanVien("NV24033","Đỗ Quốc Khoa"));
 
                 hoaDonDao.tachHoaDonMotPhong(hoaDonMoi, cthd,hoaDon.getMaHD());
+
+                String tienGiamVCCoDuoiVND = phieuTraPhongDialog.lbl_TienCuaKhuyenMaiPnlTongTien.getText();
+                double tienGiamVC = Double.parseDouble(tienGiamVCCoDuoiVND.replace("VND","").trim());
+
+
+                String tienGiamTheoHangKHCoDuoiVND = phieuTraPhongDialog.lbl_TienCuaKhuyenMaiTheoHangKH.getText();
+                double tienGiamTheoHangKH = Double.parseDouble(tienGiamTheoHangKHCoDuoiVND.replace("VND","").trim());
+
+                double tienGiamHangKH=tienGiamVC+tienGiamTheoHangKH;
+
+                HoaDon hoaDonPDF= new HoaDon(maHD,ngayHomnay,pttt,TrangThaiHoaDon.HoaDonHoanThanh,tongThanhToan,tongTienPhong,tienNhanLuu,thue,phiDoiPhong,khachHang,dsCTHDMoi,new NhanVien("NV24033","Đỗ Quốc Khoa"),tienGiamHangKH);
+
+                HoaDonPDFUtil.xuatHoaDonPDF(hoaDonPDF);
 
 
                 // Cập nhật điểm tích lũy
@@ -542,8 +704,8 @@ public class PhieuTraPhongController {
                 String maKH = kh.getMaKH();
 
                 khachHangServies.capNhatDiemTichLuy(maKH, diemTL);
+                thueDatPhongController.refreshDanhSachPhong();
 
-                JOptionPane.showMessageDialog(null, "Trả phòng thành công");
                 phieuTraPhongDialog.dispose();
             });
             // nhấn nút hủy

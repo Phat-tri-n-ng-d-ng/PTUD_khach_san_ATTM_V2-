@@ -37,7 +37,6 @@ public class KhachHangService {
     }
     public KhachHang TimKhachHang(String keyword, String type){
         return khachHangDao.TimKhachHang(keyword,type);
-
     }
     public double timPhanTramGiamCuaHangKH(String maKh){
         return khachHangDao.timPhanTramGiamCuaHangKH(maKh);

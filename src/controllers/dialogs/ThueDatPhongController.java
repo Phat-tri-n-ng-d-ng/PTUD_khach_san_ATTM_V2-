@@ -272,9 +272,12 @@ public class ThueDatPhongController {
             else if(phong.getTrangThai().equals(TrangThaiPhong.DangSuDung)){
                 Phong p=phongDao.timPhongBangMa(phong.getMaPhong());
                 PhieuThongTinPhongThueDialog phieuThongTinPhongThueDialog= new PhieuThongTinPhongThueDialog();
-                PhieuThongTinPhongThueController phieuThongTinPhongThueController= new PhieuThongTinPhongThueController(phieuThongTinPhongThueDialog,p);
+                PhieuThongTinPhongThueController phieuThongTinPhongThueController= new PhieuThongTinPhongThueController(phieuThongTinPhongThueDialog,p,this);
+
                 phieuThongTinPhongThueDialog.setLocationRelativeTo(null);
                 phieuThongTinPhongThueDialog.setVisible(true);
+
+
             }
 
             else {
@@ -452,4 +455,6 @@ public class ThueDatPhongController {
     public void setBtnDatPhongAction(java.awt.event.ActionListener action) {
         thueDatPhongPanel.btn_DatPhong.addActionListener(action);
     }
+
+
 }

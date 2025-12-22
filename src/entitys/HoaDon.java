@@ -244,6 +244,27 @@ public class HoaDon {
 		this.tienGiamTheoHangKH = tienGiamTheoHangKH;
 		this.tongTienSauGiam = tongTienSauGiam;
 	}
+
+
+    public HoaDon(String maHD, LocalDateTime ngayLap, PhuongThucThanhToan pTTT, TrangThaiHoaDon trangThai,
+                  double tongTienThanhToan, double tongTien, double tienNhan, double tienThue,
+                  double phiDoiPhong, KhachHang khachHang, ArrayList<ChiTietHoaDon> dsCTHD, NhanVien nhanVien,
+                  double tienGiamTheoHangKH) {
+        this.maHD = maHD;
+        this.ngayLap = ngayLap;
+        this.pTTT = pTTT;
+        this.trangThai = trangThai;
+        this.tongTienThanhToan = tongTienThanhToan;
+        this.tongTien = tongTien;
+        this.tienNhan = tienNhan;
+        this.tienThue = tienThue;
+        this.phiDoiPhong = phiDoiPhong;
+        this.khachHang = khachHang;
+        this.dsCTHD = dsCTHD;
+        this.nhanVien = nhanVien;
+        this.tienGiamTheoHangKH = tienGiamTheoHangKH;
+
+    }
 	@Override
     public int hashCode() {
         return Objects.hash(dsCTHD);

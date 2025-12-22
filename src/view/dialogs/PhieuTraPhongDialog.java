@@ -3,20 +3,13 @@ package view.dialogs;
 import com.toedter.calendar.JDateChooser;
 import entitys.Phong;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
-import java.awt.Dimension;
-
-import java.awt.Font;
 
 public class PhieuTraPhongDialog extends JDialog {
 
@@ -51,7 +44,11 @@ public class PhieuTraPhongDialog extends JDialog {
     public JButton btnXacNhan;
     public JButton btnHuy;
     Phong phong;
-	private JLabel lbl_QR;
+	public JLabel lbl_QR;
+	public JLabel lbl_TienKhachDua;
+	public JLabel lbl_DanhSachPhong;
+    public JLabel lbl_TienTraLaiKhach;
+
 
     public PhieuTraPhongDialog() {
         getContentPane().setBackground(new Color(236, 247, 255));
@@ -142,7 +139,7 @@ public class PhieuTraPhongDialog extends JDialog {
         rdbtn_TienMat.setSelected(true);
 
 
-        JLabel lbl_TienKhachDua = new JLabel("Tiền khách đưa:");
+         lbl_TienKhachDua = new JLabel("Tiền khách đưa:");
         lbl_TienKhachDua.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         lbl_TienKhachDua.setBounds(561, 364, 128, 24);
         getContentPane().add(lbl_TienKhachDua);
@@ -152,7 +149,7 @@ public class PhieuTraPhongDialog extends JDialog {
         getContentPane().add(txt_TienKhachDua);
         txt_TienKhachDua.setColumns(10);
 
-        JLabel lbl_DanhSachPhong = new JLabel("Danh sách phòng");
+         lbl_DanhSachPhong = new JLabel("Danh sách phòng");
         lbl_DanhSachPhong.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         lbl_DanhSachPhong.setBounds(10, 276, 147, 26);
         getContentPane().add(lbl_DanhSachPhong);
@@ -365,7 +362,7 @@ public class PhieuTraPhongDialog extends JDialog {
         getContentPane().add(txt_TienTraLai);
         
 
-        JLabel lbl_TienTraLaiKhach = new JLabel("Tiền trả lại:");
+        lbl_TienTraLaiKhach = new JLabel("Tiền trả lại:");
         lbl_TienTraLaiKhach.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         lbl_TienTraLaiKhach.setBounds(561, 399, 128, 24);
         getContentPane().add(lbl_TienTraLaiKhach);
@@ -379,6 +376,20 @@ public class PhieuTraPhongDialog extends JDialog {
         btnHuy.setBounds(872, 528, 140, 26);
         btnHuy.setBackground(new Color(255, 182, 193));
         getContentPane().add(btnHuy);
+
+//        // ===== QR chuyển khoản =====
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/img/maQR.jpg")
+        );
+
+// scale QR cho vừa
+        Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+        lbl_QR = new JLabel(new ImageIcon(img));
+        lbl_QR.setBounds(738, 348, 200, 151); // chỉnh vị trí cho đẹp
+        lbl_QR.setVisible(false); // mặc định ẩn
+        getContentPane().add(lbl_QR);
+        lbl_QR.setVisible(false);
 
 
     }

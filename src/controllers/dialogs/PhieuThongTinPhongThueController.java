@@ -37,9 +37,10 @@ public class PhieuThongTinPhongThueController {
     DecimalFormat df=new DecimalFormat("0");
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     LocalDate ngayKetThucGoc;
+    ThueDatPhongController thueDatPhongController;
 
-
-    public PhieuThongTinPhongThueController(PhieuThongTinPhongThueDialog phieuThongTinPhongThueDialog, Phong phong){
+    public PhieuThongTinPhongThueController(PhieuThongTinPhongThueDialog phieuThongTinPhongThueDialog, Phong phong, ThueDatPhongController thueDatPhongController){
+        this.thueDatPhongController=thueDatPhongController;
         this.phieuThongTinPhongThueDialog = phieuThongTinPhongThueDialog;
         this.phong = phong;
         hoaDonDao = new HoaDonDao();
@@ -136,7 +137,7 @@ public class PhieuThongTinPhongThueController {
             if (dsMaPhong.size() == 1) {
                 String maPhongCanTra = dsMaPhong.get(0);
                 PhieuTraPhongDialog phieuTraPhongDialog= new PhieuTraPhongDialog();
-                PhieuTraPhongController phieuTraPhongController= new PhieuTraPhongController(phieuTraPhongDialog,phong);
+                PhieuTraPhongController phieuTraPhongController= new PhieuTraPhongController(phieuTraPhongDialog,phong,thueDatPhongController);
                 phieuTraPhongController.traToanBoCacPhong();
                 phieuTraPhongDialog.setLocationRelativeTo(null);
                 phieuTraPhongDialog.setVisible(true);
@@ -168,7 +169,7 @@ public class PhieuThongTinPhongThueController {
                 if (choice == 0) {
                     //  TRẢ 1 PHÒNG
                     PhieuTraPhongDialog phieuTraPhongDialog= new PhieuTraPhongDialog();
-                    PhieuTraPhongController phieuTraPhongController= new PhieuTraPhongController(phieuTraPhongDialog,phong);
+                    PhieuTraPhongController phieuTraPhongController= new PhieuTraPhongController(phieuTraPhongDialog,phong,thueDatPhongController);
                     phieuTraPhongController.traMotPhong();
                     phieuTraPhongDialog.setLocationRelativeTo(null);
                     phieuTraPhongDialog.setVisible(true);
@@ -176,7 +177,7 @@ public class PhieuThongTinPhongThueController {
 
                 } else if (choice == 1) {
                     PhieuTraPhongDialog phieuTraPhongDialog= new PhieuTraPhongDialog();
-                    PhieuTraPhongController phieuTraPhongController= new PhieuTraPhongController(phieuTraPhongDialog,phong);
+                    PhieuTraPhongController phieuTraPhongController= new PhieuTraPhongController(phieuTraPhongDialog,phong,thueDatPhongController);
                     phieuTraPhongController.traToanBoCacPhong();
                     phieuTraPhongDialog.setLocationRelativeTo(null);
                     phieuTraPhongDialog.setVisible(true);
