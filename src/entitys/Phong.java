@@ -40,8 +40,6 @@ public class Phong {
 		this.trangThai = trangThai;
 	}
 
-
-
 	public Phong() {
 
     }
@@ -153,5 +151,16 @@ public class Phong {
 			return false;
 		Phong other = (Phong) obj;
 		return Objects.equals(maPhong, other.maPhong);
+	}
+
+	// Thêm phương thức để lấy thông tin dưới dạng mảng Object
+	public Object[] toObjectArray() {
+		return new Object[]{
+				maPhong,
+				loaiPhong.getTenLoaiPhong(),
+				sucChuaToiDa,
+				giaPhong,
+				tienCoc
+		};
 	}
 }

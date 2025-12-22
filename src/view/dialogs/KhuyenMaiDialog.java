@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 
 public class KhuyenMaiDialog extends JDialog {
     private KhuyenMaiDialogController khuyenMaiDialogController;
-    private KhuyenMai khuyenMai;
+    private final KhuyenMai khuyenMai;
 
     public JTextField txt_MaKM;
     public JTextField txt_TenKM;

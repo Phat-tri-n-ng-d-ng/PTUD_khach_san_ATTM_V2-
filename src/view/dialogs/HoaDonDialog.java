@@ -42,7 +42,7 @@ public class HoaDonDialog extends JDialog {
     public JTable table;
     public DefaultTableModel model;
     public JButton btn_inHoaDon;
-	public JButton btn_huyHoaDon;
+    public JButton btn_huyHoaDon;
     public JRadioButton rdbtn_NamNguoiO;
     public JRadioButton rdbtn_NuNguoiO;
 
@@ -165,7 +165,7 @@ public class HoaDonDialog extends JDialog {
         rdbtn_NamNguoiO.setBackground(Color.WHITE);
         rdbtn_NamNguoiO.setBounds(365, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
-        
+
         rdbtn_NuNguoiO = new JRadioButton("Nữ");
         rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NuNguoiO.setBackground(Color.WHITE);
@@ -349,7 +349,7 @@ public class HoaDonDialog extends JDialog {
             }
         }
 
-         btn_XacNhan = new RoundedButton("Xác nhận", new Color(76, 175, 80), Color.WHITE, 30);
+        btn_XacNhan = new RoundedButton("Xác nhận", new Color(76, 175, 80), Color.WHITE, 30);
         btn_XacNhan.setFont(new Font("Times New Roman", Font.BOLD, 14));
         btn_XacNhan.setBounds(430, 570, 120, 30);
         getContentPane().add(btn_XacNhan);
@@ -384,15 +384,15 @@ public class HoaDonDialog extends JDialog {
         btn_inHoaDon = new JButton("In hóa đơn");
         btn_inHoaDon.setBounds(956, 488, 120, 30);
         getContentPane().add(btn_inHoaDon);
-        
+
         btn_huyHoaDon = new JButton("Hủy hóa đơn");
         btn_huyHoaDon.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
+            public void actionPerformed(ActionEvent e) {
+            }
         });
         btn_huyHoaDon.setBounds(826, 488, 120, 30);
         getContentPane().add(btn_huyHoaDon);
-        
-    
-	}
+
+
+    }
 }

@@ -1,19 +1,23 @@
 package controllers;
 
+import controllers.dialogs.PhieuDatPhongController;
+import controllers.dialogs.PhieuThuePhongController;
 import database.dao.*;
 import entitys.*;
 import enums.TrangThaiKhuyenMai;
 import enums.TrangThaiPhong;
-//import services.HoaDonService;
-//import views.FormThongTinDatPhong;
-//import views.FormThongTinNhanPhong;
-//import views.FormThongTinThuePhong;
-//import views.FormThongTinTraPhong;
+import view.dialogs.ThemKhachHangDialog;
 import view.panels.ThueDatPhongPanel;
+import view.dialogs.PhieuThuePhongDialogOThueDatPhong;
+import view.dialogs.PhieuDatPhongDialogOThueDatPhong;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,14 +28,13 @@ public class ThueDatPhongController {
     private KhuyenMaiDao khuyenMaiDao;
     private ArrayList<Phong> danhSachPhong;
     private ArrayList<Phong> danhSachPhongHienThi;
-    private ArrayList<Phong> danhSachPhongTheoLoai;
     private ArrayList<KhuyenMai> danhSachKhuyenMai;
+    private ArrayList<KhuyenMai> danhSachKhuyenMaiHienThi;
     private PhongDao phongDao;
     private KhachHangDao khachHangDao;
     private ArrayList<Phong> dsPhongDaChon = new ArrayList<>();
-    // THÊM: Biến lưu thông tin khách hàng
     private KhachHang khachHangHienTai;
-//    private String trangThai;
+    private ArrayList<Phong> dsPhongTheoKH = new ArrayList<>();
 
     public ThueDatPhongController(ThueDatPhongPanel thueDatPhongPanel){
         this.thueDatPhongPanel = thueDatPhongPanel;
@@ -39,380 +42,611 @@ public class ThueDatPhongController {
         khachHangDao = new KhachHangDao();
         khuyenMaiDao = new KhuyenMaiDao();
         danhSachKhuyenMai = khuyenMaiDao.getTatCaKhuyenMai();
+        danhSachKhuyenMaiHienThi = new ArrayList<>();
         hoaDonDao = new HoaDonDao();
-        thueDatPhongPanel.btn_BoChon.addActionListener(e -> BoChonPhong());
-        thueDatPhongPanel.txt_SoDienThoai.addActionListener(e -> getKhachHang());
-        thueDatPhongPanel.chckbx_phongDat.addActionListener(e-> LocTrangThaiPhong());
-        thueDatPhongPanel.chckbx_phongThue.addActionListener(e-> LocTrangThaiPhong());
-        thueDatPhongPanel.chckbx_phongTrong.addActionListener(e-> LocTrangThaiPhong());
-        thueDatPhongPanel.btn_Standard.addActionListener(e -> LocPhongTheoLoai("Standard"));
-        thueDatPhongPanel.btn_Deluxe.addActionListener(e -> LocPhongTheoLoai("Deluxe"));
-        thueDatPhongPanel.btn_Suite.addActionListener(e -> LocPhongTheoLoai("Suite"));
-        thueDatPhongPanel.btn_Superior.addActionListener(e -> LocPhongTheoLoai("Superior"));
-        thueDatPhongPanel.btn_FamilyRoom.addActionListener(e -> LocPhongTheoLoai("Family Room"));
-        thueDatPhongPanel.btn_TatCa.addActionListener(e -> LocPhongTheoLoai(""));
-        thueDatPhongPanel.btn_LamMoi.addActionListener(e -> LamMoi());
-        thueDatPhongPanel.cbb_KhuyenMai.addActionListener(e -> LocPhongCoKhuyenMai());
-//        thueDatPhongPanel.btn_Tim.addActionListener(e -> TimPhongDatTheoSoDienThoai());
-        thueDatPhongPanel.btn_ApDung.addActionListener(e -> TuDongCapNhatTrangThaiPhong_TheoKhoangNgay());
-//        thueDatPhongPanel.btn_ThuePhong.addActionListener(e -> moFormThongTinThuePhong());
-//        thueDatPhongPanel.btn_DatPhong.addActionListener(e -> moFormThongTinDatPhong());
-//        thueDatPhongPanel.btn_NhanPhong.addActionListener(e ->{
-//        	FormThongTinNhanPhong form = new FormThongTinNhanPhong(thueDatPhongPanel);
-//        	form.setVisible(true);
-//        } );
-//        thueDatPhongPanel.btn_TraPhong.addActionListener(e -> {
-//            FormThongTinTraPhong formThongTinTraPhong = new FormThongTinTraPhong();
-//            formThongTinTraPhong.setVisible(true);
-//        });
+
+        // Gán sự kiện
+        thueDatPhongPanel.txt_TimSoDienThoai.addActionListener(e -> getKhachHang());
+        thueDatPhongPanel.btn_Tim.addActionListener(e -> getKhachHang());
+
+        thueDatPhongPanel.chckbx_phongDat.addActionListener(e-> LocPhong());
+        thueDatPhongPanel.chckbx_phongThue.addActionListener(e-> LocPhong());
+        thueDatPhongPanel.chckbx_phongTrong.addActionListener(e-> LocPhong());
+
+        thueDatPhongPanel.cbb_LoaiPhong.addActionListener(e -> LocPhong());
+//        thueDatPhongPanel.cbb_KhuyenMai.addActionListener(e -> LocPhong());
+
+        thueDatPhongPanel.btn_ApDung.addActionListener(e -> {
+            TuDongCapNhatTrangThaiPhong_TheoKhoangNgay();
+        });
+
+        thueDatPhongPanel.btn_ThuePhong.addActionListener(e -> {
+            openPhieuThuePhongDialog();
+        });
+
+        thueDatPhongPanel.btn_DatPhong.addActionListener(e -> {
+            openPhieuDatPhongDialog();
+        });
+
+        // DocumentListener để tự động reset khi xóa hết số điện thoại
+        thueDatPhongPanel.txt_TimSoDienThoai.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                // Không làm gì
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                // Khi xóa chữ, kiểm tra nếu text rỗng thì reset
+                if (thueDatPhongPanel.txt_TimSoDienThoai.getText().trim().isEmpty()) {
+                    resetKhiXoaHetSoDT();
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Không làm gì
+            }
+        });
+        getTatCaPhong();
+        getKhuyenMai(); // tạo lại combobox
     }
-
-//    private void moFormThongTinDatPhong() {
-//        // Sử dụng dsPhongDaChon thay vì danhSachPhongDaChon
-//        if (dsPhongDaChon.isEmpty()) { // SỬA Ở ĐÂY
-//            JOptionPane.showMessageDialog(thueDatPhongPanel, // SỬA: thay view bằng thueDatPhongPanel
-//                    "Vui lòng chọn ít nhất một phòng!",
-//                    "Thông báo",
-//                    JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//
-//        // Kiểm tra đã có thông tin khách hàng chưa
-//        String sdt = thueDatPhongPanel.txt_SoDienThoai.getText().trim();
-//        if (sdt.isEmpty()) {
-//            JOptionPane.showMessageDialog(thueDatPhongPanel,
-//                    "Vui lòng tìm kiếm khách hàng trước!",
-//                    "Thông báo",
-//                    JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//
-//        // Lấy thông tin khách hàng từ database
-//        KhachHang khachHang = khachHangDao.TimKhachHang(sdt, "SDT");
-//        if (khachHang == null) {
-//            JOptionPane.showMessageDialog(thueDatPhongPanel,
-//                    "Không tìm thấy thông tin khách hàng!",
-//                    "Lỗi",
-//                    JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-
-        // Mở formThongTinDatPhong thông tin đặt phòng
-//        FormThongTinDatPhong formThongTinDatPhong = new FormThongTinDatPhong();
-//        formThongTinDatPhong.setThongTin(khachHang, dsPhongDaChon, "DAT"); //sử dụng dsPhongDaChon
-//
-//        formThongTinDatPhong.addWindowListener(new java.awt.event.WindowAdapter() {
-//            @Override
-//            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-//                // Cập nhật lại danh sách phòng sau khi formThongTinDatPhong đóng
-//                refreshDanhSachPhong();
-//                // Xóa danh sách phòng đã chọn sau khi đặt phòng thành công
-//                dsPhongDaChon.clear();
-//                thueDatPhongPanel.txt_SoDienThoai.setText("");
-//                capNhatTableDanhSachPhongDaChon();
-//            }
-//        });
-//
-//        formThongTinDatPhong.setVisible(true);
-//    }
-
-//    public void moFormThongTinThuePhong() {
-//        // Sử dụng dsPhongDaChon thay vì danhSachPhongDaChon
-//        if (dsPhongDaChon.isEmpty()) { // SỬA Ở ĐÂY
-//            JOptionPane.showMessageDialog(thueDatPhongPanel, // SỬA: thay view bằng thueDatPhongPanel
-//                    "Vui lòng chọn ít nhất một phòng!",
-//                    "Thông báo",
-//                    JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//
-//        // Kiểm tra đã có thông tin khách hàng chưa
-//        String sdt = thueDatPhongPanel.txt_SoDienThoai.getText().trim();
-//        if (sdt.isEmpty()) {
-//            JOptionPane.showMessageDialog(thueDatPhongPanel,
-//                    "Vui lòng tìm kiếm khách hàng trước!",
-//                    "Thông báo",
-//                    JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//
-//        // Lấy thông tin khách hàng từ database
-//        KhachHang khachHang = khachHangServies.TimKhachHang(sdt, "SDT");
-//        if (khachHang == null) {
-//            JOptionPane.showMessageDialog(thueDatPhongPanel,
-//                    "Không tìm thấy thông tin khách hàng!",
-//                    "Lỗi",
-//                    JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-
-        // Mở formThongTinThuePhong thông tin thuê phòng
-//        FormThongTinThuePhong formThongTinThuePhong = new FormThongTinThuePhong();
-//        formThongTinThuePhong.setThongTin(khachHang, dsPhongDaChon, "THUE"); // SỬA: sử dụng dsPhongDaChon
-//
-//        formThongTinThuePhong.addWindowListener(new java.awt.event.WindowAdapter() {
-//            @Override
-//            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-//                // Cập nhật lại danh sách phòng sau khi formThongTinThuePhong đóng
-//                refreshDanhSachPhong();
-//                // Xóa danh sách phòng đã chọn sau khi thuê phòng thành công
-//                dsPhongDaChon.clear();
-//                thueDatPhongPanel.txt_SoDienThoai.setText("");
-//                capNhatTableDanhSachPhongDaChon();
-//            }
-//        });
-//
-//        formThongTinThuePhong.setVisible(true);
-//    }
 
     public void getTatCaPhong(){
         danhSachPhong = phongDao.getDanhSachPhong();
+        // Lọc dsPhongDaChon, giữ lại những phòng còn trống
+        dsPhongDaChon.removeIf(phong -> !phong.getTrangThai().equals(TrangThaiPhong.Trong));
         danhSachPhongHienThi = danhSachPhong;
-//        danhSachPhongTheoLoai = danhSachPhongHienThi;
-        // Thêm các ô giả lập
         HienThiDanhSachPhong(danhSachPhongHienThi);
+
+        // Cập nhật khuyến mãi dựa trên phòng đã chọn
+        capNhatKhuyenMaiTheoPhongDaChon();
     }
 
     private void HienThiDanhSachPhong(ArrayList<Phong> danhSachPhongHienThi) {
-        thueDatPhongPanel.danhSachPhongPanel.removeAll();
-        for (Phong phong : danhSachPhongHienThi) {
-            JPanel phongPanel = new JPanel();
-            phongPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-            phongPanel.setLayout(null);
+        if (thueDatPhongPanel.danhSachPhongPanel == null) {
+            return;
+        }
 
-            if(phong.getTrangThai().equals(TrangThaiPhong.Trong)){
-                phongPanel.setBackground(Color.white);
-            }else if(phong.getTrangThai().equals(TrangThaiPhong.DangSuDung)){
-                phongPanel.setBackground(Color.GREEN);
-            }else{
-                phongPanel.setBackground(Color.red);
+        thueDatPhongPanel.danhSachPhongPanel.removeAll();
+
+        // Cài đặt Layout
+        thueDatPhongPanel.danhSachPhongPanel.setLayout(new GridBagLayout());
+        thueDatPhongPanel.danhSachPhongPanel.setBackground(new Color(236, 247, 255));
+        thueDatPhongPanel.danhSachPhongPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        if (danhSachPhongHienThi.isEmpty()) {
+            JLabel lblNoRoom = new JLabel("Không có phòng nào để hiển thị", SwingConstants.CENTER);
+            lblNoRoom.setFont(new Font("Times New Roman", Font.BOLD, 18));
+            lblNoRoom.setForeground(Color.GRAY);
+            thueDatPhongPanel.danhSachPhongPanel.add(lblNoRoom);
+        } else {
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(10, 10, 10, 10);
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.weightx = 1.0;
+            gbc.weighty = 0;
+
+            int col = 0;
+            int row = 0;
+
+            for (Phong phong : danhSachPhongHienThi) {
+                gbc.gridx = col;
+                gbc.gridy = row;
+
+                JButton phongButton = createPhongButton(phong);
+                thueDatPhongPanel.danhSachPhongPanel.add(phongButton, gbc);
+
+                col++;
+                if (col >= 5) {
+                    col = 0;
+                    row++;
+                }
             }
 
-            JLabel label = new JLabel("Phòng: P" );
-            label.setBounds(6, 12, 0, 0);
-            phongPanel.add(label);
-            phongPanel.setPreferredSize(new Dimension(230, 120));
+            if (col > 0 && col < 5) {
+                while (col < 5) {
+                    gbc.gridx = col;
+                    gbc.gridy = row;
+                    JPanel dummy = new JPanel();
+                    dummy.setOpaque(false);
+                    thueDatPhongPanel.danhSachPhongPanel.add(dummy, gbc);
+                    col++;
+                }
+                row++;
+            }
 
+            GridBagConstraints gbcFiller = new GridBagConstraints();
+            gbcFiller.gridx = 0;
+            gbcFiller.gridy = row;
+            gbcFiller.gridwidth = 5;
+            gbcFiller.weighty = 1.0;
+            gbcFiller.fill = GridBagConstraints.BOTH;
 
-            JLabel lbl_Phong = new JLabel("Phòng: "+ phong.getMaPhong());
-            lbl_Phong.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-            lbl_Phong.setBounds(6, 10, 184, 20);
-            phongPanel.add(lbl_Phong);
-
-            JLabel lbl_LoaiPhong = new JLabel("Loại phòng: " + phong.getLoaiPhong().getTenLoaiPhong());
-            lbl_LoaiPhong.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-            lbl_LoaiPhong.setBounds(6, 36, 184, 17);
-            phongPanel.add(lbl_LoaiPhong);
-
-            JLabel lbl_SucChuaToiDa = new JLabel("Số lượng tối đa: " + phong.getSucChuaToiDa());
-            lbl_SucChuaToiDa.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-            lbl_SucChuaToiDa.setBounds(6, 57, 184, 16);
-            phongPanel.add(lbl_SucChuaToiDa);
-
-            JLabel lbl_Gia = new JLabel("Giá: " + phong.getGiaPhong());
-            lbl_Gia.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-            lbl_Gia.setBounds(6, 78, 149, 16);
-            phongPanel.add(lbl_Gia);
-
-            JButton btn_ThemPhong = new JButton();
-            btn_ThemPhong.setBounds(0, 0, 240, 120);
-            btn_ThemPhong.setOpaque(false);
-            btn_ThemPhong.setContentAreaFilled(false);
-            btn_ThemPhong.setBorderPainted(false);
-            btn_ThemPhong.setFocusPainted(false);
-            phongPanel.add(btn_ThemPhong);
-
-            btn_ThemPhong.addActionListener(e -> {
-                ThemPhongChon(phong);
-            });
-            thueDatPhongPanel.danhSachPhongPanel.add(phongPanel);
+            JPanel fillerPanel = new JPanel();
+            fillerPanel.setOpaque(false);
+            thueDatPhongPanel.danhSachPhongPanel.add(fillerPanel, gbcFiller);
         }
-        // Làm mới lại giao diện scrollPane
+
         thueDatPhongPanel.danhSachPhongPanel.revalidate();
         thueDatPhongPanel.danhSachPhongPanel.repaint();
     }
 
-    private void ThemPhongChon(Phong phong) {
-        for (int i = 0; i < thueDatPhongPanel.model.getRowCount(); i++) {
-            String maPhongTrongBang = thueDatPhongPanel.model.getValueAt(i, 0).toString();
-            if (maPhongTrongBang.equals(phong.getMaPhong())) {
+    private JButton createPhongButton(Phong phong) {
+        JButton phongButton = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+
+                g2.setColor(getForeground());
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 15, 15);
+
+                super.paintComponent(g);
+            }
+        };
+
+        phongButton.setLayout(new BorderLayout());
+        phongButton.setPreferredSize(new Dimension(100, 150));
+        phongButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        phongButton.setBorderPainted(false);
+        phongButton.setFocusPainted(false);
+        phongButton.setContentAreaFilled(false);
+
+        // Xác định màu sắc
+        Color bgColor, borderColor, textColor;
+        String trangThaiText = "";
+        boolean daChon = dsPhongDaChon.contains(phong);
+
+        if(phong.getTrangThai().equals(TrangThaiPhong.Trong)){
+            if (daChon) {
+                bgColor = new Color(200, 230, 255);
+                borderColor = new Color(0, 100, 255);
+                textColor = Color.BLACK;
+                trangThaiText = "ĐÃ CHỌN";
+            } else {
+                bgColor = Color.WHITE;
+                borderColor = new Color(52, 152, 219);
+                textColor = Color.BLACK;
+                trangThaiText = "TRỐNG";
+            }
+        } else if(phong.getTrangThai().equals(TrangThaiPhong.DangSuDung)){
+            bgColor = new Color(144, 238, 144);
+            borderColor = new Color(46, 204, 113);
+            textColor = Color.BLACK;
+            trangThaiText = "ĐANG THUÊ";
+        } else {
+            bgColor = new Color(255, 182, 193);
+            borderColor = new Color(231, 76, 60);
+            textColor = Color.BLACK;
+            trangThaiText = "ĐÃ ĐẶT";
+        }
+
+        phongButton.setBackground(bgColor);
+        phongButton.setForeground(borderColor);
+
+        // Panel thông tin
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new GridLayout(5, 1, 5, 5));
+        infoPanel.setOpaque(false);
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel lblMaPhong = new JLabel("Phòng: " + phong.getMaPhong(), SwingConstants.CENTER);
+        lblMaPhong.setFont(new Font("Arial", Font.BOLD, 16));
+        lblMaPhong.setForeground(textColor);
+
+        JLabel lblLoaiPhong = new JLabel(phong.getLoaiPhong().getTenLoaiPhong(), SwingConstants.CENTER);
+        lblLoaiPhong.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblLoaiPhong.setForeground(textColor);
+
+        JLabel lblSucChua = new JLabel("Sức chứa: " + phong.getSucChuaToiDa(), SwingConstants.CENTER);
+        lblSucChua.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblSucChua.setForeground(textColor);
+
+        double giaPhong = phong.getGiaPhong();
+        JLabel lblGia = new JLabel(String.format("%,.0f VNĐ", giaPhong), SwingConstants.CENTER);
+        lblGia.setFont(new Font("Arial", Font.BOLD, 12));
+        lblGia.setForeground(new Color(10, 100, 189));
+
+        JLabel lblTrangThai = new JLabel(trangThaiText, SwingConstants.CENTER);
+        lblTrangThai.setFont(new Font("Arial", Font.BOLD, 12));
+        lblTrangThai.setForeground(borderColor.darker());
+
+        infoPanel.add(lblMaPhong);
+        infoPanel.add(lblLoaiPhong);
+        infoPanel.add(lblSucChua);
+        infoPanel.add(lblGia);
+        infoPanel.add(lblTrangThai);
+
+        phongButton.add(infoPanel, BorderLayout.CENTER);
+
+        // Thêm hiệu ứng hover
+        Color finalBgColor = bgColor;
+        phongButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                if (phong.getTrangThai().equals(TrangThaiPhong.Trong)) {
+                    phongButton.setBackground(finalBgColor.brighter());
+                    phongButton.repaint();
+                }
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                phongButton.setBackground(finalBgColor);
+                phongButton.repaint();
+            }
+        });
+
+        // Thêm ActionListener
+        phongButton.addActionListener(e -> {
+            if(phong.getTrangThai().equals(TrangThaiPhong.Trong)) {
+                if (daChon) {
+                    dsPhongDaChon.remove(phong);
+                } else {
+                    dsPhongDaChon.add(phong);
+                }
+                HienThiDanhSachPhong(danhSachPhongHienThi);
+                // Cập nhật khuyến mãi khi phòng được chọn/bỏ chọn
+                capNhatKhuyenMaiTheoPhongDaChon();
+            } else {
                 JOptionPane.showMessageDialog(null,
-                        "Phòng này đã được chọn!",
+                        "Phòng " + phong.getMaPhong() + " không khả dụng!",
                         "Thông báo",
                         JOptionPane.WARNING_MESSAGE);
-                return;
             }
-        }
-
-        // THÊM: Thêm phòng vào danh sách đã chọn
-        dsPhongDaChon.add(phong);
-
-        thueDatPhongPanel.model.addRow(new Object[]{
-                phong.getMaPhong(),
-                phong.getLoaiPhong().getTenLoaiPhong(),
-                phong.getSucChuaToiDa(),
-                phong.getGiaPhong()
         });
-    }
 
-    private void BoChonPhong() {
-        int row = thueDatPhongPanel.table.getSelectedRow();
-        if(row != -1){
-            // THÊM: Lấy mã phòng và xóa khỏi dsPhongDaChon
-            String maPhong = thueDatPhongPanel.model.getValueAt(row, 0).toString();
-            dsPhongDaChon.removeIf(phong -> phong.getMaPhong().equals(maPhong));
-            thueDatPhongPanel.model.removeRow(row);
-        }else if(thueDatPhongPanel.table.getRowCount() == 0){
-            JOptionPane.showMessageDialog(thueDatPhongPanel,"Chưa có phòng nào trong danh sách");
-        }else{
-            JOptionPane.showMessageDialog(thueDatPhongPanel,"Vui lòng chọn phòng muốn bỏ khỏi danh sách");
-        }
+        return phongButton;
     }
 
     private void getKhachHang(){
-        String soDTKhachHang = thueDatPhongPanel.txt_SoDienThoai.getText();
+        String soDTKhachHang = thueDatPhongPanel.txt_TimSoDienThoai.getText().trim();
+
+        if (soDTKhachHang.isEmpty()) {
+            showCustomMessage("Vui lòng nhập số điện thoại!",
+                    "Thông báo",
+                    JOptionPane.WARNING_MESSAGE);
+            khachHangHienTai = null;
+            dsPhongTheoKH.clear();
+            getTatCaPhong();
+            return;
+        }
+
         KhachHang khachHang = khachHangDao.TimKhachHang(soDTKhachHang,"SDT");
         if(khachHang != null){
-            thueDatPhongPanel.txt_TenKhachHang.setText(khachHang.getTenKH());
-            if(khachHang.isGioiTinh() == true) {
-                thueDatPhongPanel.rdbtn_Nam.setSelected(true);
-                thueDatPhongPanel.rdbtn_Nu.setSelected(false);
-            }else {
-                thueDatPhongPanel.rdbtn_Nam.setSelected(false);
-                thueDatPhongPanel.rdbtn_Nu.setSelected(true);
+            khachHangHienTai = khachHang;
+            dsPhongTheoKH = hoaDonDao.getPhongTheoSDTKhachHang(soDTKhachHang);
+
+            // Kiểm tra xem có phòng nào không
+            if (dsPhongTheoKH.isEmpty()) {
+                showCustomMessage("Khách hàng " + khachHang.getTenKH() +
+                                " không có phòng nào đang thuê/đặt.",
+                        "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                // Đặt tất cả checkbox về false
+                SwingUtilities.invokeLater(() -> {
+                    thueDatPhongPanel.chckbx_phongTrong.setSelected(false);
+                    thueDatPhongPanel.chckbx_phongThue.setSelected(false);
+                    thueDatPhongPanel.chckbx_phongDat.setSelected(false);
+
+                    // Hiển thị tất cả phòng
+                    getTatCaPhong();
+                });
+            } else {
+                // Đảm bảo cập nhật UI trên EDT
+                SwingUtilities.invokeLater(() -> {
+                    // Reset tất cả checkbox
+                    thueDatPhongPanel.chckbx_phongTrong.setSelected(false);
+                    thueDatPhongPanel.chckbx_phongThue.setSelected(false);
+                    thueDatPhongPanel.chckbx_phongDat.setSelected(false);
+
+                    // Kiểm tra trạng thái phòng của khách hàng
+                    boolean coPhongThue = false;
+                    boolean coPhongDat = false;
+
+                    for (Phong p : dsPhongTheoKH) {
+                        if (p.getTrangThai().equals(TrangThaiPhong.DangSuDung)) {
+                            coPhongThue = true;
+                        } else if (p.getTrangThai().equals(TrangThaiPhong.DaDat)) {
+                            coPhongDat = true;
+                        }
+                    }
+
+                    // Tích checkbox dựa trên trạng thái phòng
+                    if (coPhongThue) {
+                        thueDatPhongPanel.chckbx_phongThue.setSelected(true);
+                    }
+                    if (coPhongDat) {
+                        thueDatPhongPanel.chckbx_phongDat.setSelected(true);
+                    }
+
+                    // Gọi LocPhong để hiển thị danh sách phòng theo checkbox đã tích
+                    LocPhong();
+                });
             }
-            thueDatPhongPanel.txt_Email.setText(khachHang.getEmail());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String ngaySinhFormatted = khachHang.getNgaySinh().format(formatter);
-            thueDatPhongPanel.txt_ngaySinhKhachHang.setText(ngaySinhFormatted);
-        }else {
-        	thueDatPhongPanel.txt_Email.setText("");
-        	thueDatPhongPanel.rdbtn_Nam.setSelected(false);
-        	thueDatPhongPanel.rdbtn_Nu.setSelected(false);
-        	thueDatPhongPanel.txt_TenKhachHang.setText("");
-        	thueDatPhongPanel.txt_ngaySinhKhachHang.setText("");
+        } else {
+            // Hiển thị thông báo đơn giản khi không tìm thấy khách hàng
+            showCustomMessage(
+                    "Không tìm thấy khách hàng với số điện thoại: " + soDTKhachHang,
+                    "Không tìm thấy",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            // Reset thông tin khách hàng
+            khachHangHienTai = null;
+            dsPhongTheoKH.clear();
+
+            // Bỏ tích tất cả checkbox và hiển thị tất cả phòng
+            SwingUtilities.invokeLater(() -> {
+                thueDatPhongPanel.chckbx_phongTrong.setSelected(false);
+                thueDatPhongPanel.chckbx_phongThue.setSelected(false);
+                thueDatPhongPanel.chckbx_phongDat.setSelected(false);
+                getTatCaPhong();
+            });
         }
     }
 
-    private void LocTrangThaiPhong() {
-        ArrayList<Phong> danhSachTam = new ArrayList<>();
 
-        // Bắt đầu lọc từ danh sách đã lọc theo loại (hoặc toàn bộ nếu chưa lọc loại)
-        ArrayList<Phong> nguonLoc = danhSachPhongTheoLoai != null ? danhSachPhongTheoLoai : danhSachPhong;
 
-        for (Phong phong : nguonLoc) {
-            boolean match = false;
+    private KhuyenMai getKhuyenMaiDuocChon() {
+        String tenKM = (String) thueDatPhongPanel.cbb_KhuyenMai.getSelectedItem();
+        if (tenKM == null || tenKM.equals("Không có khuyến mãi")) {
+            return null;
+        }
 
-            if (thueDatPhongPanel.chckbx_phongTrong.isSelected()
-                    && phong.getTrangThai().equals(TrangThaiPhong.Trong)) match = true;
-            if (thueDatPhongPanel.chckbx_phongThue.isSelected()
-                    && phong.getTrangThai().equals(TrangThaiPhong.DangSuDung)) match = true;
-            if (thueDatPhongPanel.chckbx_phongDat.isSelected()
-                    && phong.getTrangThai().equals(TrangThaiPhong.DaDat)) match = true;
+        for (KhuyenMai km : danhSachKhuyenMaiHienThi) {
+            if (km.getTenKM().equals(tenKM)) {
+                return km;
+            }
+        }
+        return null;
+    }
 
-            // Nếu không chọn trạng thái nào thì hiển thị hết
-            if (!thueDatPhongPanel.chckbx_phongTrong.isSelected()
-                    && !thueDatPhongPanel.chckbx_phongThue.isSelected()
-                    && !thueDatPhongPanel.chckbx_phongDat.isSelected()) match = true;
+    // tự động reset khi xóa hết số điện thoại
+    private void resetKhiXoaHetSoDT() {
+        // Reset thông tin khách hàng
+        khachHangHienTai = null;
+        dsPhongTheoKH.clear();
 
-            if (match) danhSachTam.add(phong);
+        // Bỏ tích tất cả checkbox (KHÔNG TÍCH BẤT KỲ CHECKBOX NÀO)
+        thueDatPhongPanel.chckbx_phongTrong.setSelected(false);
+        thueDatPhongPanel.chckbx_phongThue.setSelected(false);
+        thueDatPhongPanel.chckbx_phongDat.setSelected(false);
+
+        // Reset combobox loại phòng về "Tất cả"
+        thueDatPhongPanel.cbb_LoaiPhong.setSelectedItem("Tất cả");
+
+        // Reset combobox khuyến mãi
+        thueDatPhongPanel.cbb_KhuyenMai.removeAllItems();
+        thueDatPhongPanel.cbb_KhuyenMai.addItem("Không có khuyến mãi");
+
+        // Xóa danh sách phòng đã chọn
+        clearDsPhongDaChon();
+
+        // Load lại toàn bộ danh sách phòng (tất cả phòng, không lọc)
+        getTatCaPhong();
+
+        // Reset ô tìm kiếm về rỗng (nếu cần)
+        thueDatPhongPanel.txt_TimSoDienThoai.setText("");
+    }
+
+    // Cập nhật khuyến mãi dựa trên phòng đã chọn
+    private void capNhatKhuyenMaiTheoPhongDaChon() {
+        // Lấy danh sách loại phòng từ các phòng đã chọn
+        ArrayList<String> loaiPhongDaChon = new ArrayList<>();
+        for (Phong p : dsPhongDaChon) {
+            String loai = p.getLoaiPhong().getTenLoaiPhong().trim();
+            // Chuyển về dạng chuẩn (viết hoa chữ cái đầu)
+            loai = chuanHoaTenLoaiPhong(loai);
+            if (!loaiPhongDaChon.contains(loai)) {
+                loaiPhongDaChon.add(loai);
+            }
+        }
+
+        // Lấy ngày hiện tại để kiểm tra khuyến mãi
+        LocalDateTime ngayHienTai = LocalDateTime.now();
+
+        // Lọc khuyến mãi đang hoạt động và áp dụng cho các loại phòng đã chọn
+        ArrayList<KhuyenMai> dsKhuyenMaiPhuHop = new ArrayList<>();
+
+        if (!loaiPhongDaChon.isEmpty()) {
+            for (KhuyenMai km : danhSachKhuyenMai) {
+                // Kiểm tra khuyến mãi đang hoạt động
+                if (km.getTrangThai().equals(TrangThaiKhuyenMai.DangHoatDong)) {
+                    // Kiểm tra ngày hiện tại có nằm trong thời gian khuyến mãi không
+                    if (km.getNgayBatDau() != null && km.getNgayketThuc() != null) {
+                        if (ngayHienTai.isAfter(km.getNgayBatDau()) &&
+                                ngayHienTai.isBefore(km.getNgayketThuc())) {
+
+                            // Lấy điều kiện áp dụng và chuẩn hóa
+                            String dieuKien = km.getDieuKienApDung();
+                            if (dieuKien == null || dieuKien.trim().isEmpty()) {
+                                continue;
+                            }
+
+                            dieuKien = dieuKien.trim();
+
+                            // Kiểm tra nếu là "Tất cả"
+                            if (dieuKien.equalsIgnoreCase("Tất cả")) {
+                                dsKhuyenMaiPhuHop.add(km);
+                                continue;
+                            }
+
+                            // Tách các loại phòng trong điều kiện
+                            String[] loaiPhongKM = dieuKien.split(",");
+
+                            // Kiểm tra từng loại phòng
+                            for (String loaiKM : loaiPhongKM) {
+                                String tenLoai = loaiKM.trim();
+                                // Chuẩn hóa tên loại phòng
+                                tenLoai = chuanHoaTenLoaiPhong(tenLoai);
+
+                                // Kiểm tra xem loại phòng này có trong danh sách đã chọn không
+                                if (loaiPhongDaChon.contains(tenLoai)) {
+                                    dsKhuyenMaiPhuHop.add(km);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Cập nhật combobox khuyến mãi
+        thueDatPhongPanel.cbb_KhuyenMai.removeAllItems();
+
+        if (dsKhuyenMaiPhuHop.isEmpty()) {
+            thueDatPhongPanel.cbb_KhuyenMai.addItem("Không có khuyến mãi");
+            danhSachKhuyenMaiHienThi.clear();
+        } else {
+            danhSachKhuyenMaiHienThi.clear();
+            for (KhuyenMai km : dsKhuyenMaiPhuHop) {
+                thueDatPhongPanel.cbb_KhuyenMai.addItem(km.getTenKM());
+                danhSachKhuyenMaiHienThi.add(km);
+            }
+        }
+    }
+
+    // chuẩn hóa tên loại phòng (viết hoa chữ cái đầu, giữ nguyên phần còn lại)
+    private String chuanHoaTenLoaiPhong(String tenLoai) {
+        if (tenLoai == null || tenLoai.trim().isEmpty()) {
+            return tenLoai;
+        }
+
+        tenLoai = tenLoai.trim();
+
+        // Danh sách các tên loại phòng chuẩn trong hệ thống
+        switch (tenLoai.toLowerCase()) {
+            case "family room":
+                return "Family Room";
+            case "suite":
+                return "Suite";
+            case "standard":
+                return "Standard";
+            case "superior":
+                return "Superior";
+            case "deluxe":
+                return "Deluxe";
+            default:
+                // Viết hoa chữ cái đầu của từng từ
+                String[] words = tenLoai.split("\\s+");
+                StringBuilder result = new StringBuilder();
+                for (String word : words) {
+                    if (!word.isEmpty()) {
+                        result.append(word.substring(0, 1).toUpperCase())
+                                .append(word.substring(1).toLowerCase())
+                                .append(" ");
+                    }
+                }
+                return result.toString().trim();
+        }
+    }
+
+    private void LocPhong() {
+        ArrayList<Phong> danhSachTam;
+
+        if (khachHangHienTai != null && !dsPhongTheoKH.isEmpty()) {
+            danhSachTam = new ArrayList<>(dsPhongTheoKH);
+        } else {
+            if (danhSachPhong == null) {
+                return;
+            }
+            danhSachTam = new ArrayList<>(danhSachPhong);
+        }
+
+        // Lọc theo loại phòng
+        String loaiPhongChon = (String) thueDatPhongPanel.cbb_LoaiPhong.getSelectedItem();
+        if (loaiPhongChon != null && !loaiPhongChon.equals("Tất cả")) {
+            danhSachTam.removeIf(phong -> !phong.getLoaiPhong().getTenLoaiPhong().equalsIgnoreCase(loaiPhongChon));
+        }
+
+        // Lọc theo khuyến mãi (chỉ khi không phải "Không có khuyến mãi")
+        String khuyenMaiChon = (String) thueDatPhongPanel.cbb_KhuyenMai.getSelectedItem();
+        if (khuyenMaiChon != null && !khuyenMaiChon.equals("Không có khuyến mãi")) {
+            danhSachTam = locPhongTheoKhuyenMai(danhSachTam, khuyenMaiChon);
+        }
+
+        // Lọc theo trạng thái
+        boolean locTrangThai = false;
+        ArrayList<TrangThaiPhong> trangThaiCanLoc = new ArrayList<>();
+
+        if (thueDatPhongPanel.chckbx_phongTrong.isSelected()) {
+            trangThaiCanLoc.add(TrangThaiPhong.Trong);
+            locTrangThai = true;
+        }
+        if (thueDatPhongPanel.chckbx_phongThue.isSelected()) {
+            trangThaiCanLoc.add(TrangThaiPhong.DangSuDung);
+            locTrangThai = true;
+        }
+        if (thueDatPhongPanel.chckbx_phongDat.isSelected()) {
+            trangThaiCanLoc.add(TrangThaiPhong.DaDat);
+            locTrangThai = true;
+        }
+
+        if (locTrangThai) {
+            danhSachTam.removeIf(phong -> !trangThaiCanLoc.contains(phong.getTrangThai()));
         }
 
         danhSachPhongHienThi = danhSachTam;
         HienThiDanhSachPhong(danhSachPhongHienThi);
     }
 
-    private void LocPhongTheoLoai(String loai) {
-        if(loai != ""){
-            danhSachPhongTheoLoai = phongDao.locPhongTheoLoai2(loai);
-            danhSachPhongHienThi = danhSachPhongTheoLoai;
-            LocTrangThaiPhong();
-        }else{
-            danhSachPhongHienThi = danhSachPhong;
-        }
-        HienThiDanhSachPhong(danhSachPhongHienThi);
-    }
-
-    private void LamMoi(){
-        int luaChon = JOptionPane.showConfirmDialog(thueDatPhongPanel,"Bán có muốn làm mới lại trang","chú ý",JOptionPane.YES_NO_OPTION);
-        if(luaChon == JOptionPane.YES_OPTION){
-            thueDatPhongPanel.txt_TimSoDienThoai.setText("");
-            thueDatPhongPanel.txt_SoDienThoai.setText("");
-            thueDatPhongPanel.txt_Email.setText("");
-            thueDatPhongPanel.txt_TenKhachHang.setText("");
-            thueDatPhongPanel.txt_ngaySinhKhachHang.setText("");
-            thueDatPhongPanel.rdbtn_Nam.setSelected(false);
-            thueDatPhongPanel.rdbtn_Nu.setSelected(false);
-            thueDatPhongPanel.model.setRowCount(0);
-            thueDatPhongPanel.ngayBatDau.setDate(null);
-            thueDatPhongPanel.ngayKetThuc.setDate(null);
-            thueDatPhongPanel.chckbx_phongDat.setSelected(false);
-            thueDatPhongPanel.chckbx_phongThue.setSelected(false);
-            thueDatPhongPanel.chckbx_phongTrong.setSelected(false);
-            thueDatPhongPanel.cbb_KhuyenMai.setSelectedIndex(0);
-            getTatCaPhong();
-        }
-    }
-
-    public void getKhuyenMai(){
-        for(KhuyenMai khuyenMai : danhSachKhuyenMai){
-            if(khuyenMai.getTrangThai().equals(TrangThaiKhuyenMai.DangHoatDong)){
-                thueDatPhongPanel.cbb_KhuyenMai.addItem(khuyenMai.getTenKM());
-            }
-        }
-    }
-    private void LocPhongCoKhuyenMai() {
-        if(thueDatPhongPanel.cbb_KhuyenMai.getSelectedIndex() == 0){
-            getTatCaPhong();
-            return;
-        }
-        String tenKhuyenMaiChon = thueDatPhongPanel.cbb_KhuyenMai.getSelectedItem().toString();
+    private ArrayList<Phong> locPhongTheoKhuyenMai(ArrayList<Phong> danhSach, String tenKhuyenMai) {
+        ArrayList<Phong> ketQua = new ArrayList<>();
         KhuyenMai khuyenMaiChon = null;
 
-        for (KhuyenMai khuyenMai : danhSachKhuyenMai) {
-            if (khuyenMai.getTenKM().equals(tenKhuyenMaiChon)) {
-                khuyenMaiChon = khuyenMai;
+        for (KhuyenMai km : danhSachKhuyenMaiHienThi) {
+            if (km.getTenKM().equals(tenKhuyenMai)) {
+                khuyenMaiChon = km;
                 break;
             }
         }
 
         if (khuyenMaiChon != null) {
-            String[] loaiPhongKhuyenMai = khuyenMaiChon.getDieuKienApDung().split(",");
-            ArrayList<Phong> danhSachTam = new ArrayList<>();
-
-            for (String loai : loaiPhongKhuyenMai) {
-                String tenLoai = loai.trim();
-                ArrayList<Phong> dsTheoLoai = phongDao.locPhongTheoLoai(tenLoai);
-                danhSachTam.addAll(dsTheoLoai);
+            String dieuKien = khuyenMaiChon.getDieuKienApDung();
+            if (dieuKien == null) {
+                return danhSach;
             }
-            danhSachPhongTheoLoai = danhSachTam;
-            danhSachPhongHienThi = danhSachPhongTheoLoai;
-            LocTrangThaiPhong();
-            HienThiDanhSachPhong(danhSachPhongHienThi);
+
+            dieuKien = dieuKien.trim();
+
+            // Nếu là "Tất cả" thì trả về toàn bộ danh sách
+            if (dieuKien.equalsIgnoreCase("Tất cả")) {
+                return danhSach;
+            }
+
+            // Tách các loại phòng và chuẩn hóa
+            String[] loaiPhongKhuyenMai = dieuKien.split(",");
+            ArrayList<String> loaiPhongKMList = new ArrayList<>();
+            for (String loai : loaiPhongKhuyenMai) {
+                loaiPhongKMList.add(chuanHoaTenLoaiPhong(loai.trim()));
+            }
+
+            for (Phong phong : danhSach) {
+                String tenLoaiPhong = chuanHoaTenLoaiPhong(phong.getLoaiPhong().getTenLoaiPhong());
+                if (loaiPhongKMList.contains(tenLoaiPhong)) {
+                    ketQua.add(phong);
+                }
+            }
         }
+
+        return ketQua.isEmpty() ? danhSach : ketQua;
     }
 
-//    public void TimPhongDatTheoSoDienThoai(){
-//        String sdt = thueDatPhongPanel.txt_TimSoDienThoai.getText().strip();
-//        ArrayList<HoaDon> danhSachHoaDon = hoaDonDao.timHoaDonTheoSDT(sdt);
-//        if (danhSachHoaDon == null) {
-//            JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cho số điện thoại này");
-//            return;
-//        }
-//        ArrayList<Phong> danhSachTam = new ArrayList<>();
-//        for(HoaDon hoaDon : danhSachHoaDon){
-//            for(ChiTietHoaDon cthd : hoaDon.getcTHD()){
-//                for(Phong phong : danhSachPhong){
-//                    if(phong.getMaPhong().equals(cthd.getPhong().getMaPhong())){
-//                        danhSachTam.add(phong);
-//                    }
-//                }
-//            }
-//        }
-//
-//        danhSachPhongHienThi = danhSachTam;
-//        HienThiDanhSachPhong(danhSachPhongHienThi);
-//    }
+    public void getKhuyenMai(){
+        thueDatPhongPanel.cbb_KhuyenMai.removeAllItems();
+        danhSachKhuyenMaiHienThi.clear();
+
+        // Chỉ hiển thị "Không có khuyến mãi" nếu không có phòng nào được chọn
+        // Khi có phòng được chọn, combobox sẽ được cập nhật bởi capNhatKhuyenMaiTheoPhongDaChon()
+        if (dsPhongDaChon.isEmpty()) {
+            thueDatPhongPanel.cbb_KhuyenMai.addItem("Không có khuyến mãi");
+        }
+    }
 
     public void TuDongCapNhatTrangThaiPhong_TheoKhoangNgay() {
         Date ngayBatDau = thueDatPhongPanel.ngayBatDau.getDate();
@@ -423,54 +657,187 @@ public class ThueDatPhongController {
             return;
         }
 
-        hoaDonDao.TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(ngayBatDau, ngayKetThuc);
-        
-        getTatCaPhong();
-        LocTrangThaiPhong();
-    }
+        if (ngayBatDau.after(ngayKetThuc)) {
+            JOptionPane.showMessageDialog(null, "Ngày bắt đầu phải trước ngày kết thúc!");
+            return;
+        }
 
-    // THÊM: Phương thức thêm phòng vào danh sách đã chọn
-    public void themPhongDaChon(Phong phong) {
-        if (!dsPhongDaChon.contains(phong)) {
-            dsPhongDaChon.add(phong);
-            capNhatTableDanhSachPhongDaChon();
+        int result = JOptionPane.showConfirmDialog(null,
+                "Bạn có chắc muốn cập nhật trạng thái phòng theo khoảng ngày đã chọn?",
+                "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            hoaDonDao.TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(ngayBatDau, ngayKetThuc);
+            getTatCaPhong();
+
+            JOptionPane.showMessageDialog(null,
+                    "Đã cập nhật trạng thái phòng thành công!",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-    // THÊM: Phương thức cập nhật bảng danh sách phòng đã chọn
-    private void capNhatTableDanhSachPhongDaChon() {
-        // Xóa tất cả các dòng hiện tại
-        thueDatPhongPanel.model.setRowCount(0);
-
-        // Thêm các phòng đã chọn vào bảng
-        for (Phong phong : dsPhongDaChon) {
-            thueDatPhongPanel.model.addRow(new Object[]{
-                    phong.getMaPhong(),
-                    phong.getLoaiPhong().getTenLoaiPhong(),
-                    phong.getSucChuaToiDa(),
-                    phong.getGiaPhong()
-            });
-        }
-    }
-
-    // THÊM: Phương thức lấy danh sách phòng đã chọn
     public ArrayList<Phong> getDsPhongDaChon() {
         return dsPhongDaChon;
     }
 
+    public KhachHang getKhachHangHienTai() {
+        return khachHangHienTai;
+    }
+
+    public void clearDsPhongDaChon() {
+        dsPhongDaChon.clear();
+        // Khi xóa phòng đã chọn, cập nhật lại combobox khuyến mãi
+        getKhuyenMai();
+    }
 
     public void refreshDanhSachPhong() {
-        // Cập nhật danh sách phòng từ database
-        danhSachPhong = phongDao.getDanhSachPhong();
-
-        // Xóa các component cũ
-        thueDatPhongPanel.danhSachPhongPanel.removeAll();
-
-        // Vẽ lại danh sách phòng
         getTatCaPhong();
+        LocPhong();
+    }
 
-        // Cập nhật giao diện
-        thueDatPhongPanel.danhSachPhongPanel.revalidate();
-        thueDatPhongPanel.danhSachPhongPanel.repaint();
+    public void setBtnNhanPhongAction(java.awt.event.ActionListener action) {
+        thueDatPhongPanel.btn_ThuePhong.addActionListener(action);
+    }
+
+    public void setBtnDatPhongAction(java.awt.event.ActionListener action) {
+        thueDatPhongPanel.btn_DatPhong.addActionListener(action);
+    }
+
+    private void openPhieuDatPhongDialog() {
+        // Kiểm tra đã chọn phòng chưa
+        if (dsPhongDaChon.isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Vui lòng chọn ít nhất một phòng để đặt!",
+                    "Thông báo",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Lấy khuyến mãi đã chọn
+        KhuyenMai khuyenMaiDuocChon = getKhuyenMaiDuocChon();
+
+        // Tạo và hiển thị dialog
+        PhieuDatPhongDialogOThueDatPhong dialog = new PhieuDatPhongDialogOThueDatPhong();
+
+        // Tạo controller cho dialog và truyền dữ liệu
+        new PhieuDatPhongController(dialog, khachHangHienTai, dsPhongDaChon, khuyenMaiDuocChon);
+
+        // Hiển thị dialog
+        dialog.setModal(true);
+        dialog.setVisible(true);
+
+        // Sau khi đóng dialog, có thể cần refresh lại danh sách phòng
+        if (dialog.isConfirmed()) {
+            refreshDanhSachPhong();
+            clearDsPhongDaChon();
+        }
+    }
+
+    private void openPhieuThuePhongDialog() {
+        // Kiểm tra đã chọn phòng chưa
+        if (dsPhongDaChon.isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Vui lòng chọn ít nhất một phòng để thuê!",
+                    "Thông báo",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Lấy khuyến mãi đã chọn
+        KhuyenMai khuyenMaiDuocChon = getKhuyenMaiDuocChon();
+
+        // Tạo và hiển thị dialog
+        PhieuThuePhongDialogOThueDatPhong dialog = new PhieuThuePhongDialogOThueDatPhong();
+
+        // Tạo controller cho dialog và truyền dữ liệu
+        new PhieuThuePhongController(dialog, khachHangHienTai, dsPhongDaChon, khuyenMaiDuocChon);
+
+        // Hiển thị dialog
+        dialog.setModal(true);
+        dialog.setVisible(true);
+
+        // Sau khi đóng dialog, có thể cần refresh lại danh sách phòng
+        if (dialog.isConfirmed()) {
+            refreshDanhSachPhong();
+            clearDsPhongDaChon();
+        }
+    }
+
+    // Thêm phương thức hiển thị thông báo đẹp
+    private void showCustomMessage(String message, String title, int messageType) {
+        JOptionPane pane = new JOptionPane(
+                "<html><div style='width:300px;padding:10px;font-family:Segoe UI;font-size:14px;'>"
+                        + message + "</div></html>",
+                messageType
+        );
+        JDialog dialog = pane.createDialog(null, title);
+
+        // Customize the dialog appearance
+        dialog.getContentPane().setBackground(new Color(236, 247, 255));
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        // Get the OK button and customize it
+        for (Component comp : pane.getComponents()) {
+            if (comp instanceof JButton) {
+                JButton button = (JButton) comp;
+                button.setBackground(new Color(10, 110, 189));
+                button.setForeground(Color.WHITE);
+                button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                button.setFocusPainted(false);
+                button.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+            }
+        }
+
+        dialog.setVisible(true);
+    }
+
+    private int showCustomConfirmDialog(String message, String title, int messageType) {
+        Object[] options = {"Có", "Không"};
+        JOptionPane pane = new JOptionPane(
+                "<html><div style='width:300px;padding:10px;font-family:Segoe UI;font-size:14px;'>"
+                        + message + "</div></html>",
+                messageType,
+                JOptionPane.YES_NO_OPTION,
+                null,
+                options,
+                options[0]
+        );
+        JDialog dialog = pane.createDialog(null, title);
+
+        // Customize the dialog appearance
+        dialog.getContentPane().setBackground(new Color(236, 247, 255));
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        // Customize buttons
+        for (Component comp : pane.getComponents()) {
+            if (comp instanceof JButton) {
+                JButton button = (JButton) comp;
+                if (button.getText().equals("Có")) {
+                    button.setBackground(new Color(10, 110, 189));
+                } else {
+                    button.setBackground(new Color(220, 220, 220));
+                    button.setForeground(Color.BLACK);
+                }
+                button.setForeground(Color.WHITE);
+                button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                button.setFocusPainted(false);
+                button.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+            }
+        }
+
+        dialog.setVisible(true);
+
+        Object selectedValue = pane.getValue();
+        if (selectedValue == null) {
+            return JOptionPane.CLOSED_OPTION;
+        }
+
+        if (selectedValue.toString().equals("Có")) {
+            return JOptionPane.YES_OPTION;
+        } else {
+            return JOptionPane.NO_OPTION;
+        }
     }
 }

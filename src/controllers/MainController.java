@@ -1,4 +1,5 @@
 package controllers;
+
 import view.mainframe.*;
 import view.panels.*;
 
@@ -17,59 +18,146 @@ public class MainController {
     private JPanel phongPanel;
     private JPanel khuyenMaiPanel;
     private JPanel thueDatPhongPanel;
-    private JPanel mangHinhChinhPanel;
+    private ManHinhTrangChuPanel manHinhTrangChuPanel;
+
+    // THÊM: Panel cho thống kê
+    private JPanel thongKeDoanhThuPanel;
+    private JPanel thongKeTyLePhongPanel;
 
     public MainController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         khoi_Tao_Cac_Panel();
-        //showMangHinhChinh();
+        showMangHinhChinh();
         mainFrame.chonNutMacDinh();
     }
 
     private void khoi_Tao_Cac_Panel() {
         // Khởi tạo các JPanel khác của app
-        nhanVienPanel = new NhanVienPanel();
-        khachHangPanel = new KhachHangPanel();
-//        hoaDonPanel = new HoaDonPanel();
-        loaiPhongPanel = new LoaiPhongPanel();
-        phongPanel = new PhongPanel();
-        khuyenMaiPanel = new KhuyenMaiPanel();
-        thueDatPhongPanel = new ThueDatPhongPanel();
-//        mangHinhChinhPanel = new MangHinhChinhPanel();
+        // nhanVienPanel = new NhanVienPanel();
+        // khachHangPanel = new KhachHangPanel();
+        // hoaDonPanel = new HoaDonPanel();
+        // loaiPhongPanel = new LoaiPhongPanel();
+        // phongPanel = new PhongPanel();
+        // khuyenMaiPanel = new KhuyenMaiPanel();
+        // thueDatPhongPanel = new ThueDatPhongPanel();
+        // manHinhTrangChuPanel = new ManHinhTrangChuPanel();
     }
 
-//    public void showMangHinhChinh() {
-//        mangHinhChinhPanel = new MangHinhChinhPanel();
-//        doi_Panel(mangHinhChinhPanel);
-//    }
+    public void showMangHinhChinh() {
+        manHinhTrangChuPanel = new ManHinhTrangChuPanel();
+        doi_Panel(manHinhTrangChuPanel);
+    }
 
     public void showKhach_Hang_Panel() {
-        khachHangPanel = new KhachHangPanel();
+        if (khachHangPanel == null) {
+            khachHangPanel = new KhachHangPanel();
+        }
         doi_Panel(khachHangPanel);
     }
+
     public void showNhan_Vien_Panel() {
-        nhanVienPanel = new NhanVienPanel();
+        if (nhanVienPanel == null) {
+            nhanVienPanel = new NhanVienPanel();
+        }
         doi_Panel(nhanVienPanel);
     }
+
     public void showHoa_Don_Panel() {
-        hoaDonPanel = new HoaDonPanel();
+        if (hoaDonPanel == null) {
+            hoaDonPanel = new HoaDonPanel();
+        }
         doi_Panel(hoaDonPanel);
     }
+
     public void showLoai_Phong_Panel() {
-        loaiPhongPanel = new LoaiPhongPanel();
+        if (loaiPhongPanel == null) {
+            loaiPhongPanel = new LoaiPhongPanel();
+        }
         doi_Panel(loaiPhongPanel);
     }
+
     public void showPhong_Panel() {
-        phongPanel = new PhongPanel();
+        if (phongPanel == null) {
+            phongPanel = new PhongPanel();
+        }
         doi_Panel(phongPanel);
     }
+
     public void showKhuyen_Mai_Panel() {
-        khuyenMaiPanel = new KhuyenMaiPanel();
+        if (khuyenMaiPanel == null) {
+            khuyenMaiPanel = new KhuyenMaiPanel();
+        }
         doi_Panel(khuyenMaiPanel);
     }
+
     public void showThue_Dat_Phong_Panel() {
-        thueDatPhongPanel = new ThueDatPhongPanel();
+        if (thueDatPhongPanel == null) {
+            thueDatPhongPanel = new ThueDatPhongPanel();
+        }
         doi_Panel(thueDatPhongPanel);
+    }
+
+
+    public void showThongKeDoanhThu() {
+        if (thongKeDoanhThuPanel == null) {
+            thongKeDoanhThuPanel = new ThongKeDoanhThuPanel();
+        }
+        doi_Panel(thongKeDoanhThuPanel);
+    }
+
+    public void showThongKeTyLePhong() {
+        if (thongKeTyLePhongPanel == null) {
+            thongKeTyLePhongPanel = new ThongKeTyLePhongPanel();
+        }
+        doi_Panel(thongKeTyLePhongPanel);
+    }
+
+    // THÊM: Phương thức tạo panel thống kê chung
+    private JPanel taoPanelThongKe(String title, String message) {
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(248, 250, 252));
+        panel.setLayout(new BorderLayout());
+
+        // Header
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(67, 97, 238));
+        headerPanel.setPreferredSize(new Dimension(0, 80));
+        headerPanel.setLayout(new BorderLayout());
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        headerPanel.add(titleLabel, BorderLayout.CENTER);
+
+        panel.add(headerPanel, BorderLayout.NORTH);
+
+        // Main content
+        JPanel contentPanel = new JPanel(new GridBagLayout());
+        contentPanel.setBackground(new Color(248, 250, 252));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+
+        JLabel comingSoonLabel = new JLabel(message);
+        comingSoonLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        comingSoonLabel.setForeground(new Color(100, 116, 139));
+
+        contentPanel.add(comingSoonLabel);
+
+        panel.add(contentPanel, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    // THÊM: Phương thức hiển thị trợ giúp
+    public void showTroGiup() {
+        JOptionPane.showMessageDialog(mainFrame,
+                "Hệ thống quản lý khách sạn ATTM\n\n" +
+                        "Phiên bản: 1.0\n" +
+                        "Hỗ trợ kỹ thuật: 0966-086-570\n" +
+                        "Email: support@attm.com\n\n" +
+                        "© 2024 ATTM Hotel Management System",
+                "Trợ giúp",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void doi_Panel(JPanel panel_Moi) {
@@ -78,28 +166,21 @@ public class MainController {
         }
         pnl_Theo_Doi_Panel_Dang_Hien_Thi = panel_Moi;
 
-        if(pnl_Theo_Doi_Panel_Dang_Hien_Thi.getLayout() == null){
-            pnl_Theo_Doi_Panel_Dang_Hien_Thi.setBounds(0,0,
-                    mainFrame.getPnlNoiDung().getWidth(),
-                    mainFrame.getPnlNoiDung().getHeight());
-            mainFrame.getPnlNoiDung().add(pnl_Theo_Doi_Panel_Dang_Hien_Thi);
-        }else{
-            mainFrame.getPnlNoiDung().add(pnl_Theo_Doi_Panel_Dang_Hien_Thi, BorderLayout.CENTER);
-        }
+        mainFrame.getPnlNoiDung().removeAll();
+        mainFrame.getPnlNoiDung().setLayout(new BorderLayout());
+        mainFrame.getPnlNoiDung().add(pnl_Theo_Doi_Panel_Dang_Hien_Thi, BorderLayout.CENTER);
+
         mainFrame.getPnlNoiDung().revalidate();
         mainFrame.getPnlNoiDung().repaint();
     }
 
-    /*
-        "Khi người dùng kéo to/nhỏ cửa sổ chương trình, phương thức này sẽ tự
-        động điều chỉnh kích thước của panel đang hiển thị để LUÔN VỪA KHÍT với cửa sổ."
-    */
     public void onWindowResized() {
-        if (pnl_Theo_Doi_Panel_Dang_Hien_Thi != null &&
-                pnl_Theo_Doi_Panel_Dang_Hien_Thi.getLayout() == null) {
-            pnl_Theo_Doi_Panel_Dang_Hien_Thi.setBounds(0, 0,
-                    mainFrame.getPnlNoiDung().getWidth(),
-                    mainFrame.getPnlNoiDung().getHeight());
+        if (pnl_Theo_Doi_Panel_Dang_Hien_Thi != null) {
+            pnl_Theo_Doi_Panel_Dang_Hien_Thi.setPreferredSize(
+                    new Dimension(mainFrame.getPnlNoiDung().getWidth(),
+                            mainFrame.getPnlNoiDung().getHeight())
+            );
+            pnl_Theo_Doi_Panel_Dang_Hien_Thi.revalidate();
         }
     }
 }

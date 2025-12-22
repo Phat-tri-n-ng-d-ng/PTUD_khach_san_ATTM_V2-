@@ -9,7 +9,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class LoaiPhongDialog extends JDialog {
-    private LoaiPhong loaiPhong;
+    private final LoaiPhong loaiPhong;
     public JTextField txt_MaLoaiPhong;
     public JTextField txt_TenLoaiPhong;
     public JTextField txt_GiaNiemYet;
