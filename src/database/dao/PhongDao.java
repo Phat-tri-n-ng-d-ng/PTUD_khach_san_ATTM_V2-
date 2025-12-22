@@ -230,54 +230,6 @@ public class PhongDao {
 
         return dsp;
     }
-    public boolean doiPhong(String maHD, String maPhongCu, String maPhongMoi, double phiDoiPhong) {
-        Connection con = null;
-        try {
-            con =  ConnectDB.getConnection();
-            con.setAutoCommit(false);
-
-            PreparedStatement ps1 = con.prepareStatement(
-                "UPDATE Phong SET trangThaiPhong = 'Trong' WHERE maPhong = ?"
-            );
-            ps1.setString(1, maPhongCu);
-            ps1.executeUpdate();
-
-            PreparedStatement ps2 = con.prepareStatement(
-                "UPDATE Phong SET trangThaiPhong = 'DaDat' WHERE maPhong = ?"
-            );
-            ps2.setString(1, maPhongMoi);
-            ps2.executeUpdate();
-
-            PreparedStatement ps3 = con.prepareStatement(
-                "UPDATE ChiTietHoaDon SET maPhong = ? WHERE maHD = ? AND maPhong = ?"
-            );
-            ps3.setString(1, maPhongMoi);
-            ps3.setString(2, maHD);
-            ps3.setString(3, maPhongCu);
-            ps3.executeUpdate();
-
-            PreparedStatement ps4 = con.prepareStatement(
-                "UPDATE HoaDon SET phiDoiPhong = ? WHERE maHD = ?"
-            );
-            ps4.setDouble(1, phiDoiPhong);
-            ps4.setString(2, maHD);
-            ps4.executeUpdate();
-
-            con.commit();
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }finally {
-        	try {
-        		con.setAutoCommit(true);
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
-			ConnectDB.closeConnection(con);
-		}
-    }
     public boolean nhanPhong(String maHD, ArrayList<NguoiO> dsNguoiO, String maP) {
         Connection con = ConnectDB.getConnection();
         try {
@@ -441,5 +393,79 @@ public class PhongDao {
             ConnectDB.closeConnection(con);
         }
     }
-     
+    public boolean doiPhong(String maHD, String maPhongCu, String maPhongMoi, double phiDoiPhong) {
+        Connection con = null;
+        try {
+            con =  ConnectDB.getConnection();
+            con.setAutoCommit(false);
+
+            PreparedStatement ps1 = con.prepareStatement(
+                    "UPDATE Phong SET trangThaiPhong = 'Trong' WHERE maPhong = ?"
+            );
+            ps1.setString(1, maPhongCu);
+            ps1.executeUpdate();
+
+            PreparedStatement ps2 = con.prepareStatement(
+                    "UPDATE Phong SET trangThaiPhong = 'DaDat' WHERE maPhong = ?"
+            );
+            ps2.setString(1, maPhongMoi);
+            ps2.executeUpdate();
+
+            PreparedStatement ps3 = con.prepareStatement(
+                    "UPDATE ChiTietHoaDon SET maPhong = ? WHERE maHD = ? AND maPhong = ?"
+            );
+            ps3.setString(1, maPhongMoi);
+            ps3.setString(2, maHD);
+            ps3.setString(3, maPhongCu);
+            ps3.executeUpdate();
+
+            PreparedStatement ps4 = con.prepareStatement(
+                    "UPDATE HoaDon SET phiDoiPhong = ? WHERE maHD = ?"
+            );
+            ps4.setDouble(1, phiDoiPhong);
+            ps4.setString(2, maHD);
+            ps4.executeUpdate();
+
+            con.commit();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }finally {
+            try {
+                con.setAutoCommit(true);
+            } catch (Exception e2) {
+                // TODO: handle exception
+            }
+            ConnectDB.closeConnection(con);
+        }
+    }
+
+    public ArrayList<Phong> getDanhSachPhongTrong(){
+        Connection con = ConnectDB.getConnection();
+        ArrayList<Phong> dsp= new ArrayList<>();
+
+        try {
+//            CallableStatement st = con.prepareCall("{call getDanhSachPhong}");
+//            ResultSet rs = st.executeQuery();
+            Statement st = con.createStatement();
+            ResultSet rs =st.executeQuery("select maPhong,lp.maLoaiPhong,lp.tenLoaiPhong,tang,soPhong,sucChuaToiDa,giaPhong,tienCoc,trangThaiPhong " +
+                    "from Phong p join LoaiPhong lp on p.maLoaiPhong=lp.maLoaiPhong where p.trangThaiPhong = 'Trong' ");
+
+            while (rs.next()){
+                LoaiPhong loaiPhong= new LoaiPhong(rs.getString(2),rs.getString(3));
+                Phong p = new Phong(rs.getString("maPhong"),loaiPhong,
+                        rs.getInt(4),rs.getInt(5),rs.getInt(6),rs.getDouble(7),
+                        rs.getDouble(8),TrangThaiPhong.valueOf(rs.getString(9)));
+                dsp.add(p);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            ConnectDB.closeConnection(con);
+        }
+        return dsp;
+    }
 }

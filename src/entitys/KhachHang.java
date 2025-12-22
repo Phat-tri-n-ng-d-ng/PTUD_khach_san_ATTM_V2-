@@ -120,6 +120,14 @@ public class KhachHang {
 		this.soCCCD = soCCCD;
 	}
 
+    public KhachHang(String tenKH, String sdt, String soCCCD, HangKhachHang hangKH) {
+        super();
+        this.tenKH = tenKH;
+        this.sdt = sdt;
+        this.soCCCD = soCCCD;
+        this.hangKH = hangKH;
+    }
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(maKH);

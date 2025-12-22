@@ -8,14 +8,13 @@ import enums.TrangThaiKhuyenMai;
 import enums.TrangThaiPhong;
 import view.dialogs.PhieuDoiPhongDialog;
 import view.dialogs.PhieuPhongDatDialog;
-import view.dialogs.ThemKhachHangDialog;
 import view.panels.ThueDatPhongPanel;
 import view.dialogs.PhieuThuePhongDialogOThueDatPhong;
 import view.dialogs.PhieuDatPhongDialogOThueDatPhong;
 
 import javax.swing.*;
 
-import controllers.dialogs.PhieuDoiPhongController;
+import controllers.dialogs.PhieuDoiPhongDatController;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -324,7 +323,7 @@ public class ThueDatPhongController{
                 new PhieuPhongDatController(phieuPhongDatdialog, p);
                 phieuPhongDatdialog.btnDoiPhong.addActionListener(ev -> {
                     PhieuDoiPhongDialog phieuDoiPhongDialog = new PhieuDoiPhongDialog();
-                    new PhieuDoiPhongController(phieuDoiPhongDialog, p);
+                    new PhieuDoiPhongDatController(phieuDoiPhongDialog, p);
                     phieuDoiPhongDialog.setLocationRelativeTo(null);
                     phieuDoiPhongDialog.setModal(true);
                     phieuDoiPhongDialog.setVisible(true);

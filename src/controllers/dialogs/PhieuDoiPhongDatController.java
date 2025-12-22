@@ -1,8 +1,3 @@
-/*
- * @ (#) PhieuDoiPhongController.java     1.0     12/17/2025
- *
- *Copyright (c) 2025 IUH. All rights reserved.
- */
 package controllers.dialogs;
 
 
@@ -14,7 +9,6 @@ import entitys.KhachHang;
 import entitys.Phong;
 import services.KhachHangService;
 import services.PhongService;
-import view.dialogs.PhieuDatPhongDialog;
 import view.dialogs.PhieuDoiPhongDialog;
 
 import javax.swing.*;
@@ -22,18 +16,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class PhieuDoiPhongController implements MouseListener {
+public class PhieuDoiPhongDatController implements MouseListener {
     PhieuDoiPhongDialog phieuDoiPhongDialog;
     Phong phong;
     HoaDonDao hoaDonDao;
     KhachHangService khachHangService;
     PhongService phongService;
     DecimalFormat df=new DecimalFormat("0");
-	private PhongDao phongDao;
+    private PhongDao phongDao;
 
-    public PhieuDoiPhongController(PhieuDoiPhongDialog phieu, Phong phong) {
+    public PhieuDoiPhongDatController(PhieuDoiPhongDialog phieu, Phong phong) {
         this.phieuDoiPhongDialog = phieu;
         this.phong = phong;
         hoaDonDao = new HoaDonDao();
@@ -76,7 +69,7 @@ public class PhieuDoiPhongController implements MouseListener {
 //        phieuDoiPhongDialog.ngayBatDau.setDate(Date.from(hoaDon.getNgayNhanPhong().atZone(java.time.ZoneId.systemDefault()).toInstant()));
 //        phieuDoiPhongDialog.ngayKetThuc.setDate(Date.from(hoaDon.getNgayTraPhong().atZone(java.time.ZoneId.systemDefault()).toInstant()));
         // Hiển thị danh sách phòng
-        ArrayList<Phong> dsPhong= phongService.getDanhSachPhong();
+        ArrayList<Phong> dsPhong= phongDao.getDanhSachPhongTrong();
         for (Phong p : dsPhong) {
 //            int ngay=phieuDoiPhongDialog.ngayKetThuc-phieuDoiPhongDialog.ngayBatDau;
             phieuDoiPhongDialog.modelPhongDoi.addRow(new Object[]{p.getMaPhong(),p.getLoaiPhong().getTenLoaiPhong(),p.getSucChuaToiDa(),df.format(p.getGiaPhong()),df.format(p.getTienCoc())});
@@ -127,14 +120,14 @@ public class PhieuDoiPhongController implements MouseListener {
             double phiDoiPhong = phieuDoiPhongDialog.rdbtn_KhachHangYeuCau.isSelected() ? 50000 : 0;
             boolean doiP = phongDao.doiPhong(maHD, maPhongCu, maPhongMoi, phiDoiPhong);
             if(doiP) {
-            	JOptionPane.showMessageDialog(phieuDoiPhongDialog,"Đổi phòng thành công!");
+                JOptionPane.showMessageDialog(phieuDoiPhongDialog,"Đổi phòng thành công!");
             }else {
-            	JOptionPane.showMessageDialog(phieuDoiPhongDialog,"Đổi phòng không thành công!");
+                JOptionPane.showMessageDialog(phieuDoiPhongDialog,"Đổi phòng không thành công!");
 
             }
 
-            
-            
+
+
 
         });
 

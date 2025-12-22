@@ -152,43 +152,6 @@ public class HoaDonDao {
 	    }
 	    return kh;
 	}
-	 public HoaDon timHoaDonTheoMa(String ma) {
-	        Connection connection = ConnectDB.getConnection();
-	        HoaDon hd = null;
-	        String sql = "select maHD, ngayLap, kh.tenKH, kh.sdt,phuongThucTT, nv.tenNV, tienNhan,hd.trangThaiHD from HoaDon hd join KhachHang kh on hd.maKH = kh.maKH join NhanVien nv on hd.maNV = nv.maNV where maHD = ?"; //co The them ttien tra
-	        try {
-	            PreparedStatement st = connection.prepareStatement(sql);
-	            st.setString(1, ma);
-	            ResultSet rs= st.executeQuery();
-	            while(rs.next()) {
-	                String maHD = rs.getString("maHD");
-	                LocalDateTime ngayLap = rs.getTimestamp("ngayLap").toLocalDateTime();
-	                String tenKH = rs.getString("tenKH");
-	                String sdt = rs.getString("sdt");
-	                KhachHang kh = new KhachHang(tenKH,sdt);
-	                String tenNV = rs.getString("tenNV");
-	                TrangThaiHoaDon trangThaiHD = TrangThaiHoaDon.valueOf(rs.getString("trangThaiHD"));
-	                double tienNhan =  rs.getDouble("tienNhan");
-	                NhanVien nv = new NhanVien();
-	                nv.setTenNV(tenNV);
-	                PhuongThucThanhToan pttt = PhuongThucThanhToan.valueOf(rs.getString("phuongThucTT"));
-	                //Lay du lieu tu chi tiet hoa don
-	                ArrayList<ChiTietHoaDon> dsCTDH = this.getChiTietHoaDon(maHD);
-
-	                hd = new HoaDon(maHD, ngayLap, pttt, trangThaiHD, kh, dsCTDH , nv, tienNhan);
-	                hd.setTongTien();
-	                hd.setTienThue();
-	                hd.setPhiDoiPhong();
-	                hd.setTongTienThanhToan();
-	            }
-	        } catch (Exception e) {
-	            // TODO: handle exception
-	            e.printStackTrace();
-	        }finally {
-	            ConnectDB.closeConnection(connection);
-	        }
-	        return hd;
-	    }
 	 public ArrayList<ChiTietHoaDon> timPhongTheoMaHD(String ma) {
 	        Connection connection = ConnectDB.getConnection();
 	        ChiTietHoaDon hd = null;
@@ -343,6 +306,46 @@ public class HoaDonDao {
             throw new RuntimeException(e);
         }
         return n>0;
+    }
+
+    public HoaDon timHoaDonTheoMa(String ma) {
+        Connection connection = ConnectDB.getConnection();
+        HoaDon hd = null;
+        String sql = "select maHD, ngayLap, kh.tenKH, kh.sdt,kh.soCCCD,hk.tenHang,phuongThucTT, nv.tenNV, tienNhan,hd.trangThaiHD  from HoaDon hd join KhachHang kh on hd.maKH = kh.maKH join NhanVien nv on hd.maNV = nv.maNV join HangKhachHang hk on hk.maHang = kh.maHang where maHD = ?"; //co The them ttien tra
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, ma);
+            ResultSet rs= st.executeQuery();
+            while(rs.next()) {
+                String maHD = rs.getString("maHD");
+                LocalDateTime ngayLap = rs.getTimestamp("ngayLap").toLocalDateTime();
+                String tenKH = rs.getString("tenKH");
+                String sdt = rs.getString("sdt");
+                String soCCCD = rs.getString("soCCCD");
+                String hangKh= rs.getString("tenHang");
+                HangKhachHang hangObj = new HangKhachHang(hangKh); // Tạo đối tượng trước
+                KhachHang kh = new KhachHang(tenKH, sdt, soCCCD, hangObj);	                String tenNV = rs.getString("tenNV");
+                TrangThaiHoaDon trangThaiHD = TrangThaiHoaDon.valueOf(rs.getString("trangThaiHD"));
+                double tienNhan =  rs.getDouble("tienNhan");
+                NhanVien nv = new NhanVien();
+                nv.setTenNV(tenNV);
+                PhuongThucThanhToan pttt = PhuongThucThanhToan.valueOf(rs.getString("phuongThucTT"));
+                //Lay du lieu tu chi tiet hoa don
+                ArrayList<ChiTietHoaDon> dsCTDH = getChiTietHoaDon(maHD);
+
+                hd = new HoaDon(maHD, ngayLap, pttt, trangThaiHD, kh, dsCTDH , nv, tienNhan);
+                hd.setTongTien();
+                hd.setTienThue();
+                hd.setPhiDoiPhong();
+                hd.setTongTienThanhToan();
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }finally {
+            ConnectDB.closeConnection(connection);
+        }
+        return hd;
     }
 
     public boolean capNhatHoaDon(String phuongThucTT,double tongTien,double tienThue,
