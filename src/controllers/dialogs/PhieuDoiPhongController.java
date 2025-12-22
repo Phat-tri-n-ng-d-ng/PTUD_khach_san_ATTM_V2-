@@ -7,6 +7,7 @@ package controllers.dialogs;
 
 
 import database.dao.HoaDonDao;
+import database.dao.PhongDao;
 import entitys.ChiTietHoaDon;
 import entitys.HoaDon;
 import entitys.KhachHang;
@@ -30,6 +31,7 @@ public class PhieuDoiPhongController implements MouseListener {
     KhachHangService khachHangService;
     PhongService phongService;
     DecimalFormat df=new DecimalFormat("0");
+	private PhongDao phongDao;
 
     public PhieuDoiPhongController(PhieuDoiPhongDialog phieu, Phong phong) {
         this.phieuDoiPhongDialog = phieu;
@@ -37,6 +39,7 @@ public class PhieuDoiPhongController implements MouseListener {
         hoaDonDao = new HoaDonDao();
         khachHangService = new KhachHangService();
         phongService = new PhongService();
+        phongDao = new PhongDao();
 
         HoaDon hoaDon = hoaDonDao.timHoaDonTheoPhongDaDat(phong.getMaPhong());
         if (hoaDon == null) {
@@ -122,7 +125,7 @@ public class PhieuDoiPhongController implements MouseListener {
             String maPhongCu = phieuDoiPhongDialog.tablePhongHienTai.getValueAt(0, 0).toString();
             String maPhongMoi = phieuDoiPhongDialog.tablePhongDoi.getValueAt(row, 0).toString();
             double phiDoiPhong = phieuDoiPhongDialog.rdbtn_KhachHangYeuCau.isSelected() ? 50000 : 0;
-            boolean doiP = hoaDonDao.doiPhong(maHD, maPhongCu, maPhongMoi, phiDoiPhong);
+            boolean doiP = phongDao.doiPhong(maHD, maPhongCu, maPhongMoi, phiDoiPhong);
             if(doiP) {
             	JOptionPane.showMessageDialog(phieuDoiPhongDialog,"Đổi phòng thành công!");
             }else {

@@ -20,6 +20,7 @@ import com.toedter.calendar.JDateChooser;
 
 import database.dao.HoaDonDao;
 import database.dao.KhuyenMaiDao;
+import database.dao.PhongDao;
 import entitys.ChiTietHoaDon;
 import entitys.HoaDon;
 import entitys.NguoiO;
@@ -32,6 +33,7 @@ public class PhieuPhongDatController implements ActionListener, MouseListener {
 	private PhieuPhongDatDialog phieuPhongDatDialog;
 	private PhongService phongService;
 	private KhachHangService khachHangServies;
+	private PhongDao phongDao;
 	private HoaDonDao hoaDonDao;
 	private KhuyenMaiDao khuyenMaiDao;
 	private Phong phongChinh;
@@ -48,13 +50,22 @@ public class PhieuPhongDatController implements ActionListener, MouseListener {
 		phongService = new PhongService();
 		khachHangServies = new KhachHangService();
 		khuyenMaiDao = new KhuyenMaiDao();
+		phongDao = new PhongDao();
 		
 		phieuPhongDatDialog.btnNhanPhong.addActionListener(this);
 		phieuPhongDatDialog.btnHuyPhong.addActionListener(this);
 		phieuPhongDatDialog.btn_Them.addActionListener(this);
 		phieuPhongDatDialog.table_PhongDiKem.addMouseListener(this);
+		HoaDon hd = null;
+		if (phongChinh.getTrangThai() == enums.TrangThaiPhong.DaDat) {
+		    hd = hoaDonDao.timHoaDonTheoPhongDaDat(phongChinh.getMaPhong());
+		} else if (phongChinh.getTrangThai() == enums.TrangThaiPhong.DangSuDung) {
+		    hd = hoaDonDao.timHoaDonTheoPhongDangThue(phongChinh.getMaPhong());
+		}
+		
+		
 
-		hienThiThongTinKHDat();
+		hienThiThongTinKHDat(hd);
 		khoiTaoDanhSachNguoiOTheoPhong();
 	}
 
@@ -69,11 +80,11 @@ public class PhieuPhongDatController implements ActionListener, MouseListener {
 		}
 	}
 
-	public void hienThiThongTinKHDat() {
-		String maP = phongChinh.getMaPhong();
-		HoaDon hd = hoaDonDao.timHoaDonTheoPhongDaDat(maP);
+	public void hienThiThongTinKHDat(HoaDon hd) {
+		
 		ChiTietHoaDon cthd = hoaDonDao.getChiTietHoaDon_1(hd.getMaHD());
 		ArrayList<Phong> dsPhong = phongService.getPhongBangMa(hd.getMaHD());
+		
 
 		// Hiển thị thông tin khách hàng
 		phieuPhongDatDialog.txt_HoTen.setText(hd.getKhachHang().getTenKH());
@@ -218,8 +229,9 @@ public class PhieuPhongDatController implements ActionListener, MouseListener {
 		                "Không tìm thấy hóa đơn đặt phòng!");
 		            return;
 		        }
-			 boolean huyP = hoaDonDao.huyPhong(hd.getMaHD(),phongChinh.getMaPhong(),lyDoHuy,hd.getKhachHang().getMaKH());
+			 boolean huyP = phongDao.huyPhong(hd.getMaHD(),phongChinh.getMaPhong(),lyDoHuy,hd.getKhachHang().getMaKH());
 			 if (huyP) {
+				 
 		            JOptionPane.showMessageDialog(phieuPhongDatDialog, "Đã hủy phòng!");
 		            phieuPhongDatDialog.dispose();
 		        } else {
@@ -313,92 +325,129 @@ public class PhieuPhongDatController implements ActionListener, MouseListener {
 			phieuPhongDatDialog.table_PhongDiKem.clearSelection();
 			
 		} else if (o == phieuPhongDatDialog.btnNhanPhong) {
-			// Kiểm tra xem có người ở nào không
-			int tongNguoiO = 0;
-			for (ArrayList<NguoiO> dsNguoiO : danhSachNguoiOTheoPhong.values()) {
-				tongNguoiO += dsNguoiO.size();
-			}
-			
-			if (tongNguoiO == 0) {
-				int confirm = JOptionPane.showConfirmDialog(
-						phieuPhongDatDialog,
-						"Không có người ở nào được thêm!\n" +
-						"Bạn có muốn nhận phòng mà không có người ở không?",
-						"Xác nhận",
-						JOptionPane.YES_NO_OPTION);
-				
-				if (confirm != JOptionPane.YES_OPTION) {
-					return;
-				}
-			}
+			 // Lấy danh sách tất cả phòng trong hóa đơn
+	        ArrayList<String> danhSachPhongTrongHD = new ArrayList<>();
+	        danhSachPhongTrongHD.add(phongChinh.getMaPhong()); // Thêm phòng chính
+	        
+	        // Thêm các phòng đi kèm
+	        DefaultTableModel modelPhong = phieuPhongDatDialog.model_PhongDiKem;
+	        for (int i = 0; i < modelPhong.getRowCount(); i++) {
+	            String maPhong = modelPhong.getValueAt(i, 0).toString();
+	            danhSachPhongTrongHD.add(maPhong);
+	        }
+	        
+	        // KIỂM TRA: Mỗi phòng phải có ít nhất 1 người ở
+	        boolean tatCaPhongCoNguoiO = true;
+	        StringBuilder phongThieuNguoiO = new StringBuilder();
+	        
+	        for (String maPhong : danhSachPhongTrongHD) {
+	            ArrayList<NguoiO> dsNguoiO = danhSachNguoiOTheoPhong.get(maPhong);
+	            if (dsNguoiO == null || dsNguoiO.isEmpty()) {
+	                tatCaPhongCoNguoiO = false;
+	                phongThieuNguoiO.append("- ").append(maPhong).append("\n");
+	            }
+	        }
+	        
+	        if (!tatCaPhongCoNguoiO) {
+	            JOptionPane.showMessageDialog(phieuPhongDatDialog,
+	                "KHÔNG THỂ NHẬN PHÒNG!\n\n" +
+	                "Các phòng sau chưa có người ở:\n" + 
+	                phongThieuNguoiO.toString() +
+	                "\nVui lòng thêm người ở cho TẤT CẢ các phòng trước khi nhận phòng!",
+	                "Thiếu thông tin",
+	                JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+	        
+	        // Hiển thị xác nhận chi tiết
+	        StringBuilder thongBaoXacNhan = new StringBuilder();
+	        thongBaoXacNhan.append("XÁC NHẬN NHẬN PHÒNG\n\n");
+	        thongBaoXacNhan.append("Danh sách phòng và người ở:\n");
+	        
+	        int tongNguoiO = 0;
+	        for (String maPhong : danhSachPhongTrongHD) {
+	            ArrayList<NguoiO> dsNguoiO = danhSachNguoiOTheoPhong.get(maPhong);
+	            int soNguoi = (dsNguoiO != null) ? dsNguoiO.size() : 0;
+	            tongNguoiO += soNguoi;
+	            
+	            thongBaoXacNhan.append("- ").append(maPhong);
+	            if (maPhong.equals(phongChinh.getMaPhong())) {
+	                thongBaoXacNhan.append(" (Phòng chính)");
+	            }
+	            thongBaoXacNhan.append(": ").append(soNguoi).append(" người\n");
+	        }
+	        
+	        thongBaoXacNhan.append("\nTổng cộng: ")
+	                      .append(danhSachPhongTrongHD.size()).append(" phòng, ")
+	                      .append(tongNguoiO).append(" người ở");
+	        
+	        int xacNhan = JOptionPane.showConfirmDialog(
+	                phieuPhongDatDialog,
+	                thongBaoXacNhan.toString(),
+	                "Xác nhận nhận tất cả phòng",
+	                JOptionPane.YES_NO_OPTION,
+	                JOptionPane.QUESTION_MESSAGE);
 
-			// Hiển thị tổng hợp trước khi lưu
-			StringBuilder thongBaoXacNhan = new StringBuilder();
-			thongBaoXacNhan.append("XÁC NHẬN NHẬN PHÒNG\n\n");
-			thongBaoXacNhan.append("Danh sách người ở:\n");
-			
-			// Người ở phòng chính
-			ArrayList<NguoiO> dsPhongChinh = danhSachNguoiOTheoPhong.get(phongChinh.getMaPhong());
-			if (dsPhongChinh != null && !dsPhongChinh.isEmpty()) {
-				thongBaoXacNhan.append("- Phòng chính: ").append(dsPhongChinh.size()).append(" người\n");
-			}
-			
-			// Người ở các phòng đi kèm
-			DefaultTableModel modelPhong = phieuPhongDatDialog.model_PhongDiKem;
-			for (int i = 0; i < modelPhong.getRowCount(); i++) {
-				String maPhong = modelPhong.getValueAt(i, 0).toString();
-				String soPhong = modelPhong.getValueAt(i, 2).toString();
-				
-				ArrayList<NguoiO> dsNguoiO = danhSachNguoiOTheoPhong.get(maPhong);
-				if (dsNguoiO != null && !dsNguoiO.isEmpty()) {
-					thongBaoXacNhan.append("- Phòng đi kèm").append(": ").append(dsNguoiO.size()).append(" người\n");
-				}
-			}
-			
-			thongBaoXacNhan.append("\nTổng cộng: ").append(tongNguoiO).append(" người ở");
-			
-			int xacNhan = JOptionPane.showConfirmDialog(
-					phieuPhongDatDialog,
-					thongBaoXacNhan.toString(),
-					"Xác nhận nhận phòng",
-					JOptionPane.YES_NO_OPTION);
+	        if (xacNhan != JOptionPane.YES_OPTION) return;
 
-			if (xacNhan != JOptionPane.YES_OPTION) return;
+	        try {
+	            HoaDon hd = hoaDonDao.timHoaDonTheoPhongDaDat(phongChinh.getMaPhong());
+	            if (hd == null) {
+	                JOptionPane.showMessageDialog(phieuPhongDatDialog, 
+	                    "Không tìm thấy hóa đơn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
 
-			try {
-				HoaDon hd = hoaDonDao.timHoaDonTheoPhongDaDat(phongChinh.getMaPhong());
+	            // Chuẩn bị dữ liệu người ở
+	            ArrayList<NguoiO> tatCaNguoiO = new ArrayList<>();
+	            
+	            for (String maPhong : danhSachPhongTrongHD) {
+	                ArrayList<NguoiO> dsNguoiO = danhSachNguoiOTheoPhong.get(maPhong);
+	                
+	                Phong phong = new Phong();
+	                phong.setMaPhong(maPhong);
 
-				// Lưu tất cả người ở vào database
-				ArrayList<NguoiO> tatCaNguoiO = new ArrayList<>();
-				
-				for (Map.Entry<String, ArrayList<NguoiO>> entry : danhSachNguoiOTheoPhong.entrySet()) {
-					String maPhong = entry.getKey();
-					ArrayList<NguoiO> dsNguoiO = entry.getValue();
+	                for (NguoiO no : dsNguoiO) {
+	                    no.setHoaDon(hd);
+	                    no.setPhong(phong);
+	                    tatCaNguoiO.add(no);
+	                }
+	            }
+	            
+	            // Gọi DAO để nhận phòng
+	            boolean success = phongDao.nhanPhong(hd.getMaHD(), tatCaNguoiO, phongChinh.getMaPhong());
+	            
+	            if (success) {
+	                // Thông báo thành công chi tiết
+	                StringBuilder thongBaoThanhCong = new StringBuilder();
+	                thongBaoThanhCong.append("NHẬN PHÒNG THÀNH CÔNG!\n\n");
+	                thongBaoThanhCong.append("Đã nhận ").append(danhSachPhongTrongHD.size()).append(" phòng:\n");
+	                
+	                for (String maPhong : danhSachPhongTrongHD) {
+	                    ArrayList<NguoiO> dsNguoiO = danhSachNguoiOTheoPhong.get(maPhong);
+	                    thongBaoThanhCong.append("- ").append(maPhong).append(": ")
+	                                    .append(dsNguoiO.size()).append(" người ở\n");
+	                }
+	                
+	                thongBaoThanhCong.append("\nTrạng thái: Đang sử dụng");
+	                
+	                JOptionPane.showMessageDialog(phieuPhongDatDialog, 
+	                    thongBaoThanhCong.toString(),
+	                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
+	                
+	                phieuPhongDatDialog.dispose();
+	            } else {
+	                JOptionPane.showMessageDialog(phieuPhongDatDialog, 
+	                    "Nhận phòng thất bại!", 
+	                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+	            }
 
-					if (!dsNguoiO.isEmpty()) {
-						Phong phong = new Phong();
-						phong.setMaPhong(maPhong);
-
-						for (NguoiO no : dsNguoiO) {
-							no.setHoaDon(hd);
-							no.setPhong(phong);
-							tatCaNguoiO.add(no);
-						}
-					}
-				}
-				
-				if (!tatCaNguoiO.isEmpty()) {
-					// Lưu tất cả người ở vào database
-					hoaDonDao.nhanPhong(hd.getMaHD(), tatCaNguoiO);
-				}
-
-				JOptionPane.showMessageDialog(phieuPhongDatDialog, "NHẬN PHÒNG THÀNH CÔNG!");
-				phieuPhongDatDialog.dispose();
-
-			} catch (Exception e2) {
-				e2.printStackTrace();
-				JOptionPane.showMessageDialog(phieuPhongDatDialog, "Lỗi khi nhận phòng: " + e2.getMessage());
-			}
+	        } catch (Exception e2) {
+	            e2.printStackTrace();
+	            JOptionPane.showMessageDialog(phieuPhongDatDialog, 
+	                "Lỗi khi nhận phòng: " + e2.getMessage(), 
+	                "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        }
 		}else if(o == phieuPhongDatDialog.btnHuyPhong) {
 			huyPhong();
 			

@@ -59,7 +59,7 @@ public class PhieuPhongDatDialog extends JDialog {
         lblTenKhachSanMenu.setBounds(10, 10, 90, 24);
         getContentPane().add(lblTenKhachSanMenu);
 
-        JLabel lblTieuDeForm = new JLabel("Thông tin phòng ????");
+        JLabel lblTieuDeForm = new JLabel("Thông tin phòng đã đặt");
         lblTieuDeForm.setForeground(new Color(10, 110, 189));
         lblTieuDeForm.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTieuDeForm.setBounds(430, 3, 302, 40);

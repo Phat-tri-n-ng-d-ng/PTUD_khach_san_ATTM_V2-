@@ -179,8 +179,10 @@ public class ThueDatPhongController {
         phongButton.setContentAreaFilled(false);
 
         // Xác định màu sắc
-        Color bgColor, borderColor, textColor;
-        String trangThaiText = "";
+        Color bgColor = Color.GRAY;
+        Color borderColor = Color.BLACK;
+        Color textColor = Color.BLACK;
+        String trangThaiText = "KHÔNG XÁC ĐỊNH";
         boolean daChon = dsPhongDaChon.contains(phong);
 
         if(phong.getTrangThai().equals(TrangThaiPhong.Trong)){
@@ -200,7 +202,7 @@ public class ThueDatPhongController {
             borderColor = new Color(46, 204, 113);
             textColor = Color.BLACK;
             trangThaiText = "ĐANG THUÊ";
-        } else {
+        } else if(TrangThaiPhong.DaDat.equals(phong.getTrangThai()))  {
             bgColor = new Color(255, 182, 193);
             borderColor = new Color(231, 76, 60);
             textColor = Color.BLACK;
@@ -270,7 +272,19 @@ public class ThueDatPhongController {
                 }
                 HienThiDanhSachPhong(danhSachPhongHienThi);
             } else if (phong.getTrangThai().equals(TrangThaiPhong.DaDat)) {
+            	
                 Phong p = phongDao.timPhongBangMa(phong.getMaPhong());
+                HoaDon hd = hoaDonDao.timHoaDonTheoPhongDaDat(p.getMaPhong());
+
+                if (hd == null) {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Phòng này thuộc phòng thuê!",
+                        "Thông báo",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
                 PhieuPhongDatDialog phieuPhongDatdialog = new PhieuPhongDatDialog();
                 new PhieuPhongDatController(phieuPhongDatdialog, p);
                 phieuPhongDatdialog.btnDoiPhong.addActionListener(ev -> {
@@ -280,6 +294,12 @@ public class ThueDatPhongController {
                     phieuDoiPhongDialog.setModal(true);
                     phieuDoiPhongDialog.setVisible(true);
                     phieuPhongDatdialog.dispose();
+                });
+                phieuPhongDatdialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent e) {
+                        refreshDanhSachPhong(); 
+                    }
                 });
 
                 phieuPhongDatdialog.setLocationRelativeTo(null);
