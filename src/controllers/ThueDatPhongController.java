@@ -741,21 +741,8 @@ public class ThueDatPhongController{
             JOptionPane.showMessageDialog(null, "Ngày bắt đầu phải trước ngày kết thúc!");
             return;
         }
-
-        int result = JOptionPane.showConfirmDialog(null,
-                "Bạn có chắc muốn cập nhật trạng thái phòng theo khoảng ngày đã chọn?",
-                "Xác nhận",
-                JOptionPane.YES_NO_OPTION);
-
-        if (result == JOptionPane.YES_OPTION) {
-            hoaDonDao.TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(ngayBatDau, ngayKetThuc);
-            getTatCaPhong();
-
-            JOptionPane.showMessageDialog(null,
-                    "Đã cập nhật trạng thái phòng thành công!",
-                    "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
+        hoaDonDao.TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(ngayBatDau, ngayKetThuc);
+        getTatCaPhong();
     }
 
     public ArrayList<Phong> getDsPhongDaChon() {
@@ -928,6 +915,22 @@ public class ThueDatPhongController{
             return JOptionPane.YES_OPTION;
         } else {
             return JOptionPane.NO_OPTION;
+        }
+    }
+    private void LamMoi(){
+        int luaChon = JOptionPane.showConfirmDialog(thueDatPhongPanel,"Bán có muốn làm mới lại trang","chú ý",JOptionPane.YES_NO_OPTION);
+        if(luaChon == JOptionPane.YES_OPTION){
+            thueDatPhongPanel.txt_TimSoDienThoai.setText("");
+            thueDatPhongPanel.model.setRowCount(0);
+            thueDatPhongPanel.ngayBatDau.setDate(null);
+            thueDatPhongPanel.ngayKetThuc.setDate(null);
+            thueDatPhongPanel.chckbx_phongDat.setSelected(false);
+            thueDatPhongPanel.chckbx_phongThue.setSelected(false);
+            thueDatPhongPanel.chckbx_phongTrong.setSelected(false);
+            thueDatPhongPanel.cbb_KhuyenMai.setSelectedIndex(0);
+            LocalDate ngayHomNay = LocalDate.now();
+            hoaDonDao.tuDongCapNhatTrangThaiPhong(ngayHomNay);
+            getTatCaPhong();
         }
     }
 }

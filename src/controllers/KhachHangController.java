@@ -1,9 +1,12 @@
 package controllers;
 
+import controllers.dialogs.HangKhachHangDialogController;
 import database.dao.KhachHangDao;
 import entitys.HangKhachHang;
 import entitys.KhachHang;
+import view.dialogs.HangKhachHangDialog;
 import view.dialogs.KhachHangDialog;
+import view.dialogs.NhanVienDialog;
 import view.panels.KhachHangPanel;
 
 import javax.swing.*;
@@ -28,11 +31,25 @@ public class KhachHangController implements MouseListener {
         khachHangPanel.btn_LamMoi.addActionListener(e -> LamMoi());
         khachHangPanel.cbb_LocHangKhachHang.addActionListener(e -> getKhachHangTheoHang());
         khachHangPanel.btn_Tim.addActionListener(e -> TimKhachHang());
+        khachHangPanel.btn_CapNhatHangKhachHang.addActionListener(e -> moFromCapNhatKhachHang());
 
         khachHangPanel.table.addMouseListener(this);
 
         suKienTextField();
     }
+
+    private void moFromCapNhatKhachHang() {
+        ArrayList<HangKhachHang> dsHang = khachHangDao.getTatCaHangKhachHang();
+
+        HangKhachHangDialog dialog = new HangKhachHangDialog(
+                (JFrame) SwingUtilities.getWindowAncestor(khachHangPanel),
+                dsHang
+        );
+
+        dialog.hienDiem();
+        dialog.setVisible(true);
+    }
+
 
     public void getTatCaKhachHang(){
         try {

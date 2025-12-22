@@ -490,8 +490,6 @@ public class HoaDonDao {
 //        }
 //        return kh;
 //    }
-    public void TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(Date ngayBatDau, Date ngayKetThuc) {
-    }
     public HoaDon timHoaDonTheoPhongDaDat(String maPhong){
         Connection con=ConnectDB.getConnection(); HoaDon hd=null;
         String sql="select top 1 hd.maHD,hd.ngayLap,cthd.ngayNhanPhong,cthd.ngayTraPhong,"
@@ -682,4 +680,29 @@ public class HoaDonDao {
 			// Đóng kết nối
 		}
 	}
+    public void tuDongCapNhatTrangThaiPhong(LocalDate ngayHomNay) {
+        try (Connection conn = ConnectDB.getConnection();
+             CallableStatement st =
+                     conn.prepareCall("EXEC TuDongCapNhatTrangThaiPhong @NgayHienTai = ?")) {
+            st.setDate(1, java.sql.Date.valueOf(ngayHomNay));
+            st.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(Date ngayBatDau, Date ngayKetThuc) {
+        try (Connection conn = ConnectDB.getConnection();
+             CallableStatement st = conn.prepareCall("{CALL TuDongCapNhatTrangThaiPhong_TheoKhoangNgay(?, ?)}")) {
+
+            java.sql.Date sqlNgayBatDau = new java.sql.Date(ngayBatDau.getTime());
+            java.sql.Date sqlNgayKetThuc = new java.sql.Date(ngayKetThuc.getTime());
+
+            st.setDate(1, sqlNgayBatDau);
+            st.setDate(2, sqlNgayKetThuc);
+            st.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

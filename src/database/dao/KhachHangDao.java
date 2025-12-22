@@ -4,6 +4,7 @@ import database.connectDB.ConnectDB;
 import entitys.HangKhachHang;
 import entitys.KhachHang;
 
+import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -221,5 +222,104 @@ public class KhachHangDao {
             ConnectDB.closeConnection(connection);
         }
         return khachHang;
+    }
+
+    public ArrayList<HangKhachHang> getTatCaHangKhachHang() {
+        ArrayList<HangKhachHang> dsHang = new ArrayList<>();
+        Connection connection = null;
+
+        try {
+            connection = ConnectDB.getConnection();
+
+            String sql = """
+            SELECT maHang, tenHang, diemToiThieu
+            FROM HangKhachHang
+        """;
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String maHang = rs.getString("maHang");
+                String tenHang = rs.getString("tenHang");
+                int diemToiThieu = rs.getInt("diemToiThieu");
+
+                HangKhachHang hang = new HangKhachHang(maHang, tenHang, diemToiThieu);
+                dsHang.add(hang);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDB.closeConnection(connection);
+        }
+
+        return dsHang;
+    }
+
+    public boolean CapNhatHangKhachHang(ArrayList<HangKhachHang> dsHang) {
+        if (dsHang == null || dsHang.isEmpty()) {
+            return false;
+        }
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        boolean success = true;
+
+        try {
+            connection = ConnectDB.getConnection();
+            connection.setAutoCommit(false); // Bắt đầu transaction để đảm bảo toàn vẹn dữ liệu
+
+            String sql = "UPDATE HangKhachHang SET diemToiThieu = ? WHERE maHang = ?";
+
+            stmt = connection.prepareStatement(sql);
+
+            for (HangKhachHang hang : dsHang) {
+                stmt.setDouble(1, hang.getDiemToiThieu());    // Điểm mới
+                stmt.setString(2, hang.getMaHang());       // Mã hạng để xác định bản ghi
+
+                int rowsAffected = stmt.executeUpdate();
+                if (rowsAffected == 0) {
+                    System.out.println("Cảnh báo: Không tìm thấy hạng có mã " + hang.getMaHang());
+                    success = false; // Vẫn tiếp tục nhưng đánh dấu có lỗi
+                }
+            }
+
+            if (success) {
+                connection.commit(); // Chỉ commit nếu tất cả thành công
+                System.out.println("Cập nhật ngưỡng điểm hạng khách hàng thành công!");
+            } else {
+                connection.rollback();
+                System.out.println("Có lỗi khi cập nhật một số hạng, đã rollback.");
+            }
+
+        } catch (Exception e) {
+            success = false;
+            e.printStackTrace();
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                    System.out.println("Đã rollback do ngoại lệ.");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null,
+                    "Lỗi khi cập nhật hạng khách hàng: " + e.getMessage(),
+                    "Lỗi cơ sở dữ liệu", JOptionPane.ERROR_MESSAGE);
+
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (connection != null) {
+                    connection.setAutoCommit(true); // Khôi phục chế độ mặc định
+                    ConnectDB.closeConnection(connection);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return success;
     }
 }

@@ -2,12 +2,14 @@
 package controllers;
 
 import database.dao.DangNhapDao;
+import database.dao.HoaDonDao;
 import entitys.NhanVien;
 import entitys.TaiKhoan;
 import view.mainframe.DangNhapFrame;
 import view.mainframe.MainFrame;
 
 import javax.swing.*;
+import java.time.LocalDate;
 
 public class DangNhapController {
     private DangNhapFrame dangNhapFrame;
@@ -59,6 +61,8 @@ public class DangNhapController {
                     quanLyPhien.setTaiKhoanDangNhap(taiKhoan);
                     quanLyPhien.setNhanVienDangNhap(nhanVien);
 
+                    tuDongCapNhatTrangThaiPhong();
+
                     // Mở MainFrame
                     MainFrame mainFrame = new MainFrame();
                     mainFrame.setVisible(true);
@@ -92,5 +96,10 @@ public class DangNhapController {
                     "Lỗi hệ thống",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public void tuDongCapNhatTrangThaiPhong(){
+        LocalDate ngayHomNay = LocalDate.now();
+        HoaDonDao hoaDonDao = new HoaDonDao();
+        hoaDonDao.tuDongCapNhatTrangThaiPhong(ngayHomNay);
     }
 }

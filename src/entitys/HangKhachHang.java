@@ -18,6 +18,12 @@ public class HangKhachHang {
         this.tenHang = tenHang;
     }
 
+    public HangKhachHang(String maHang, String tenHang, int diemToiThieu) {
+        this.maHang = maHang;
+        this.tenHang = tenHang;
+        this.diemToiThieu = diemToiThieu;
+    }
+
     public void setMaHang(String maHang) {
         this.maHang = maHang;
     }

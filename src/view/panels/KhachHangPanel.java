@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 
 public class KhachHangPanel extends JPanel {
+    public JButton btn_CapNhatHangKhachHang;
     public LocalDate maxDate;
     public KhachHangController khachHangController;
     public JDateChooser ngaySinh;
@@ -246,7 +247,7 @@ public class KhachHangPanel extends JPanel {
         table.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         pnlDanhSachKhachHang.add(scrollPane);
 
-        JButton btn_CapNhatHangKhachHang = new JButton("Cập nhận hạng khách hàng");
+        btn_CapNhatHangKhachHang = new JButton("Cập nhận hạng khách hàng");
         btn_CapNhatHangKhachHang.setBounds(1097, 10, 185, 30);
         pnlDanhSachKhachHang.add(btn_CapNhatHangKhachHang);
 
