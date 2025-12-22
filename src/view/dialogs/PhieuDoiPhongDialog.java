@@ -1,8 +1,7 @@
 package view.dialogs;
 
 import com.toedter.calendar.JDateChooser;
-import controllers.dialogs.PhieuDoiPhongController;
-import entitys.Phong;
+import controllers.dialogs.PhieuDoiPhongThueController;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -17,7 +16,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Component;
 
 public class PhieuDoiPhongDialog extends JDialog {
 
@@ -47,7 +45,7 @@ public class PhieuDoiPhongDialog extends JDialog {
     public JCheckBox chckbx_FamilyRoom;
     public JTable tablePhongHienTai, tablePhongDoi;
     public JRadioButton rdbtn_KhachHangYeuCau, rdbtn_KhachSanSapXep;
-    PhieuDoiPhongController phieuDoiPhongController;
+    PhieuDoiPhongThueController phieuDoiPhongThueController;
 
 
 

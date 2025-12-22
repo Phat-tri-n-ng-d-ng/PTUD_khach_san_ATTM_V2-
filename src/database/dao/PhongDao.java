@@ -189,4 +189,52 @@ public class PhongDao {
 
         return dsp;
     }
+    public boolean doiPhong(String maHD, String maPhongCu, String maPhongMoi, double phiDoiPhong) {
+        Connection con = null;
+        try {
+            con =  ConnectDB.getConnection();
+            con.setAutoCommit(false);
+
+            PreparedStatement ps1 = con.prepareStatement(
+                    "UPDATE Phong SET trangThaiPhong = 'Trong' WHERE maPhong = ?"
+            );
+            ps1.setString(1, maPhongCu);
+            ps1.executeUpdate();
+
+            PreparedStatement ps2 = con.prepareStatement(
+                    "UPDATE Phong SET trangThaiPhong = 'DaDat' WHERE maPhong = ?"
+            );
+            ps2.setString(1, maPhongMoi);
+            ps2.executeUpdate();
+
+            PreparedStatement ps3 = con.prepareStatement(
+                    "UPDATE ChiTietHoaDon SET maPhong = ? WHERE maHD = ? AND maPhong = ?"
+            );
+            ps3.setString(1, maPhongMoi);
+            ps3.setString(2, maHD);
+            ps3.setString(3, maPhongCu);
+            ps3.executeUpdate();
+
+            PreparedStatement ps4 = con.prepareStatement(
+                    "UPDATE HoaDon SET phiDoiPhong = ? WHERE maHD = ?"
+            );
+            ps4.setDouble(1, phiDoiPhong);
+            ps4.setString(2, maHD);
+            ps4.executeUpdate();
+
+            con.commit();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }finally {
+            try {
+                con.setAutoCommit(true);
+            } catch (Exception e2) {
+                // TODO: handle exception
+            }
+            ConnectDB.closeConnection(con);
+        }
+    }
 }

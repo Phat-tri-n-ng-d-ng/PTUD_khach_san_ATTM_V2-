@@ -122,7 +122,7 @@ public class PhieuThongTinPhongThueController {
         // sự kiện btn đổi phòng
         phieuThongTinPhongThueDialog.btnDoiPhong.addActionListener(ev->{
             PhieuDoiPhongDialog phieuDoiPhongDialog= new PhieuDoiPhongDialog();
-            PhieuDoiPhongController phieuDoiPhongController= new PhieuDoiPhongController(phieuDoiPhongDialog,phong);
+            PhieuDoiPhongThueController phieuDoiPhongThueController = new PhieuDoiPhongThueController(phieuDoiPhongDialog,phong);
             phieuDoiPhongDialog.setLocationRelativeTo(null);
             phieuDoiPhongDialog.setVisible(true);
             phieuThongTinPhongThueDialog.dispose();
