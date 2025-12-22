@@ -5,7 +5,6 @@ import com.toedter.calendar.JDateChooser;
 import controllers.ThueDatPhongController;
 
 import java.awt.*;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
@@ -38,7 +37,8 @@ public class ThueDatPhongPanel extends JPanel {
     public JButton btn_ApDung;
     public JButton btn_ThuePhong;
     public JButton btn_DatPhong;
-    public JButton btn_DoiPhong;
+
+    public JButton LamMoi;
 
     // ===== CHECKBOX =====
     public JCheckBox chckbx_phongTrong;
@@ -59,125 +59,186 @@ public class ThueDatPhongPanel extends JPanel {
     // ===== TABLE =====
     public DefaultTableModel model;
 
+    // ===== HÀM TẠO NÚT BO GÓC =====
+    private JButton createRoundedButton(String text, Color bgColor, Color borderColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Vẽ nền bo góc
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+
+                // Vẽ viền bo góc
+                g2.setColor(borderColor);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+
+        return button;
+    }
 
     public ThueDatPhongPanel() {
         jbInit();
     }
 
     private void jbInit() {
+
+        // Panel chính với lề trái 10px, phải 10px
         setBounds(100, 100, 1336, 768);
-        setBackground(new Color(236, 247, 255));
-        setBorder(new EmptyBorder(5, 5, 5, 5));
+        setBackground(new Color(248, 250, 252));
+        setBorder(new EmptyBorder(5, 10, 5, 10)); // Thêm lề phải 10px
         setLayout(null);
 
-        // ===== TITLE =====
-        lbl_TieuDe = new JLabel("Đặt/ thuê phòng");
-        lbl_TieuDe.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        lbl_TieuDe.setForeground(new Color(10, 100, 189));
-        lbl_TieuDe.setBounds(725, 10, 250, 30);
+        // ===== TITLE - CĂN GIỮA =====
+        lbl_TieuDe = new JLabel("ĐẶT/THUÊ PHÒNG");
+        lbl_TieuDe.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lbl_TieuDe.setForeground(new Color(67, 97, 238));
+        // Tính toán vị trí để căn giữa
+        int titleWidth = 250;
+        int panelWidth = 1336;
+        int titleX = (panelWidth - titleWidth) / 2;
+        lbl_TieuDe.setBounds(titleX, 10, titleWidth, 30);
         add(lbl_TieuDe);
 
-        // ===== FILTER PANEL =====
+        // ===== LABEL BỘ LỌC - CÁCH LỀ TRÁI 10px, LỀ PHẢI 10px =====
+        lbl_BoLoc = new JLabel("Bộ lọc");
+        lbl_BoLoc.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lbl_BoLoc.setForeground(new Color(51, 65, 85));
+        lbl_BoLoc.setBounds(10, 45, 100, 20); // Cách lề trái 10px
+        add(lbl_BoLoc);
+
+        // ===== FILTER PANEL - CÁCH LỀ TRÁI 10px, LỀ PHẢI 10px =====
         pnlLoc = new JPanel(null);
         pnlLoc.setBackground(Color.WHITE);
-        pnlLoc.setBorder(new LineBorder(Color.BLACK));
-        pnlLoc.setBounds(20, 75, 1293, 73);
+        pnlLoc.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15) // Padding bên trong
+        ));
+        // Panel rộng: 1336 - 10 (trái) - 10 (phải) = 1316
+        pnlLoc.setBounds(10, 75, 1316, 85); // Cách lề trái 10px, phải 10px
         add(pnlLoc);
 
+        // ===== CÁC THÀNH PHẦN TRONG PANEL LỌC - ĐIỀU CHỈNH ĐỂ KHÔNG CHẠM LỀ PHẢI =====
+        // Tính toán lại để các thành phần không chạm vào lề phải panel con
         JLabel lblTim = new JLabel("Tìm số điện thoại khách hàng:");
-        lblTim.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        lblTim.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblTim.setBounds(10, 10, 250, 20);
         pnlLoc.add(lblTim);
 
         txt_TimSoDienThoai = new JTextField();
-        txt_TimSoDienThoai.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        txt_TimSoDienThoai.setBounds(10, 33, 316, 30);
+        txt_TimSoDienThoai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txt_TimSoDienThoai.setBounds(10, 35, 300, 35); // Giảm width để cách lề phải
+        txt_TimSoDienThoai.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(0, 10, 0, 10)
+        ));
         pnlLoc.add(txt_TimSoDienThoai);
 
-        btn_Tim = new JButton("Tìm");
-        btn_Tim.setBounds(336, 33, 100, 30);
-        btn_Tim.setBackground(new Color(52, 152, 219));
-        btn_Tim.setForeground(Color.WHITE);
-        btn_Tim.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        btn_Tim.setBorder(BorderFactory.createLineBorder(new Color(41, 128, 185), 1));
-        btn_Tim.setFocusPainted(false);
+        // Nút Tìm kiếm - điều chỉnh vị trí
+        btn_Tim = createRoundedButton("Tìm", new Color(67, 97, 238), new Color(56, 86, 228));
+        btn_Tim.setBounds(320, 35, 100, 35); // Cách textfield 10px
         pnlLoc.add(btn_Tim);
 
         JLabel lblNgayBD = new JLabel("Ngày bắt đầu:");
-        lblNgayBD.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lblNgayBD.setBounds(466, 10, 120, 20);
+        lblNgayBD.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblNgayBD.setBounds(450, 10, 120, 20); // Dịch sang phải
         pnlLoc.add(lblNgayBD);
 
         JLabel lblNgayKT = new JLabel("Ngày kết thúc:");
-        lblNgayKT.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lblNgayKT.setBounds(620, 10, 120, 20);
+        lblNgayKT.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblNgayKT.setBounds(604, 10, 120, 20); // Dịch sang phải
         pnlLoc.add(lblNgayKT);
 
         ngayBatDau = new JDateChooser();
-        ngayBatDau.setBounds(466, 33, 130, 30);
+        ngayBatDau.setBounds(450, 35, 130, 35); // Dịch sang phải
         ngayBatDau.setDateFormatString("dd/MM/yyyy");
         pnlLoc.add(ngayBatDau);
 
         ngayKetThuc = new JDateChooser();
-        ngayKetThuc.setBounds(620, 33, 130, 30);
+        ngayKetThuc.setBounds(604, 35, 130, 35); // Dịch sang phải
         ngayKetThuc.setDateFormatString("dd/MM/yyyy");
         pnlLoc.add(ngayKetThuc);
 
-        btn_ApDung = new JButton("Áp dụng");
-        btn_ApDung.setBounds(760, 33, 100, 30);
-        btn_ApDung.setBackground(new Color(46, 204, 113));
-        btn_ApDung.setForeground(Color.WHITE);
-        btn_ApDung.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        btn_ApDung.setBorder(BorderFactory.createLineBorder(new Color(39, 174, 96), 1));
-        btn_ApDung.setFocusPainted(false);
+        // Nút Áp dụng - điều chỉnh vị trí
+        btn_ApDung = createRoundedButton("Áp dụng", new Color(46, 221, 149), new Color(36, 211, 139));
+        btn_ApDung.setBounds(754, 35, 100, 35); // Dịch sang phải
         pnlLoc.add(btn_ApDung);
 
         cbb_KhuyenMai = new JComboBox<>();
-        cbb_KhuyenMai.setBounds(890, 33, 180, 30);
+        cbb_KhuyenMai.setBounds(884, 35, 180, 35); // Dịch sang phải
         cbb_KhuyenMai.addItem("Chọn");
-        cbb_KhuyenMai.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        cbb_KhuyenMai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        cbb_KhuyenMai.setBackground(Color.WHITE);
+        cbb_KhuyenMai.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(0, 10, 0, 10)
+        ));
         pnlLoc.add(cbb_KhuyenMai);
 
         lbl_KhuyenMai = new JLabel("Khuyến mãi:");
-        lbl_KhuyenMai.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lbl_KhuyenMai.setBounds(890, 10, 180, 20);
+        lbl_KhuyenMai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lbl_KhuyenMai.setBounds(884, 10, 180, 20); // Dịch sang phải
         pnlLoc.add(lbl_KhuyenMai);
 
         lbl_LoaiPhong = new JLabel("Loại phòng:");
-        lbl_LoaiPhong.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        lbl_LoaiPhong.setBounds(1110, 10, 120, 20);
+        lbl_LoaiPhong.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        // Tính toán để không chạm lề phải: 1306 - 170 - 10 = 1126
+        lbl_LoaiPhong.setBounds(1104, 10, 120, 20); // Dịch sang phải, cách lề phải panel
         pnlLoc.add(lbl_LoaiPhong);
 
         cbb_LoaiPhong = new JComboBox<>();
-        cbb_LoaiPhong.setBounds(1110, 33, 170, 30);
+        // Tính toán để không chạm lề phải: 1306 - 170 - 10 = 1126
+        cbb_LoaiPhong.setBounds(1104, 35, 170, 35); // Dịch sang phải, cách lề phải panel
         cbb_LoaiPhong.addItem("Tất cả");
         cbb_LoaiPhong.addItem("Standard");
         cbb_LoaiPhong.addItem("Superior");
         cbb_LoaiPhong.addItem("Deluxe");
         cbb_LoaiPhong.addItem("Suite");
         cbb_LoaiPhong.addItem("Family room");
-        cbb_LoaiPhong.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        cbb_LoaiPhong.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        cbb_LoaiPhong.setBackground(Color.WHITE);
+        cbb_LoaiPhong.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(0, 10, 0, 10)
+        ));
         pnlLoc.add(cbb_LoaiPhong);
 
-        // ===== LABEL =====
-        lbl_BoLoc = new JLabel("Bộ lọc");
-        lbl_BoLoc.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        lbl_BoLoc.setBounds(20, 45, 100, 20);
-        add(lbl_BoLoc);
+        // ===== LABEL DANH SÁCH PHÒNG - CÁCH LỀ TRÁI 10px, LỀ PHẢI 10px =====
+        lbl_DanhSachPhong = new JLabel("DANH SÁCH PHÒNG");
+        lbl_DanhSachPhong.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lbl_DanhSachPhong.setForeground(new Color(51, 65, 85));
+        lbl_DanhSachPhong.setBounds(10, 160, 200, 20); // Cách lề trái 10px
+        add(lbl_DanhSachPhong);
 
-        // ===== DANH SÁCH PHÒNG PANEL =====
+        // ===== DANH SÁCH PHÒNG PANEL - CÁCH LỀ TRÁI 10px, LỀ PHẢI 10px =====
         pnlDanhSachPhong = new JPanel(null);
-        pnlDanhSachPhong.setBounds(20, 195, 1293, 596);
-        pnlDanhSachPhong.setBorder(new LineBorder(Color.BLACK));
+        // Panel rộng: 1336 - 10 (trái) - 10 (phải) = 1316
+        pnlDanhSachPhong.setBounds(10, 195, 1316, 596); // Cách lề trái 10px, phải 10px
+        pnlDanhSachPhong.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15) // Padding bên trong
+        ));
         pnlDanhSachPhong.setBackground(Color.WHITE);
         add(pnlDanhSachPhong);
 
-        lbl_DanhSachPhong = new JLabel("Danh sách phòng");
-        lbl_DanhSachPhong.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        lbl_DanhSachPhong.setBounds(20, 160, 200, 20);
-        add(lbl_DanhSachPhong);
-
-        // ===== CHECKBOX =====
+        // ===== CHECKBOX - CẬP NHẬT STYLE VÀ VỊ TRÍ =====
         chckbx_phongTrong = new JCheckBox("Phòng trống");
         chckbx_phongTrong.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         chckbx_phongTrong.setFocusPainted(false);
@@ -217,64 +278,46 @@ public class ThueDatPhongPanel extends JPanel {
         mauPhongDat.setBorder(new LineBorder(Color.BLACK));
         pnlDanhSachPhong.add(mauPhongDat);
 
-        // ===== BUTTON STYLE - Sắp xếp 3 nút cách đều và sát phải =====
-        int buttonWidth = 170;
-        int buttonHeight = 30;
-        int buttonGap = 20;
-        int rightMargin = 10;
+        // ===== BUTTON STYLE - Các nút bo góc với hiệu ứng bàn tay =====
+        int buttonWidth = 160; // Giảm width button
+        int buttonHeight = 35;
+        int buttonGap = 10; // Giảm khoảng cách
+        int rightMargin = 10; // Lề phải bên trong panel
+        // Panel pnlDanhSachPhong có width = 1316, trừ padding 15 mỗi bên = 1286
+        // Tính toán vị trí bắt đầu cho các nút
+        int availableWidth = 1286; // 1316 - 15 - 15
         int totalWidth = (3 * buttonWidth) + (2 * buttonGap);
-        int startX = 1293 - totalWidth - rightMargin;
+        int startX = availableWidth - totalWidth - rightMargin; // Tính từ mép trái của nội dung panel
 
-        btn_DoiPhong = new JButton("Đổi phòng");
-        btn_DoiPhong.setBounds(startX, 10, buttonWidth, buttonHeight);
-        btn_DoiPhong.setBackground(new Color(10, 100, 189));
-        btn_DoiPhong.setForeground(Color.WHITE);
-        btn_DoiPhong.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        btn_DoiPhong.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(8, 80, 160), 1),
-                BorderFactory.createEmptyBorder(5, 15, 5, 15)
-        ));
-        btn_DoiPhong.setFocusPainted(false);
-        pnlDanhSachPhong.add(btn_DoiPhong);
+        // Nút Đổi phòng bo góc
+        LamMoi = createRoundedButton("ĐỔI PHÒNG", new Color(67, 97, 238), new Color(56, 86, 228));
+        LamMoi.setBounds(startX, 10, buttonWidth, buttonHeight);
+        pnlDanhSachPhong.add(LamMoi);
 
-        btn_ThuePhong = new JButton("Thuê phòng");
+        // Nút Thuê phòng bo góc
+        btn_ThuePhong = createRoundedButton("THUÊ PHÒNG", new Color(67, 97, 238), new Color(56, 86, 228));
         btn_ThuePhong.setBounds(startX + buttonWidth + buttonGap, 10, buttonWidth, buttonHeight);
-        btn_ThuePhong.setBackground(new Color(10, 100, 189));
-        btn_ThuePhong.setForeground(Color.WHITE);
-        btn_ThuePhong.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        btn_ThuePhong.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(8, 80, 160), 1),
-                BorderFactory.createEmptyBorder(5, 15, 5, 15)
-        ));
-        btn_ThuePhong.setFocusPainted(false);
         pnlDanhSachPhong.add(btn_ThuePhong);
 
-        btn_DatPhong = new JButton("Đặt phòng");
+        // Nút Đặt phòng bo góc
+        btn_DatPhong = createRoundedButton("ĐẶT PHÒNG", new Color(67, 97, 238), new Color(56, 86, 228));
         btn_DatPhong.setBounds(startX + (2 * (buttonWidth + buttonGap)), 10, buttonWidth, buttonHeight);
-        btn_DatPhong.setBackground(new Color(10, 100, 189));
-        btn_DatPhong.setForeground(Color.WHITE);
-        btn_DatPhong.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        btn_DatPhong.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(8, 80, 160), 1),
-                BorderFactory.createEmptyBorder(5, 15, 5, 15)
-        ));
-        btn_DatPhong.setFocusPainted(false);
         pnlDanhSachPhong.add(btn_DatPhong);
 
         // ===== PANEL CHỨA DANH SÁCH PHÒNG (KHỞI TẠO) =====
         danhSachPhongPanel = new JPanel();
         danhSachPhongPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
-        danhSachPhongPanel.setBackground(new Color(236, 247, 255));
+        danhSachPhongPanel.setBackground(new Color(248, 250, 252));
 
         // Tạo ScrollPane để chứa danhSachPhongPanel
         scrollPaneDanhSachPhong = new JScrollPane(danhSachPhongPanel);
-        scrollPaneDanhSachPhong.setBounds(10, 50, 1273, 536);
+        // ScrollPane rộng: 1316 - 15 - 15 = 1286
+        scrollPaneDanhSachPhong.setBounds(10, 50, 1286, 536); // Điều chỉnh theo width mới
         scrollPaneDanhSachPhong.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPaneDanhSachPhong.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPaneDanhSachPhong.getVerticalScrollBar().setUnitIncrement(16);
         scrollPaneDanhSachPhong.setBorder(BorderFactory.createEmptyBorder());
-        scrollPaneDanhSachPhong.getViewport().setBackground(new Color(236, 247, 255));
-
+        scrollPaneDanhSachPhong.getViewport().setBackground(new Color(248, 250, 252));
         pnlDanhSachPhong.add(scrollPaneDanhSachPhong);
 
         // ===== CONTROLLER =====

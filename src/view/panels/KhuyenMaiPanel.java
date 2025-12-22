@@ -171,6 +171,13 @@ public class KhuyenMaiPanel extends JPanel {
         pnlThongTinKhuyenMai.add(chckbx_TatCa);
         chckbx_TatCa.setBackground(Color.white);
 
+        chckbx_Standard.setFocusPainted(false);
+        chckbx_Superior.setFocusPainted(false);
+        chckbx_Family.setFocusPainted(false);
+        chckbx_Deluxe.setFocusPainted(false);
+        chckbx_Suite.setFocusPainted(false);
+        chckbx_TatCa.setFocusPainted(false);
+
         JPanel pnlBoLoc = new JPanel();
         pnlBoLoc.setBorder(new LineBorder(new Color(0, 0, 0)));
         pnlBoLoc.setBackground(new Color(255, 255, 255));
@@ -250,6 +257,13 @@ public class KhuyenMaiPanel extends JPanel {
         chckbx_TatCa_1.setBounds(240, 68, 87, 26);
         pnlBoLoc.add(chckbx_TatCa_1);
         chckbx_TatCa_1.setBackground(Color.white);
+
+        chckbx_Standard_1.setFocusPainted(false);
+        chckbx_Superior_1.setFocusPainted(false);
+        chckbx_Family_1.setFocusPainted(false);
+        chckbx_Deluxe_1.setFocusPainted(false);
+        chckbx_Suite_1.setFocusPainted(false);
+        chckbx_TatCa_1.setFocusPainted(false);
 
         JLabel lbl_ThongTinKhuyenMai = new JLabel("Thông tin khuyến mãi ");
         lbl_ThongTinKhuyenMai.setFont(new Font("Times New Roman", Font.PLAIN, 20));

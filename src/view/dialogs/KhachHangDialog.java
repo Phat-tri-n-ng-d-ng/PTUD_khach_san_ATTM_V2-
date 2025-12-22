@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 
 public class KhachHangDialog extends JDialog{
-    private KhachHang khachHang;
+    private final KhachHang khachHang;
     public JTextField txt_MaKH;
     public JTextField txt_TenKhachHang;
     public JTextField txt_SoDienThoai;

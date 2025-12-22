@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class PhongDialog extends JDialog {
-    private Phong phong;
+    private final Phong phong;
     public JTextField txt_MaPhong;
     public JComboBox<String> cbb_LoaiPhong;
     public JTextField txt_Tang;

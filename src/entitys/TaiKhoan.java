@@ -11,8 +11,7 @@ public class TaiKhoan {
 	private VaiTro vaiTro;
 	private TrangThaiTaiKhoan trangThai;
 	private String maNV;     // Mã nhân viên
-	private String tenNV;    // Tên nhân viên (từ join)
-	private String chucVu;   // Chức vụ (từ join)
+	  // Chức vụ (từ join)
 
 	public String getTenDangNhap() {
 		return tenDangNhap;
@@ -50,20 +49,13 @@ public class TaiKhoan {
 		this.maNV = maNV;
 	}
 
-	public String getTenNV() {
-		return tenNV;
-	}
-
-	public void setTenNV(String tenNV) {
-		this.tenNV = tenNV;
-	}
-
-	public String getChucVu() {
-		return chucVu;
-	}
-
-	public void setChucVu(String chucVu) {
-		this.chucVu = chucVu;
+	// Constructor từ kết quả database
+	public TaiKhoan(String tenDangNhap, String matKhau, VaiTro vaiTro, TrangThaiTaiKhoan trangThai, String maNV) {
+		this.tenDangNhap = tenDangNhap;
+		this.matKhau = matKhau;
+		this.vaiTro = vaiTro;
+		this.trangThai = trangThai;
+		this.maNV = maNV;
 	}
 
 	public TaiKhoan(String tenDangNhap, String matKhau, VaiTro vaiTro) {

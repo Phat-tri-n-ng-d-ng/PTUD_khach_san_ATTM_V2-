@@ -71,6 +71,23 @@ public class NhanVien {
         this.chucVu = chucVu;
         this.taiKhoan = taiKhoan;
     }
+
+    // Thêm constructor để tạo từ database
+    public NhanVien(String maNV, String tenNV, LocalDate ngaySinh, String sdt, boolean gioiTinh, String email, String chucVuStr) {
+        this.maNV = maNV;
+        this.tenNV = tenNV;
+        this.ngaySinh = ngaySinh;
+        this.sdt = sdt;
+        this.gioiTinh = gioiTinh;
+        this.email = email;
+        // Chuyển đổi từ String sang enum
+        try {
+            this.chucVu = ChucVuNhanVien.valueOf(chucVuStr);
+        } catch (IllegalArgumentException e) {
+            this.chucVu = ChucVuNhanVien.LeTan; // giá trị mặc định
+        }
+        this.taiKhoan = null; // Có thể set sau
+    }
     public NhanVien(String maNV, String tenNV, LocalDate ngaySinh, String sdt, boolean gioiTinh, String email,
                     ChucVuNhanVien chucVu) {
         this.maNV = maNV;
@@ -82,17 +99,17 @@ public class NhanVien {
         this.chucVu = chucVu;
         this.taiKhoan = taiKhoan;
     }
-    
 
-    public NhanVien(String maNV, String tenNV) {
-		super();
-		this.maNV = maNV;
-		this.tenNV = tenNV;
-	}
 	public NhanVien(String maNV, TaiKhoan taiKhoan) {
         this.maNV = maNV;
         this.taiKhoan = taiKhoan;
     }
+
+    public NhanVien(String maNV, String tenNV) {
+        this.maNV = maNV;
+        this.tenNV = tenNV;
+    }
+
 
     public NhanVien() {
 

@@ -4,10 +4,10 @@ package controllers.dialogs;
 import database.dao.KhuyenMaiDao;
 import entitys.KhuyenMai;
 import enums.TrangThaiKhuyenMai;
-import enums.TrangThaiTaiKhoan;
 import view.dialogs.KhuyenMaiDialog;
 
 import javax.swing.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -25,8 +25,59 @@ public class KhuyenMaiDialogController {
 
         hienThiThongTin();
         dangKySuKien();
+        capNhatComboBoxTrangThaiTheoNgay();
     }
 
+    private void capNhatComboBoxTrangThaiTheoNgay() {
+        Date ngayBD = khuyenMaiDialog.ngayBatDau.getDate();
+        Date ngayKT = khuyenMaiDialog.ngayKetThuc.getDate();
+
+        if(ngayBD == null || ngayKT == null){
+            return; // Ngày chưa được chọn
+        }
+
+        // CHUYỂN SANG LocalDate để chỉ so sánh ngày, không so sánh giờ
+        LocalDate hienTai = LocalDate.now();
+        LocalDate ngayBatDau = ngayBD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate ngayKetThuc = ngayKT.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Xóa tất cả các mục hiện có
+        khuyenMaiDialog.cbb_TrangThaiHoaDon.removeAllItems();
+
+        // Thêm các trạng thái phù hợp
+        // Kiểm tra và thêm item phù hợp theo ngày
+        if (ngayBatDau.isAfter(hienTai)) {
+            // Chưa đến ngày bắt đầu -> chỉ hiển thị "Sắp diễn ra"
+            String trangThaiHienThi = getTrangThaiHienThi(TrangThaiKhuyenMai.SapDienRa);
+            khuyenMaiDialog.cbb_TrangThaiHoaDon.addItem(trangThaiHienThi);
+            khuyenMaiDialog.cbb_TrangThaiHoaDon.setSelectedItem(trangThaiHienThi);
+        } else if (!ngayBatDau.isAfter(hienTai) && !ngayKetThuc.isBefore(hienTai)) {
+            // Đang trong thời gian hoạt động (ngày bắt đầu <= hôm nay và ngày kết thúc >= hôm nay)
+            // -> hiển thị "Đang hoạt động" và "Tạm ngừng"
+            String trangThaiHoatDong = getTrangThaiHienThi(TrangThaiKhuyenMai.DangHoatDong);
+            String trangThaiTamNgung = getTrangThaiHienThi(TrangThaiKhuyenMai.TamNgung);
+
+            khuyenMaiDialog.cbb_TrangThaiHoaDon.addItem(trangThaiHoatDong);
+            khuyenMaiDialog.cbb_TrangThaiHoaDon.addItem(trangThaiTamNgung);
+
+            // Nếu đang chỉnh sửa, giữ trạng thái cũ nếu nó là một trong 2 trạng thái này
+            if (khuyenMai != null) {
+                String trangThaiCu = getTrangThaiHienThi(khuyenMai.getTrangThai());
+                if (trangThaiCu.equals(trangThaiHoatDong) || trangThaiCu.equals(trangThaiTamNgung)) {
+                    khuyenMaiDialog.cbb_TrangThaiHoaDon.setSelectedItem(trangThaiCu);
+                } else {
+                    khuyenMaiDialog.cbb_TrangThaiHoaDon.setSelectedItem(trangThaiHoatDong);
+                }
+            } else {
+                khuyenMaiDialog.cbb_TrangThaiHoaDon.setSelectedItem(trangThaiHoatDong);
+            }
+        } else if (ngayKetThuc.isBefore(hienTai)) {
+            // Đã hết hạn -> chỉ hiển thị "Hết hạn"
+            String trangThaiHienThi = getTrangThaiHienThi(TrangThaiKhuyenMai.HetHan);
+            khuyenMaiDialog.cbb_TrangThaiHoaDon.addItem(trangThaiHienThi);
+            khuyenMaiDialog.cbb_TrangThaiHoaDon.setSelectedItem(trangThaiHienThi);
+        }
+    }
 
     public void hienThiThongTin() {
         if(khuyenMai != null){
@@ -40,8 +91,8 @@ public class KhuyenMaiDialogController {
             khuyenMaiDialog.ngayBatDau.setDate(ngayBD);
             khuyenMaiDialog.ngayKetThuc.setDate(ngayKT);
 
-            // Hiển thị trạng thái
-            khuyenMaiDialog.cbb_TrangThaiHoaDon.setSelectedItem(getTrangThaiHienThi(khuyenMai.getTrangThai()));
+//            // Hiển thị trạng thái
+//            khuyenMaiDialog.cbb_TrangThaiHoaDon.setSelectedItem(getTrangThaiHienThi(khuyenMai.getTrangThai()));
 
             setDieuKienCheckbox(khuyenMai.getDieuKienApDung());
         }
@@ -73,6 +124,10 @@ public class KhuyenMaiDialogController {
     private void dangKySuKien() {
         khuyenMaiDialog.btn_CapNhat.addActionListener(e -> capNhatKhuyenMai());
         khuyenMaiDialog.btn_Dong.addActionListener(e -> khuyenMaiDialog.dispose());
+
+        // Cập nhật trạng thái khi ngày thay đổi
+        khuyenMaiDialog.ngayBatDau.addPropertyChangeListener("date", e -> capNhatComboBoxTrangThaiTheoNgay());
+        khuyenMaiDialog.ngayKetThuc.addPropertyChangeListener("date", e -> capNhatComboBoxTrangThaiTheoNgay());
     }
 
     private boolean kiemTraDuLieu() {
@@ -246,22 +301,32 @@ public class KhuyenMaiDialogController {
             return true; // Đã được kiểm tra ở hàm kiemTraDuLieu()
         }
 
-        LocalDateTime hienTai = LocalDateTime.now();
-        LocalDateTime ngayBatDau = ngayBD.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        LocalDateTime ngayKetThuc = ngayKT.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        // Sử dụng LocalDate để chỉ so sánh ngày, không so sánh giờ
+        LocalDate hienTai = LocalDate.now();
+        LocalDate ngayBatDau = ngayBD.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate ngayKetThuc = ngayKT.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+//        // In debug để kiểm tra
+//        System.out.println("Debug trạng thái kiểm tra:");
+//        System.out.println("Trạng thái: " + trangThai);
+//        System.out.println("Ngày bắt đầu: " + ngayBatDau);
+//        System.out.println("Ngày kết thúc: " + ngayKetThuc);
+//        System.out.println("Ngày hiện tại: " + hienTai);
 
         switch (trangThai){
             case "Sắp diễn ra":
-                if(ngayBatDau.isBefore(hienTai)){
+                if(!ngayBatDau.isAfter(hienTai)){
                     JOptionPane.showMessageDialog(khuyenMaiDialog,
-                            "Không thể đặt trạng thái 'Sắp diễn ra' khi ngày bắt đầu đã qua!",
-                            "Lỗi trang thái", JOptionPane.ERROR_MESSAGE);
+                            "Không thể đặt trạng thái 'Sắp diễn ra' khi ngày bắt đầu đã qua hoặc là hôm nay!",
+                            "Lỗi trạng thái", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-            break;
+                break;
 
             case "Đang hoạt động":
-                if (ngayBatDau.isAfter(hienTai) || ngayKetThuc.isBefore(hienTai)) {
+                // Sửa logic: Chỉ hợp lệ khi ngày hôm nay nằm trong khoảng từ ngày bắt đầu đến ngày kết thúc (bao gồm cả hai ngày)
+                // Tức là: ngày bắt đầu <= hôm nay <= ngày kết thúc
+                if(ngayBatDau.isAfter(hienTai) || ngayKetThuc.isBefore(hienTai)){
                     JOptionPane.showMessageDialog(khuyenMaiDialog,
                             "Không thể đặt trạng thái 'Đang hoạt động' khi chưa đến ngày bắt đầu hoặc đã qua ngày kết thúc!",
                             "Lỗi trạng thái", JOptionPane.ERROR_MESSAGE);
@@ -270,13 +335,17 @@ public class KhuyenMaiDialogController {
                 break;
 
             case "Hết hạn":
-                if (ngayKetThuc.isAfter(hienTai)) {
+                if(!ngayKetThuc.isBefore(hienTai)){
                     JOptionPane.showMessageDialog(khuyenMaiDialog,
                             "Không thể đặt trạng thái 'Hết hạn' khi chưa đến ngày kết thúc!",
                             "Lỗi trạng thái", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
                 break;
+
+            case "Tạm ngừng":
+                // Trạng thái "Tạm ngừng" có thể đặt bất kỳ lúc nào
+                return true;
         }
         return true;
     }

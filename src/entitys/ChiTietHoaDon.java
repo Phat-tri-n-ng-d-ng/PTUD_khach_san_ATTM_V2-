@@ -3,7 +3,7 @@ package entitys;
 import java.time.LocalDateTime;
 
 public class ChiTietHoaDon {
-	private double thanhTien;
+    private double thanhTien;
     private Phong phong;
     private HoaDon HoaDon;
     private int soNgayO;
@@ -20,14 +20,14 @@ public class ChiTietHoaDon {
     }
 
     public HoaDon getHoaDon() {
-		return HoaDon;
-	}
+        return HoaDon;
+    }
 
-	public void setHoaDon(HoaDon hoaDon) {
-		HoaDon = hoaDon;
-	}
+    public void setHoaDon(HoaDon hoaDon) {
+        HoaDon = hoaDon;
+    }
 
-	public void setSoNgayO(int soNgayO) {
+    public void setSoNgayO(int soNgayO) {
         this.soNgayO = soNgayO;
     }
 
@@ -44,7 +44,6 @@ public class ChiTietHoaDon {
     public void setKhuyenMai(KhuyenMai khuyenMai) {
         this.khuyenMai = khuyenMai;
     }
-    
 
     public double getTienGiam() {
 		return tienGiam;
@@ -93,6 +92,10 @@ public class ChiTietHoaDon {
         this.thanhTien = phong.getGiaPhong() * soNgayO;
     }
 
+    public void setThanhTien(double thanhTien) {
+        this.thanhTien = thanhTien;
+    }
+
     public ChiTietHoaDon(Phong phong, HoaDon hoaDon, int soNgayO) {
         setThanhTien(phong, soNgayO);
     }
@@ -102,11 +105,17 @@ public class ChiTietHoaDon {
         this.soNgayO = soNgayO;
         this.thanhTien = tinhThanhTien();
     }
+    public ChiTietHoaDon(Phong phong,  int soNgayO,KhuyenMai km) {
+        this.phong = phong;
+        this.soNgayO = soNgayO;
+        this.thanhTien = tinhThanhTien();
+        this.khuyenMai=km;
+    }
     public ChiTietHoaDon(Phong phong, entitys.HoaDon hoaDon) {
-            super();
-            this.phong = phong;
-            HoaDon = hoaDon;
-        }
+        super();
+        this.phong = phong;
+        HoaDon = hoaDon;
+    }
 
 	public ChiTietHoaDon(double thanhTien, Phong phong, entitys.HoaDon hoaDon, int soNgayO, KhuyenMai khuyenMai,
 			double tienGiam, LocalDateTime ngayNhanPhong, LocalDateTime ngayTraPhong) {
@@ -146,10 +155,4 @@ public class ChiTietHoaDon {
 		
 		System.out.println("DEBUG CTDH - Constructor mới - thanhTien: " + this.thanhTien);
 	}
-
-
-
-	
-
-	
 }

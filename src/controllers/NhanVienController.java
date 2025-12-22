@@ -5,6 +5,7 @@ import entitys.NhanVien;
 import entitys.TaiKhoan;
 import enums.ChucVuNhanVien;
 import enums.TrangThaiTaiKhoan;
+import enums.VaiTro;
 import view.dialogs.NhanVienDialog;
 import view.panels.NhanVienPanel;
 
@@ -169,7 +170,7 @@ public class NhanVienController implements MouseListener {
             TrangThaiTaiKhoan trangThaiTaiKhoan = getTrangThaiTaiKhoan(nhanVienPanel.table.getValueAt(row,7).toString());
             TaiKhoan tk = null;
             if (trangThaiTaiKhoan != null && !trangThaiTaiKhoan.toString().trim().isEmpty()) {
-                tk = new TaiKhoan(sdt,trangThaiTaiKhoan);
+                tk = new TaiKhoan(sdt,"12345678", VaiTro.LeTan);
             }
             NhanVien nhanVien = new NhanVien(maNV,tenNV,ngaySinh,sdt,gioiTinh,email,chucVuNhanVien,tk);
             NhanVienDialog dialog = new NhanVienDialog(
@@ -332,7 +333,8 @@ public class NhanVienController implements MouseListener {
         }
     }
 
-    private String getChucVuHienThi(ChucVuNhanVien chucVu) {
+    public static String getChucVuHienThi(ChucVuNhanVien chucVu) {
+        if (chucVu == null) return "";
         switch (chucVu) {
             case QuanLy -> { return "Quản lý"; }
             case LeTan -> { return "Lễ tân"; }

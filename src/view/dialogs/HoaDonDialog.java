@@ -214,7 +214,6 @@ public class HoaDonDialog extends JDialog {
         rdbtn_NamNguoiO.setBounds(365, 170, 55, 20);
         pnl_ThongTinKhachHang.add(rdbtn_NamNguoiO);
         gioiTinhGroup.add(rdbtn_NamNguoiO);
-        
         rdbtn_NuNguoiO = new JRadioButton("Nữ");
         rdbtn_NuNguoiO.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         rdbtn_NuNguoiO.setBackground(Color.WHITE);
@@ -370,6 +369,30 @@ public class HoaDonDialog extends JDialog {
         lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1.setBounds(374, 49, 141, 18);
         panel.add(lbl_TienCuaTongTienThanhToanTrongPnlTongTien_1);
 
+        class RoundedButton extends JButton {
+            private int radius;
+
+            public RoundedButton(String label, Color bg, Color fg, int radius) {
+                super(label);
+                this.radius = radius;
+                setBackground(bg);
+                setForeground(fg);
+                setContentAreaFilled(false);
+                setFocusPainted(false);
+                setBorder(null);
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+        }
+
         btn_XacNhan = new RoundedButton("Xác nhận", new Color(76, 175, 80), Color.WHITE, 30);
         btn_XacNhan.setFont(new Font("Times New Roman", Font.BOLD, 14));
         btn_XacNhan.setBounds(430, 570, 120, 30);
@@ -405,7 +428,7 @@ public class HoaDonDialog extends JDialog {
         btn_inHoaDon = new JButton("In hóa đơn");
         btn_inHoaDon.setBounds(956, 488, 120, 30);
         getContentPane().add(btn_inHoaDon);
-        
+
         btn_huyHoaDon = new JButton("Hủy hóa đơn");
         btn_huyHoaDon.setBounds(826, 488, 120, 30);
         getContentPane().add(btn_huyHoaDon);

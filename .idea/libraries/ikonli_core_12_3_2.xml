@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="ikonli-core-12.3.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/ikonli-core-12.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ikonli-fontawesome5-pack-12.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ikonli-swing-12.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.24.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.5.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mssql-jdbc-12.10.0.jre11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xchart-3.8.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

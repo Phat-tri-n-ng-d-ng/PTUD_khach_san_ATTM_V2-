@@ -20,7 +20,7 @@ public class NhanVienDialog extends JDialog {
     private JSpinner spinnerNgaySinh;
     private JButton btnClose;
 
-    private NhanVien nhanVien;
+    private final NhanVien nhanVien;
     public JTextField txt_MaNhanVien;
     public JTextField txt_TenNhanVien;
     public JTextField txt_SoDienThoai;
